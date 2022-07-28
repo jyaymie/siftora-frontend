@@ -1,10 +1,12 @@
 import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function Product() {
+	const navigate = useNavigate();
 	// ==================================================================== STATES
 	const { error, setError, loading, setLoading } = useContext(DataContext);
 	const [products, setProducts] = useState([]);
@@ -54,6 +56,7 @@ function Product() {
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
+		navigate('/');
 	};
 
 	// ======================================================================= JSX
@@ -90,6 +93,9 @@ function Product() {
 			</Form.Group>
 			<Button type='submit' variant='primary'>
 				Add Product
+			</Button>
+			<Button type='button' variant='primary' onClick={() => navigate('/')}>
+				Cancel
 			</Button>
 			{loading && 'Loading...'}
 			{error && error}
