@@ -14,8 +14,7 @@ function Products() {
 	const [show, setShow] = useState(false); // For showing/closing a modal
 	const [productToDelete, setProductToDelete] = useState({});
 
-	// ============================================================== ON PAGE LOAD
-	// Display all products on initial page load
+	// ========================================================= RETRIEVE PRODUCTS
 	const getProducts = async () => {
 		setError('');
 		try {
@@ -31,40 +30,10 @@ function Products() {
 		}
 	};
 
+	// Display all products on initial page load
 	useEffect(() => {
 		getProducts();
 	}, []);
-
-	// ========================================================== SHOW/CLOSE MODAL
-	const showModal = (product) => {
-		setProductToDelete(product);
-		setShow(true);
-	};
-
-	const closeModal = () => setShow(false);
-
-	// ============================================================ DELETE PRODUCT
-	const deleteProduct = async () => {
-		closeModal();
-		setError('');
-		const id = productToDelete.id;
-		try {
-			const res = await axios.delete(
-				`http://localhost:8000/api/products/${id}`
-			);
-			if (res.status === 204) {
-				const filteredProducts = products.filter(
-					(product) => product !== productToDelete
-				);
-				setProducts(filteredProducts);
-			}
-		} catch (error) {
-			console.log("Product wasn't deleted...", error);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
 
 	// ============================================= INCREMENT/DECREMENT USE COUNT
 	const incrementUse = (product) => {
@@ -93,6 +62,38 @@ function Products() {
 			}
 		} catch (error) {
 			console.log("Use count wasn't udpated...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
+	// ========================================================== SHOW/CLOSE MODAL
+	const showModal = (product) => {
+		setProductToDelete(product);
+		setShow(true);
+	};
+
+	const closeModal = () => setShow(false);
+
+	// ============================================================ DELETE PRODUCT
+	const deleteProduct = async () => {
+		closeModal();
+		setError('');
+		const id = productToDelete.id;
+		try {
+			const res = await axios.delete(
+				`http://localhost:8000/api/products/${id}`
+			);
+			if (res.status === 204) {
+				const filteredProducts = products.filter(
+					(product) => product !== productToDelete
+				);
+				setProducts(filteredProducts);
+				getProducts();
+			}
+		} catch (error) {
+			console.log("Product wasn't deleted...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -137,7 +138,6 @@ function Products() {
 										+
 									</Button>
 								</li>
-
 								<li>Finish Date: {product.finish_date}</li>
 								<li>Will Repurchase: {product.will_repurchase}</li>
 								<li>Notes: {product.notes}</li>
@@ -146,7 +146,7 @@ function Products() {
 							<Button
 								type='button'
 								variant='secondary'
-								onClick={() => showModal()}>
+								onClick={() => showModal(product)}>
 								Delete
 							</Button>
 						</Accordion.Body>
