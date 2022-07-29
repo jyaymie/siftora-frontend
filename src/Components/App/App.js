@@ -1,24 +1,26 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { DataContext } from '../../dataContext';
 import Home from '../Home/Home';
 import Bin from '../Bin/Bin';
-import Product from '../Product/Product';
+import BinForm from '../BinForm/BinForm';
+import ProductForm from '../ProductForm/ProductForm';
+import Products from '../Products/Products';
+import ProductUpdateForm from '../ProductUpdateForm/ProductUpdateForm';
 
 function App() {
-	// For error handling in all components
-	const [error, setError] = useState('');
-	const [loading, setLoading] = useState('');
+	const [error, setError] = useState(''); // For error handling
+	const [bins, setBins] = useState([]);
 
 	return (
 		<DataContext.Provider
 			value={{
 				error,
 				setError,
-				loading,
-				setLoading,
+				bins,
+				setBins,
 			}}>
 			<div>
 				<header>
@@ -27,8 +29,14 @@ function App() {
 				<main>
 					<Routes>
 						<Route path='/' element={<Home />}></Route>
+						<Route path='/bins' element={<Home />}></Route>
 						<Route path='/bins/:id' element={<Bin />}></Route>
-						<Route path='/product' element={<Product />}></Route>
+						<Route path='/bin-form' element={<BinForm />}></Route>
+						<Route path='/product-form' element={<ProductForm />}></Route>
+						<Route
+							path='/product-update-form'
+							element={<ProductUpdateForm />}></Route>
+						<Route path='/products' element={<Products />}></Route>
 					</Routes>
 				</main>
 			</div>

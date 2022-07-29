@@ -26,13 +26,13 @@ function BinForm() {
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
-			console.log('No bin was added...', error);
+			console.log("Bin wasn't add...", error);
 		}
 		navigate('/');
 	};
 
 	return (
-		<div>
+		<>
 			<Form onSubmit={addBin}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Title</Form.Label>
@@ -44,7 +44,7 @@ function BinForm() {
 				</Button>
 			</Form>
 			{error && error}
-		</div>
+		</>
 	);
 }
 

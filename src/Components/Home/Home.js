@@ -53,7 +53,7 @@ function Home() {
 				setBins(filteredBins);
 			}
 		} catch (error) {
-			console.log("The bin wasn't deleted...", error);
+			console.log("Bin wasn't deleted...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -62,7 +62,7 @@ function Home() {
 
 	// ======================================================================= JSX
 	return (
-		<div>
+		<>
 			<Card style={{ width: '200px' }}>
 				<Card.Body>
 					<Link to='/product-form'>Add Product</Link>
@@ -131,7 +131,7 @@ function Home() {
 			</Modal>
 
 			{error && error}
-		</div>
+		</>
 	);
 }
 
