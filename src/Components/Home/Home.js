@@ -8,8 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 
 function Home() {
 	// ==================================================================== STATES
-	const { error, setError } = useContext(DataContext);
-	const [bins, setBins] = useState([]);
+	const { error, setError, bins, setBins } = useContext(DataContext);
 	const [show, setShow] = useState(false); // For showing/closing a modal
 	const [binToDelete, setBinToDelete] = useState({});
 

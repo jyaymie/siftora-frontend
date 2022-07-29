@@ -6,9 +6,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function ProductForm() {
-	const { error, setError } = useContext(DataContext);
+	const { error, setError, products, setProducts } = useContext(DataContext);
 	const navigate = useNavigate();
-	const [products, setProducts] = useState([]);
 
 	// =============================================================== ADD PRODUCT
 	const addProduct = async (e) => {

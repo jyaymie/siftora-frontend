@@ -2,15 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DataContext } from '../../dataContext';
 import axios from 'axios';
-import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
 
 function Products() {
 	// ==================================================================== STATES
-	const { error, setError } = useContext(DataContext);
-	const [products, setProducts] = useState([]);
+	const { error, setError, products, setProducts } = useContext(DataContext);
 	const [show, setShow] = useState(false); // For showing/closing a modal
 	const [productToDelete, setProductToDelete] = useState({});
 
@@ -103,11 +101,7 @@ function Products() {
 	// ======================================================================= JSX
 	return (
 		<>
-			<Card style={{ width: '200px' }}>
-				<Card.Body>
-					<Link to='/product-form'>Add Product</Link>
-				</Card.Body>
-			</Card>
+			<Link to='/product-form'>Add Product</Link>
 
 			{products.map((product) => (
 				<Accordion key={product.id}>
@@ -142,7 +136,7 @@ function Products() {
 								<li>Will Repurchase: {product.will_repurchase}</li>
 								<li>Notes: {product.notes}</li>
 							</ul>
-							<Link to='/product-update-form'>Edit</Link>
+							<Link to={`/product-update-form/${product.id}`}>Edit</Link>
 							<Button
 								type='button'
 								variant='secondary'

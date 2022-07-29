@@ -13,6 +13,7 @@ import ProductUpdateForm from '../ProductUpdateForm/ProductUpdateForm';
 function App() {
 	const [error, setError] = useState(''); // For error handling
 	const [bins, setBins] = useState([]);
+	const [products, setProducts] = useState([]);
 
 	return (
 		<DataContext.Provider
@@ -21,6 +22,8 @@ function App() {
 				setError,
 				bins,
 				setBins,
+				products,
+				setProducts,
 			}}>
 			<div>
 				<header>
@@ -34,7 +37,7 @@ function App() {
 						<Route path='/bin-form' element={<BinForm />}></Route>
 						<Route path='/product-form' element={<ProductForm />}></Route>
 						<Route
-							path='/product-update-form'
+							path='/product-update-form/:id'
 							element={<ProductUpdateForm />}></Route>
 						<Route path='/products' element={<Products />}></Route>
 					</Routes>
