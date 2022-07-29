@@ -10,13 +10,11 @@ function Home() {
 	// ==================================================================== STATES
 	const { error, setError, loading, setLoading } = useContext(DataContext);
 	const [bins, setBins] = useState([]);
-	// For the modal
-	const [show, setShow] = useState(false);
-	// For deleting a bin
-	const [targetIndex, setTargetIndex] = useState(null);
+	const [show, setShow] = useState(false); // For showing/closing a modal
+	const [binToDelete, setBinToDelete] = useState({});
 
 	// ============================================================== ON PAGE LOAD
-	// Display all the bins on initial page load
+	// Display all bins on initial page load
 	useEffect(() => {
 		const getBins = async () => {
 			setError('');
@@ -24,9 +22,8 @@ function Home() {
 			try {
 				const res = await axios.get('http://localhost:8000/api/bins/');
 				if (res.status === 200) {
-					console.log('Found the bins!', res);
-					setLoading(false);
 					setBins(res.data);
+					setLoading(false);
 				}
 			} catch (error) {
 				console.log("Bins weren't retrieved...", error);
@@ -36,55 +33,55 @@ function Home() {
 				);
 			}
 		};
-		// Call the getBins function
 		getBins();
 	}, []);
 
 	// ========================================================== SHOW/CLOSE MODAL
-	const handleClose = () => setShow(false);
-
-	const handleShow = (index) => {
+	const showModal = (bin) => {
+		setBinToDelete(bin);
 		setShow(true);
-		setTargetIndex(index);
 	};
+
+	const closeModal = () => setShow(false);
 
 	// =================================================================== ADD BIN
 	const addBin = async () => {
-		setError('');
-		setLoading(true);
-		try {
-			const res = await axios.post('http://localhost:8000/api/bins/', {});
-			if (res.status === 201) {
-				let updatedBins = [...bins];
-				updatedBins.push(bins[targetIndex]);
-				setBins(updatedBins);
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Bin wasn't added...", error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
+		// setError('');
+		// setLoading(true);
+		// try {
+		// 	const res = await axios.post('http://localhost:8000/api/bins/', {
+		// 		title: 'title',
+		// 	});
+		// 	if (res.status === 201) {
+		// 		setLoading(false);
+		// 		let updatedBins = [...bins];
+		// 		updatedBins.push();
+		// 		setBins(updatedBins);
+		// 	}
+		// } catch (error) {
+		// 	setLoading(false);
+		// 	setError(
+		// 		'Hm, something went wrong. Please try again or contact support@siftora.com.'
+		// 	);
+		// 	console.log("The bin wasn't created...", error);
+		// }
 	};
 
 	// ================================================================ DELETE BIN
 	const deleteBin = async () => {
-		handleClose();
+		closeModal();
 		setError('');
 		setLoading(true);
-		const id = bins[targetIndex].id;
+		const id = binToDelete.id;
 		try {
 			const res = await axios.delete(`http://localhost:8000/api/bins/${id}`);
 			if (res.status === 204) {
-				let updatedBins = [...bins];
-				updatedBins.splice(targetIndex, 1);
-				setBins(updatedBins);
+				const filteredBins = bins.filter((bin) => bin !== binToDelete);
+				setBins(filteredBins);
 				setLoading(false);
 			}
 		} catch (error) {
-			console.log("Bin wasn't deleted...", error);
+			console.log("The bin wasn't deleted...", error);
 			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
@@ -95,62 +92,32 @@ function Home() {
 	// ======================================================================= JSX
 	return (
 		<div>
-			{/* If there is at least one bin, display the option to add a product */}
-			{bins.length > 0 ? (
-				<Card style={{ width: '200px' }}>
+			<Card style={{ width: '200px' }}>
+				<Card.Body>
+					<Link to='/product'>Add Product</Link>
+				</Card.Body>
+			</Card>
+
+			{bins.map((bin) => (
+				<Card style={{ width: '200px' }} key={bin.id}>
 					<Card.Body>
-						<Card.Text>Add Product</Card.Text>
-						<Link to='/product'>Add</Link>
+						<Link to={`bins/${bin.id}`}>
+							<Card.Text>
+								{bin.title} ({bin.product_count})
+							</Card.Text>
+						</Link>
+						<Button type='button' variant='primary'>
+							Edit
+						</Button>
+						<Button
+							type='button'
+							variant='primary'
+							onClick={() => showModal(bin)}>
+							Delete
+						</Button>
 					</Card.Body>
 				</Card>
-			) : null}
-
-			{bins
-				? bins.map((bin, index) => (
-						<div key={bin.id}>
-							<Card style={{ width: '200px' }}>
-								<Card.Body>
-									<Link to={`bins/${bin.id}`}>
-										<Card.Text>
-											{bin.title} ({bin.product_count})
-										</Card.Text>
-									</Link>
-									<Button type='button' variant='primary'>
-										Edit
-									</Button>
-									<Button
-										type='button'
-										variant='primary'
-										onClick={() => handleShow(index)}>
-										Delete
-									</Button>
-								</Card.Body>
-							</Card>
-
-							<Modal show={show} onHide={handleClose}>
-								<Modal.Header>
-									<Modal.Title>Are you sure?</Modal.Title>
-								</Modal.Header>
-								<Modal.Body>
-									{`Deleting your ${bin.title} bin will also delete the products
-									it contains. You will still have access to any of these
-									products if they are stored in other bins.`}
-								</Modal.Body>
-								<Modal.Footer>
-									<Button
-										type='button'
-										variant='secondary'
-										onClick={handleClose}>
-										Cancel
-									</Button>
-									<Button type='button' variant='primary' onClick={deleteBin}>
-										Delete Bin
-									</Button>
-								</Modal.Footer>
-							</Modal>
-						</div>
-				  ))
-				: null}
+			))}
 
 			<Card style={{ width: '200px' }}>
 				<Card.Body>
@@ -161,7 +128,24 @@ function Home() {
 				</Card.Body>
 			</Card>
 
-			{loading && 'Loading...'}
+			<Modal show={show} onHide={closeModal}>
+				<Modal.Header>
+					<Modal.Title>Are you sure?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{`Deleting your ${binToDelete.title} bin cannot be undone.`}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button type='button' variant='secondary' onClick={closeModal}>
+						Cancel
+					</Button>
+					<Button type='button' variant='primary' onClick={deleteBin}>
+						Delete Bin
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			{loading && 'Just a sec...'}
 			{error && error}
 		</div>
 	);
