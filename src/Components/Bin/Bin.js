@@ -17,7 +17,7 @@ function Bin() {
 			setError('');
 			setLoading(true);
 			try {
-				const res = await axios.get(`http://localhost:8000/api/bins/${id}`);
+				const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 				if (res.status === 200) {
 					console.log('Found the bin!', res);
 					setLoading(false);
@@ -55,7 +55,7 @@ function Bin() {
 		updatedProducts.splice(index, 1);
 		setProducts(updatedProducts);
 		try {
-			const res = await axios.put(`http://localhost:8000/api/bins/${id}`, {
+			const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
 				...bin,
 				products,
 			});
@@ -77,7 +77,7 @@ function Bin() {
 
 		try {
 			const res = await axios.put(
-				`http://localhost:8000/api/products/${product.key}`,
+				`http://localhost:8000/api/products/${product.key}/`,
 				{
 					...product,
 					// use_count,

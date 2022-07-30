@@ -7,7 +7,6 @@ import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
 
 function Products() {
-	// ==================================================================== STATES
 	const { error, setError, products, setProducts } = useContext(DataContext);
 	const [show, setShow] = useState(false); // For showing/closing a modal
 	const [productToDelete, setProductToDelete] = useState({});
@@ -81,7 +80,7 @@ function Products() {
 		const id = productToDelete.id;
 		try {
 			const res = await axios.delete(
-				`http://localhost:8000/api/products/${id}`
+				`http://localhost:8000/api/products/${id}/`
 			);
 			if (res.status === 204) {
 				const filteredProducts = products.filter(

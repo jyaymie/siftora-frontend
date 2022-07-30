@@ -16,7 +16,9 @@ function ProductUpdateForm() {
 		const getProduct = async () => {
 			setError('');
 			try {
-				const res = await axios.get(`http://localhost:8000/api/products/${id}`);
+				const res = await axios.get(
+					`http://localhost:8000/api/products/${id}/`
+				);
 				if (res.status === 200) {
 					setProduct(res.data);
 				}
@@ -65,10 +67,8 @@ function ProductUpdateForm() {
 			const res = await axios.put(`http://localhost:8000/api/products/${id}/`, {
 				...productToUpdate,
 			});
-			if (res.status === 201) {
-				let updatedProducts = [...products];
-				updatedProducts.push(productToUpdate);
-				setProducts(updatedProducts);
+			if (res.status === 200) {
+				navigate('/products');
 			}
 		} catch (error) {
 			console.log("Product wasn't added...", error);
@@ -76,7 +76,6 @@ function ProductUpdateForm() {
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
-		navigate('/products');
 	};
 
 	// ======================================================================= JSX

@@ -6,28 +6,29 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Home() {
+function Bins() {
 	const { error, setError, bins, setBins } = useContext(DataContext);
 	const [show, setShow] = useState(false); // For showing/closing a modal
 	const [binToDelete, setBinToDelete] = useState({});
 
 	// ============================================================= RETRIEVE BINS
+	const getBins = async () => {
+		setError('');
+		try {
+			const res = await axios.get('http://localhost:8000/api/bins/');
+			if (res.status === 200) {
+				setBins(res.data);
+			}
+		} catch (error) {
+			console.log("Bins weren't retrieved...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
 	// Display all bins on initial page load
 	useEffect(() => {
-		const getBins = async () => {
-			setError('');
-			try {
-				const res = await axios.get('http://localhost:8000/api/bins/');
-				if (res.status === 200) {
-					setBins(res.data);
-				}
-			} catch (error) {
-				console.log("Bins weren't retrieved...", error);
-				setError(
-					'Hm, something went wrong. Please try again or contact support@siftora.com.'
-				);
-			}
-		};
 		getBins();
 	}, []);
 
@@ -45,10 +46,11 @@ function Home() {
 		setError('');
 		const id = binToDelete.id;
 		try {
-			const res = await axios.delete(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.delete(`http://localhost:8000/api/bin/${id}/`);
 			if (res.status === 204) {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);
+				getBins();
 			}
 		} catch (error) {
 			console.log("Bin wasn't deleted...", error);
@@ -61,20 +63,8 @@ function Home() {
 	// ======================================================================= JSX
 	return (
 		<>
-			<ul>
-				<li>
-					<Link to='/product-form'>Add Product</Link>
-				</li>
-				<li>
-					<Link to='/bin-form'>Add Bin</Link>
-				</li>
-				<li>
-					<Link to='/products'>View My Products</Link>
-				</li>
-				<li>
-					<Link to='/bins'>View My Bins</Link>
-				</li>
-			</ul>
+			<Link to='/bin-form'>Add Bin</Link>
+
 			{bins.map((bin) => (
 				<Card style={{ width: '200px' }} key={bin.id}>
 					<Card.Body>
@@ -83,12 +73,10 @@ function Home() {
 								{bin.title} ({bin.product_count})
 							</Card.Text>
 						</Link>
-						<Button type='button' variant='primary'>
-							Edit
-						</Button>
+						<Link to={`/bin-update-form/${bin.id}`}>Edit</Link>
 						<Button
 							type='button'
-							variant='primary'
+							variant='secondary'
 							onClick={() => showModal(bin)}>
 							Delete
 						</Button>
@@ -101,24 +89,7 @@ function Home() {
 					<Modal.Title>Are you sure?</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{`Deleting your ${binToDelete.title} bin cannot be undone.`}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button type='button' variant='secondary' onClick={closeModal}>
-						Cancel
-					</Button>
-					<Button type='button' variant='primary' onClick={deleteBin}>
-						Delete Bin
-					</Button>
-				</Modal.Footer>
-			</Modal>
-
-			<Modal show={show} onHide={closeModal}>
-				<Modal.Header>
-					<Modal.Title>Are you sure?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{`Deleting your ${binToDelete.title} bin cannot be undone.`}
+					{`Deleting ${binToDelete.title} cannot be undone.`}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type='button' variant='secondary' onClick={closeModal}>
@@ -135,4 +106,4 @@ function Home() {
 	);
 }
 
-export default Home;
+export default Bins;
