@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function ProductForm() {
-	const { error, setError, products, setProducts } = useContext(DataContext);
 	const navigate = useNavigate();
+	const [error, setError] = useState('');
+	const [products, setProducts] = useState([]);
 
 	// =============================================================== ADD PRODUCT
 	const addProduct = async (e) => {

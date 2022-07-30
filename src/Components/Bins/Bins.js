@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 function Bins() {
-	const { error, setError, bins, setBins } = useContext(DataContext);
-	const [show, setShow] = useState(false); // For showing/closing a modal
+	const [error, setError] = useState('');
+	const [bins, setBins] = useState([]);
+	const [show, setShow] = useState(false);
 	const [binToDelete, setBinToDelete] = useState({});
 
 	// ============================================================= RETRIEVE BINS
@@ -27,10 +27,9 @@ function Bins() {
 		}
 	};
 
-	// Display all bins on initial page load
 	useEffect(() => {
 		getBins();
-	}, []);
+	});
 
 	// ========================================================== SHOW/CLOSE MODAL
 	const showModal = (bin) => {
@@ -46,7 +45,7 @@ function Bins() {
 		setError('');
 		const id = binToDelete.id;
 		try {
-			const res = await axios.delete(`http://localhost:8000/api/bin/${id}/`);
+			const res = await axios.delete(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 204) {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);
@@ -68,7 +67,7 @@ function Bins() {
 			{bins.map((bin) => (
 				<Card style={{ width: '200px' }} key={bin.id}>
 					<Card.Body>
-						<Link to={`bins/${bin.id}`}>
+						<Link to={`/bins/${bin.id}`}>
 							<Card.Text>
 								{bin.title} ({bin.product_count})
 							</Card.Text>
@@ -89,7 +88,7 @@ function Bins() {
 					<Modal.Title>Are you sure?</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{`Deleting ${binToDelete.title} cannot be undone.`}
+					{`Deleting your ${binToDelete.title} bin cannot be undone.`}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type='button' variant='secondary' onClick={closeModal}>

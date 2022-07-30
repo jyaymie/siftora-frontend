@@ -1,36 +1,36 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function BinForm() {
-	const { error, setError, bins, setBins } = useContext(DataContext);
 	const navigate = useNavigate();
+	const [error, setError] = useState('');
+	const [bins, setBins] = useState([]);
 
 	// =================================================================== ADD BIN
 	const addBin = async (e) => {
 		e.preventDefault();
 		setError('');
 		try {
-			const res = await axios.post('http://localhost:8000/api/bins/', {
-				title: e.target.title.value,
-			});
+			const binToAdd = { title: e.target.title.value };
+			const res = await axios.post('http://localhost:8000/api/bins/', binToAdd);
 			if (res.status === 201) {
 				let updatedBins = [...bins];
-				updatedBins.push({ title: e.target.title.value });
+				updatedBins.push(binToAdd);
 				setBins(updatedBins);
+				navigate('/bins'); ///////////////// RECONSIDER WHERE TO DIRECT THE USER
 			}
 		} catch (error) {
+			console.log("Bin wasn't add...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
-			console.log("Bin wasn't add...", error);
 		}
-		navigate('/');
 	};
 
+	// ======================================================================= JSX
 	return (
 		<>
 			<Form onSubmit={addBin}>

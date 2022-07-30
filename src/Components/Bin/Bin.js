@@ -1,111 +1,110 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function Bin() {
-	const { error, setError, loading, setLoading } = useContext(DataContext);
-	const [bin, setBin] = useState({});
-	const [products, setProducts] = useState([]);
-	const [useCount, setUseCount] = useState(null);
 	const { id } = useParams();
+	const [error, setError] = useState('');
+	const [products, setProducts] = useState([]);
+	const [show, setShow] = useState(false);
+	const [productToRemove, setProductToRemove] = useState({});
 
-	useEffect(() => {
-		const getProducts = async () => {
-			setError('');
-			setLoading(true);
-			try {
-				const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
-				if (res.status === 200) {
-					console.log('Found the bin!', res);
-					setLoading(false);
-					setBin(res.data);
-					setProducts(res.data.products);
-				}
-			} catch (error) {
-				console.log("Products weren't retrieved...", error);
-				setLoading(false);
-				setError(
-					'Hm, something went wrong. Please try again or contact support@siftora.com.'
-				);
-			}
-		};
-		// Call the getProducts function
-		getProducts();
-	}, []);
-
-	const incrementUse = (product) => {
-		setUseCount(product.use_count++);
-		product.use_count = useCount;
-		updateCount();
-	};
-
-	const decrementUse = (product) => {
-		setUseCount(product.use_count--);
-		product.use_count = useCount;
-		updateCount();
-	};
-
-	const deleteProduct = async (index) => {
+	// ============================================================== GET PRODUCTS
+	const getProducts = async () => {
 		setError('');
-		setLoading(true);
-		let updatedProducts = [...products];
-		updatedProducts.splice(index, 1);
-		setProducts(updatedProducts);
 		try {
-			const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
-				...bin,
-				products,
-			});
+			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 200) {
-				setLoading(false);
+				setProducts(res.data.products);
 			}
 		} catch (error) {
-			console.log("Product wasn't deleted...", error);
-			setLoading(false);
+			console.log("Products weren't retrieved...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
+		}
+	};
+
+	useEffect(() => {
+		getProducts();
+	});
+
+	// ========================================================== UPDATE USE COUNT
+	const incrementUse = (product) => {
+		product.use_count++;
+		updateCount(product);
+	};
+
+	const decrementUse = (product) => {
+		if (product.use_count > 0) {
+			product.use_count--;
+			updateCount(product);
 		}
 	};
 
 	const updateCount = async (product) => {
 		setError('');
-		setLoading(true);
-
 		try {
 			const res = await axios.put(
-				`http://localhost:8000/api/products/${product.key}/`,
-				{
-					...product,
-					// use_count,
-				}
+				`http://localhost:8000/api/products/${product.id}/`,
+				product
 			);
 			if (res.status === 200) {
-				setLoading(false);
+				getProducts();
 			}
 		} catch (error) {
-			console.log("Bin wasn't deleted...", error);
-			setLoading(false);
+			console.log("Use count wasn't udpated...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
-	if (!products) {
-		return <p>Loading products...</p>;
-	}
+	// ========================================================== SHOW/CLOSE MODAL
+	const showModal = (product) => {
+		setProductToRemove(product);
+		setShow(true);
+	};
+
+	const closeModal = () => setShow(false);
+
+	// =================================================== REMOVE PRODUCT FROM BIN
+	const removeProduct = async () => {
+		closeModal();
+		setError('');
+		const id = productToRemove.id;
+		try {
+			const res = await axios.delete(
+				`http://localhost:8000/api/products/${id}/`
+			);
+			if (res.status === 204) {
+				const filteredProducts = products.filter(
+					(product) => product !== productToRemove
+				);
+				setProducts(filteredProducts);
+				getProducts();
+			}
+		} catch (error) {
+			console.log("Product wasn't removed...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
+	// ======================================================================= JSX
 	return (
-		<div>
-			{products.map((product, index) => (
+		<>
+			<Link to='/product-form'>Add Product</Link>
+
+			{products.map((product) => (
 				<Accordion key={product.id}>
 					<Accordion.Item eventKey='0'>
 						<Accordion.Header>
-							{`${product.name} by ${product.brand} / Expiration
-							Date: ${product.expiry_date}`}
+							{`${product.name} by ${product.brand}`}
 						</Accordion.Header>
 						<Accordion.Body>
 							<ul>
@@ -114,8 +113,9 @@ function Bin() {
 								<li>Purchase Date: {product.purchase_date}</li>
 								<li>Price: {product.price}</li>
 								<li>Open Date: {product.open_date}</li>
+								<li>Expiry Date: {product.expiry_date}</li>
 								<li>
-									# of Uses: {product.use_count}{' '}
+									# of Uses: {product.use_count}
 									<Button
 										type='button'
 										variant='secondary'
@@ -133,18 +133,38 @@ function Bin() {
 								<li>Will Repurchase: {product.will_repurchase}</li>
 								<li>Notes: {product.notes}</li>
 							</ul>
-							<Link to='/product'>Edit</Link>
+							<Link to={`/product-update-form/${product.id}`}>Edit</Link>
 							<Button
 								type='button'
 								variant='secondary'
-								onClick={() => deleteProduct(index)}>
-								Delete from Bin
+								onClick={() => showModal(product)}>
+								Remove from Bin
 							</Button>
 						</Accordion.Body>
 					</Accordion.Item>
 				</Accordion>
 			))}
-		</div>
+
+			<Modal show={show} onHide={closeModal}>
+				<Modal.Header>
+					<Modal.Title>Just so you know!</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{`Removing ${productToRemove.name} from this bin will not remove it from your products inventory. To delete this product, please go to `}
+					<Link to='/products'>My Products</Link>.
+				</Modal.Body>
+				<Modal.Footer>
+					<Button type='button' variant='secondary' onClick={closeModal}>
+						Cancel
+					</Button>
+					<Button type='button' variant='primary' onClick={removeProduct}>
+						Remove from Bin
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			{error && error}
+		</>
 	);
 }
 

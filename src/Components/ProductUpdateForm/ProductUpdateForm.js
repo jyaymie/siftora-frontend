@@ -1,36 +1,34 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function ProductUpdateForm() {
-	const { error, setError, products, setProducts } = useContext(DataContext);
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const [error, setError] = useState('');
 	const [product, setProduct] = useState([]);
 
 	// =============================================================== GET PRODUCT
-	useEffect(() => {
-		const getProduct = async () => {
-			setError('');
-			try {
-				const res = await axios.get(
-					`http://localhost:8000/api/products/${id}/`
-				);
-				if (res.status === 200) {
-					setProduct(res.data);
-				}
-			} catch (error) {
-				console.log("Product wasn't retrieved...", error);
-				setError(
-					'Hm, something went wrong. Please try again or contact support@siftora.com.'
-				);
+	const getProduct = async () => {
+		setError('');
+		try {
+			const res = await axios.get(`http://localhost:8000/api/products/${id}/`);
+			if (res.status === 200) {
+				setProduct(res.data);
 			}
-		};
+		} catch (error) {
+			console.log("Product wasn't retrieved...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
+	useEffect(() => {
 		getProduct();
-	}, []);
+	});
 
 	// =============================================================== ADD PRODUCT
 	const updateProduct = async (e) => {

@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
 
 function Products() {
-	const { error, setError, products, setProducts } = useContext(DataContext);
-	const [show, setShow] = useState(false); // For showing/closing a modal
+	const [error, setError] = useState('');
+	const [products, setProducts] = useState([]);
+	const [show, setShow] = useState(false);
 	const [productToDelete, setProductToDelete] = useState({});
 
-	// ========================================================= RETRIEVE PRODUCTS
+	// ============================================================== GET PRODUCTS
 	const getProducts = async () => {
 		setError('');
 		try {
@@ -27,12 +27,11 @@ function Products() {
 		}
 	};
 
-	// Display all products on initial page load
 	useEffect(() => {
 		getProducts();
-	}, []);
+	});
 
-	// ============================================= INCREMENT/DECREMENT USE COUNT
+	// ========================================================== UPDATE USE COUNT
 	const incrementUse = (product) => {
 		product.use_count++;
 		updateCount(product);
@@ -117,7 +116,7 @@ function Products() {
 								<li>Open Date: {product.open_date}</li>
 								<li>Expiry Date: {product.expiry_date}</li>
 								<li>
-									# of Uses: {product.use_count}{' '}
+									# of Uses: {product.use_count}
 									<Button
 										type='button'
 										variant='secondary'
