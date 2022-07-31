@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Accordion from 'react-bootstrap/Accordion';
@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 function Bin() {
 	const { id } = useParams();
 	const [error, setError] = useState('');
+	const [bin, setBin] = useState({});
 	const [products, setProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
@@ -18,6 +19,7 @@ function Bin() {
 		try {
 			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 200) {
+				setBin(res.data);
 				setProducts(res.data.products);
 			}
 		} catch (error) {
@@ -30,7 +32,7 @@ function Bin() {
 
 	useEffect(() => {
 		getProducts();
-	});
+	}, []);
 
 	// ========================================================== UPDATE USE COUNT
 	const incrementUse = (product) => {
@@ -56,7 +58,7 @@ function Bin() {
 				getProducts();
 			}
 		} catch (error) {
-			console.log("Use count wasn't udpated...", error);
+			console.log("Use count wasn't updated...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -75,17 +77,18 @@ function Bin() {
 	const removeProduct = async () => {
 		closeModal();
 		setError('');
-		const id = productToRemove.id;
 		try {
-			const res = await axios.delete(
-				`http://localhost:8000/api/products/${id}/`
+			const filteredProducts = products.filter(
+				(product) => product !== productToRemove
 			);
-			if (res.status === 204) {
-				const filteredProducts = products.filter(
-					(product) => product !== productToRemove
-				);
-				setProducts(filteredProducts);
-				getProducts();
+			setProducts(filteredProducts);
+			const updatedBin = { title: bin.title, products: filteredProducts };
+			const res = await axios.put(
+				`http://localhost:8000/api/bins/${id}/`,
+				updatedBin
+			);
+			if (res.status === 200) {
+				setBin(updatedBin);
 			}
 		} catch (error) {
 			console.log("Product wasn't removed...", error);
@@ -97,8 +100,8 @@ function Bin() {
 
 	// ======================================================================= JSX
 	return (
-		<>
-			<Link to='/product-form'>Add Product</Link>
+		<div>
+			<Link to={`/bins/${bin.id}/add-product`}>Add Product</Link>
 
 			{products.map((product) => (
 				<Accordion key={product.id}>
@@ -133,7 +136,8 @@ function Bin() {
 								<li>Will Repurchase: {product.will_repurchase}</li>
 								<li>Notes: {product.notes}</li>
 							</ul>
-							<Link to={`/product-update-form/${product.id}`}>Edit</Link>
+							<Link to={`/products/${product.id}/edit`}>Edit</Link>
+
 							<Button
 								type='button'
 								variant='secondary'
@@ -164,7 +168,7 @@ function Bin() {
 			</Modal>
 
 			{error && error}
-		</>
+		</div>
 	);
 }
 

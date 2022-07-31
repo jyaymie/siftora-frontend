@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function BinUpdateForm() {
+function FormToEditBin() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
@@ -29,24 +28,28 @@ function BinUpdateForm() {
 
 	useEffect(() => {
 		getBin();
-	});
+	}, []);
 
-	// =================================================================== ADD BIN
+	// ================================================================ UPDATE BIN
 	const updateBin = async (e) => {
 		e.preventDefault();
 		setError('');
 		try {
 			const binToUpdate = {
+				id: id,
 				title: e.target.title.value,
+				products: bin.products,
 			};
-			const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
-				...binToUpdate,
-			});
+			console.log(binToUpdate);
+			const res = await axios.put(
+				`http://localhost:8000/api/bins/${id}/`,
+				binToUpdate
+			);
 			if (res.status === 200) {
 				navigate('/bins');
 			}
 		} catch (error) {
-			console.log("Bin wasn't added...", error);
+			console.log("Bin wasn't updated...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -55,20 +58,25 @@ function BinUpdateForm() {
 
 	// ======================================================================= JSX
 	return (
-		<>
+		<div>
 			<Form onSubmit={updateBin}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Title</Form.Label>
-					<Form.Control id='title' defaultValue={bin.title} required />
+					<Form.Control
+						id='title'
+						defaultValue={bin.title}
+						onClick={(e) => e.target.select()}
+						required
+					/>
 				</Form.Group>
 				<Link to='/bins'>Cancel</Link>
 				<Button type='submit' variant='primary'>
-					Update Bin
+					Submit
 				</Button>
 				{error && error}
 			</Form>
-		</>
+		</div>
 	);
 }
 
-export default BinUpdateForm;
+export default FormToEditBin;

@@ -29,7 +29,7 @@ function Products() {
 
 	useEffect(() => {
 		getProducts();
-	});
+	}, []);
 
 	// ========================================================== UPDATE USE COUNT
 	const incrementUse = (product) => {
@@ -45,8 +45,6 @@ function Products() {
 	};
 
 	const updateCount = async (product) => {
-		console.log(product);
-		console.log(product.id);
 		setError('');
 		try {
 			const res = await axios.put(
@@ -98,7 +96,7 @@ function Products() {
 
 	// ======================================================================= JSX
 	return (
-		<>
+		<div>
 			<Link to='/product-form'>Add Product</Link>
 
 			{products.map((product) => (
@@ -164,7 +162,7 @@ function Products() {
 			</Modal>
 
 			{error && error}
-		</>
+		</div>
 	);
 }
 

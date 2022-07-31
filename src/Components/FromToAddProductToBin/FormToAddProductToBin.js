@@ -1,13 +1,34 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function ProductForm() {
+function FormToAddProductToBin() {
+	const { id } = useParams();
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
-	const [products, setProducts] = useState([]);
+	const [bin, setBin] = useState([]);
+
+	// =================================================================== GET BIN
+	const getBin = async () => {
+		setError('');
+		try {
+			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			if (res.status === 200) {
+				setBin(res.data);
+			}
+		} catch (error) {
+			console.log("Bin wasn't retrieved...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
+	useEffect(() => {
+		getBin();
+	}, []);
 
 	// =============================================================== ADD PRODUCT
 	const addProduct = async (e) => {
@@ -27,6 +48,7 @@ function ProductForm() {
 		}
 		try {
 			const productToAdd = {
+				bins: [{ id: id, title: bin.title }],
 				brand: e.target.brand.value,
 				name: e.target.name.value,
 				shade: e.target.shade.value,
@@ -40,14 +62,15 @@ function ProductForm() {
 				will_repurchase: e.target.will_repurchase.value,
 				notes: e.target.will_repurchase.value,
 			};
-			console.log(productToAdd);
-			const res = await axios.post('http://localhost:8000/api/products/', {
-				...productToAdd,
-			});
+			console.log('producttoadd', productToAdd);
+			const res = await axios.post(
+				'http://localhost:8000/api/products/',
+				productToAdd
+			);
 			if (res.status === 201) {
-				let updatedProducts = [...products];
-				updatedProducts.push(productToAdd);
-				setProducts(updatedProducts);
+				let updatedBin = bin;
+				updatedBin.products.push(productToAdd);
+				setBin(updatedBin);
 			}
 		} catch (error) {
 			console.log("Product wasn't added...", error);
@@ -55,12 +78,30 @@ function ProductForm() {
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
-		navigate('/products');
+		// =========================================== UPDATE BIN WITH ADDED PRODUCT
+		const updateBin = async () => {
+			setError('');
+			try {
+				const res = await axios.put(
+					`http://localhost:8000/api/bins/${id}/`,
+					bin
+				);
+				if (res.status === 200) {
+					navigate(`/bins/${id}`);
+				}
+			} catch (error) {
+				console.log("Bin wasn't updated...", error);
+				setError(
+					'Hm, something went wrong. Please try again or contact support@siftora.com.'
+				);
+			}
+		};
+		updateBin();
 	};
 
 	// ======================================================================= JSX
 	return (
-		<>
+		<div>
 			<Form onSubmit={addProduct}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Brand</Form.Label>
@@ -97,8 +138,8 @@ function ProductForm() {
 				</Button>
 			</Form>
 			{error && error}
-		</>
+		</div>
 	);
 }
 
-export default ProductForm;
+export default FormToAddProductToBin;

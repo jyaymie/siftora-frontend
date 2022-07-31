@@ -4,7 +4,7 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function ProductUpdateForm() {
+function FormToEditProduct() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
@@ -28,9 +28,9 @@ function ProductUpdateForm() {
 
 	useEffect(() => {
 		getProduct();
-	});
+	}, []);
 
-	// =============================================================== ADD PRODUCT
+	// ============================================================ UPDATE PRODUCT
 	const updateProduct = async (e) => {
 		e.preventDefault();
 		setError('');
@@ -61,15 +61,15 @@ function ProductUpdateForm() {
 				will_repurchase: e.target.will_repurchase.value,
 				notes: e.target.will_repurchase.value,
 			};
-			console.log(productToUpdate);
-			const res = await axios.put(`http://localhost:8000/api/products/${id}/`, {
-				...productToUpdate,
-			});
+			const res = await axios.put(
+				`http://localhost:8000/api/products/${id}/`,
+				productToUpdate
+			);
 			if (res.status === 200) {
 				navigate('/products');
 			}
 		} catch (error) {
-			console.log("Product wasn't added...", error);
+			console.log("Product wasn't updated...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -78,7 +78,7 @@ function ProductUpdateForm() {
 
 	// ======================================================================= JSX
 	return (
-		<>
+		<div>
 			<Form onSubmit={updateProduct}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Brand</Form.Label>
@@ -133,12 +133,12 @@ function ProductUpdateForm() {
 				</Form.Group>
 				<Link to='/products'>Cancel</Link>
 				<Button type='submit' variant='primary'>
-					Update Product
+					Submit
 				</Button>
 				{error && error}
 			</Form>
-		</>
+		</div>
 	);
 }
 
-export default ProductUpdateForm;
+export default FormToEditProduct;

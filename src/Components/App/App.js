@@ -4,11 +4,12 @@ import { Routes, Route, Link } from 'react-router-dom';
 import Home from '../Home/Home';
 import Bins from '../Bins/Bins';
 import Bin from '../Bin/Bin';
-import BinForm from '../BinForm/BinForm';
-import BinUpdateForm from '../BinUpdateForm/BinUpdateForm';
-import ProductForm from '../ProductForm/ProductForm';
+import FormToAddBin from '../FormToAddBin/FormToAddBin';
+import FormToEditBin from '../FormToEditBin/FormToEditBin';
 import Products from '../Products/Products';
-import ProductUpdateForm from '../ProductUpdateForm/ProductUpdateForm';
+import FormToAddProduct from '../FormToAddProduct/FormToAddProduct';
+import FormToAddProductToBin from '../FromToAddProductToBin/FormToAddProductToBin';
+import FormToEditProduct from '../FormToEditProduct/FormToEditProduct';
 
 function App() {
 	return (
@@ -21,15 +22,16 @@ function App() {
 					<Route path='/' element={<Home />}></Route>
 					<Route path='/bins' element={<Bins />}></Route>
 					<Route path='/bins/:id' element={<Bin />}></Route>
-					<Route path='/bin-form' element={<BinForm />}></Route>
-					<Route
-						path='/bin-update-form/:id'
-						element={<BinUpdateForm />}></Route>
-					<Route path='/product-form' element={<ProductForm />}></Route>
-					<Route
-						path='/product-update-form/:id'
-						element={<ProductUpdateForm />}></Route>
+					<Route path='/add-bin' element={<FormToAddBin />}></Route>
+					<Route path='/bins/:id/edit' element={<FormToEditBin />}></Route>
 					<Route path='/products' element={<Products />}></Route>
+					<Route path='/add-product' element={<FormToAddProduct />}></Route>
+					<Route
+						path='/bins/:id/add-product'
+						element={<FormToAddProductToBin />}></Route>
+					<Route
+						path='/products/:id/edit'
+						element={<FormToEditProduct />}></Route>
 				</Routes>
 			</main>
 		</div>

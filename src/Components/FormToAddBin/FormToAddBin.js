@@ -4,7 +4,7 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
-function BinForm() {
+function FormToAddBin() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [bins, setBins] = useState([]);
@@ -14,13 +14,13 @@ function BinForm() {
 		e.preventDefault();
 		setError('');
 		try {
-			const binToAdd = { title: e.target.title.value };
+			const binToAdd = { title: e.target.title.value, products: [] };
 			const res = await axios.post('http://localhost:8000/api/bins/', binToAdd);
 			if (res.status === 201) {
 				let updatedBins = [...bins];
 				updatedBins.push(binToAdd);
 				setBins(updatedBins);
-				navigate('/bins'); ///////////////// RECONSIDER WHERE TO DIRECT THE USER
+				navigate('/bins');
 			}
 		} catch (error) {
 			console.log("Bin wasn't add...", error);
@@ -32,20 +32,20 @@ function BinForm() {
 
 	// ======================================================================= JSX
 	return (
-		<>
+		<div>
 			<Form onSubmit={addBin}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Title</Form.Label>
 					<Form.Control id='title' required />
 				</Form.Group>
-				<Link to='/'>Cancel</Link>
+				<Link to='/bins'>Cancel</Link>
 				<Button type='submit' variant='primary'>
 					Add
 				</Button>
 			</Form>
 			{error && error}
-		</>
+		</div>
 	);
 }
 
-export default BinForm;
+export default FormToAddBin;

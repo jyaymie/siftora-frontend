@@ -29,7 +29,7 @@ function Bins() {
 
 	useEffect(() => {
 		getBins();
-	});
+	}, []);
 
 	// ========================================================== SHOW/CLOSE MODAL
 	const showModal = (bin) => {
@@ -61,8 +61,8 @@ function Bins() {
 
 	// ======================================================================= JSX
 	return (
-		<>
-			<Link to='/bin-form'>Add Bin</Link>
+		<div>
+			<Link to='/add-bin'>Add Bin</Link>
 
 			{bins.map((bin) => (
 				<Card style={{ width: '200px' }} key={bin.id}>
@@ -72,7 +72,7 @@ function Bins() {
 								{bin.title} ({bin.product_count})
 							</Card.Text>
 						</Link>
-						<Link to={`/bin-update-form/${bin.id}`}>Edit</Link>
+						<Link to={`/bins/${bin.id}/edit`}>Edit</Link>
 						<Button
 							type='button'
 							variant='secondary'
@@ -101,7 +101,7 @@ function Bins() {
 			</Modal>
 
 			{error && error}
-		</>
+		</div>
 	);
 }
 
