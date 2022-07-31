@@ -17,10 +17,14 @@ function SigninPage() {
 			setError('');
 			try {
 				const res = await axios
-					.post('https://siftora.herokuapp.com/admin/auth/user/', {
-						username: username,
-						password: password,
-					})
+					.post(
+						'https://siftora.herokuapp.com/admin/auth/user/',
+						{
+							username: username,
+							password: password,
+						},
+						{ withCredentials: true }
+					)
 					.then((res) => {
 						setIsLoggedIn(true);
 						navigate('/');
@@ -39,7 +43,7 @@ function SigninPage() {
 		<div>
 			<p>So good to have you back!</p>
 			<Form onSubmit={handleSignUp}>
-				<Form.Group className='mb-3' controlId='formBasicEmail'>
+				<Form.Group className='mb-3'>
 					<Form.Label htmlFor='username'>Username</Form.Label>
 					<Form.Control
 						type='text'
@@ -49,7 +53,7 @@ function SigninPage() {
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3' controlId='formBasicPassword'>
+				<Form.Group className='mb-3'>
 					<Form.Label htmlFor='password'>Password</Form.Label>
 					<Form.Control
 						type='password'
@@ -59,7 +63,7 @@ function SigninPage() {
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3' controlId='formBasicCheckbox'></Form.Group>
+				<Form.Group className='mb-3'></Form.Group>
 				<Button variant='primary' type='submit'>
 					Log In
 				</Button>

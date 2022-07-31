@@ -15,7 +15,7 @@ function Dashboard() {
 	const getBins = async () => {
 		setError('');
 		try {
-			const res = await axios.get('https://siftora.herokuapp.com/api/bins/');
+			const res = await axios.get('http://localhost:8000/api/bins/');
 			if (res.status === 200) {
 				setBins(res.data);
 			}

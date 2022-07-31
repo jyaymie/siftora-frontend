@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import CSRFToken from '../CSRFToken';
 
 function SignupPage() {
 	const navigate = useNavigate();
@@ -12,17 +13,35 @@ function SignupPage() {
 	const [confirmedPassword, setConfirmedPassword] = useState('');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+	const getCookie = (name) => {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i].trim();
+				if (cookie.substring(0, name.length + 1) === name + '=') {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	};
+
 	const handleSignUp = (e) => {
 		e.preventDefault();
 		const post = async () => {
 			setError('');
 			try {
 				const res = await axios
-					.post('https://siftora.herokuapp.com/admin/auth/user/add/', {
-						username: username,
-						password: password,
-						re_password: confirmedPassword,
-					})
+					.post(
+						'http://localhost:8000/api/signup/',
+						{
+							username: username,
+							password: password,
+							password2: password,
+						}
+					)
 					.then((res) => {
 						setIsLoggedIn(true);
 						navigate('/');
@@ -41,7 +60,8 @@ function SignupPage() {
 		<div>
 			<p>Join the SIFTORA community!</p>
 			<Form onSubmit={handleSignUp}>
-				<Form.Group className='mb-3' controlId='formBasicEmail'>
+				<CSRFToken />
+				<Form.Group className='mb-3'>
 					<Form.Label htmlFor='username'>Username</Form.Label>
 					<Form.Control
 						type='text'
@@ -51,7 +71,7 @@ function SignupPage() {
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3' controlId='formBasicPassword'>
+				<Form.Group className='mb-3'>
 					<Form.Label htmlFor='password'>Password</Form.Label>
 					<Form.Control
 						type='password'
@@ -63,18 +83,18 @@ function SignupPage() {
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3' controlId='formBasicPassword'>
+				<Form.Group className='mb-3'>
 					<Form.Label htmlFor='password'>Confirm Password</Form.Label>
 					<Form.Control
 						type='password'
 						id='password'
-						minLength='8'
+						minlength='5'
 						value={confirmedPassword}
 						onChange={(e) => setConfirmedPassword(e.target.value)}
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3' controlId='formBasicCheckbox'></Form.Group>
+				<Form.Group className='mb-3'></Form.Group>
 				<Button variant='primary' type='submit'>
 					Sign Up
 				</Button>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -104,7 +106,13 @@ function Bin() {
 	return (
 		<div>
 			<Link to={`/bins/${bin.id}/add-product`}>Add Product</Link>
-
+			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
+				<Dropdown.Item>Purchase Date</Dropdown.Item>
+				<Dropdown.Item>Price</Dropdown.Item>
+				<Dropdown.Item>Open Date</Dropdown.Item>
+				<Dropdown.Item>Expiry Date</Dropdown.Item>
+				<Dropdown.Item># of Uses</Dropdown.Item>
+			</DropdownButton>
 			{products.map((product) => (
 				<Accordion key={product.id}>
 					<Accordion.Item eventKey='0'>
