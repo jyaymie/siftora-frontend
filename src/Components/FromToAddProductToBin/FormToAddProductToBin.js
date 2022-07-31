@@ -14,7 +14,9 @@ function FormToAddProductToBin() {
 	const getBin = async () => {
 		setError('');
 		try {
-			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.get(
+				`https://siftora.herokuapp.com/api/bins/${id}/`
+			);
 			if (res.status === 200) {
 				setBin(res.data);
 			}
@@ -48,7 +50,6 @@ function FormToAddProductToBin() {
 		}
 		try {
 			const productToAdd = {
-				bins: [{ id: id, title: bin.title }],
 				brand: e.target.brand.value,
 				name: e.target.name.value,
 				shade: e.target.shade.value,
@@ -64,12 +65,12 @@ function FormToAddProductToBin() {
 			};
 			console.log('producttoadd', productToAdd);
 			const res = await axios.post(
-				'http://localhost:8000/api/products/',
+				'https://siftora.herokuapp.com/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {
 				let updatedBin = bin;
-				updatedBin.products.push(productToAdd);
+				updatedBin.products.push(res.data);
 				setBin(updatedBin);
 			}
 		} catch (error) {
@@ -81,10 +82,15 @@ function FormToAddProductToBin() {
 		// =========================================== UPDATE BIN WITH ADDED PRODUCT
 		const updateBin = async () => {
 			setError('');
+			console.log('updatedbin', bin);
 			try {
 				const res = await axios.put(
-					`http://localhost:8000/api/bins/${id}/`,
-					bin
+					`https://siftora.herokuapp.com/api/bins/${id}/`,
+					{
+						id: id,
+						title: bin.title,
+						products: bin.products,
+					}
 				);
 				if (res.status === 200) {
 					navigate(`/bins/${id}`);

@@ -15,7 +15,9 @@ function Products() {
 	const getProducts = async () => {
 		setError('');
 		try {
-			const res = await axios.get('http://localhost:8000/api/products/');
+			const res = await axios.get(
+				'https://siftora.herokuapp.com/api/products/'
+			);
 			if (res.status === 200) {
 				setProducts(res.data);
 			}
@@ -48,7 +50,7 @@ function Products() {
 		setError('');
 		try {
 			const res = await axios.put(
-				`http://localhost:8000/api/products/${product.id}/`,
+				`https://siftora.herokuapp.com/api/products/${product.id}/`,
 				product
 			);
 			if (res.status === 200) {
@@ -77,7 +79,7 @@ function Products() {
 		const id = productToDelete.id;
 		try {
 			const res = await axios.delete(
-				`http://localhost:8000/api/products/${id}/`
+				`https://siftora.herokuapp.com/api/products/${id}/`
 			);
 			if (res.status === 204) {
 				const filteredProducts = products.filter(
@@ -97,7 +99,7 @@ function Products() {
 	// ======================================================================= JSX
 	return (
 		<div>
-			<Link to='/product-form'>Add Product</Link>
+			<Link to='/add-product'>Add Product</Link>
 
 			{products.map((product) => (
 				<Accordion key={product.id}>
@@ -132,7 +134,7 @@ function Products() {
 								<li>Will Repurchase: {product.will_repurchase}</li>
 								<li>Notes: {product.notes}</li>
 							</ul>
-							<Link to={`/product-update-form/${product.id}`}>Edit</Link>
+							<Link to={`/products/${product.id}/edit`}>Edit</Link>
 							<Button
 								type='button'
 								variant='secondary'

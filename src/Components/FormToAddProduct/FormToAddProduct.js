@@ -27,7 +27,6 @@ function FormToAddProduct() {
 		}
 		try {
 			const productToAdd = {
-				bins: [],
 				brand: e.target.brand.value,
 				name: e.target.name.value,
 				shade: e.target.shade.value,
@@ -43,7 +42,7 @@ function FormToAddProduct() {
 			};
 			console.log(productToAdd);
 			const res = await axios.post(
-				'http://localhost:8000/api/products/',
+				'https://siftora.herokuapp.com/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {

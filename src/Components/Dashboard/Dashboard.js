@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Bins() {
+function Dashboard() {
 	const [error, setError] = useState('');
 	const [bins, setBins] = useState([]);
 	const [show, setShow] = useState(false);
@@ -15,7 +15,7 @@ function Bins() {
 	const getBins = async () => {
 		setError('');
 		try {
-			const res = await axios.get('http://localhost:8000/api/bins/');
+			const res = await axios.get('https://siftora.herokuapp.com/api/bins/');
 			if (res.status === 200) {
 				setBins(res.data);
 			}
@@ -45,7 +45,9 @@ function Bins() {
 		setError('');
 		const id = binToDelete.id;
 		try {
-			const res = await axios.delete(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.delete(
+				`https://siftora.herokuapp.com/api/bins/${id}/`
+			);
 			if (res.status === 204) {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);
@@ -62,7 +64,17 @@ function Bins() {
 	// ======================================================================= JSX
 	return (
 		<div>
-			<Link to='/add-bin'>Add Bin</Link>
+			<ul>
+				<li>
+					<Link to='/products'>My Products</Link>
+				</li>
+				<li>
+					<Link to='/add-bin'>Add Bin</Link>
+				</li>
+				<li>
+					<Link to='/add-product'>Add Product</Link>
+				</li>
+			</ul>
 
 			{bins.map((bin) => (
 				<Card style={{ width: '200px' }} key={bin.id}>
@@ -105,4 +117,4 @@ function Bins() {
 	);
 }
 
-export default Bins;
+export default Dashboard;

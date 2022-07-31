@@ -14,7 +14,9 @@ function FormToEditBin() {
 	const getBin = async () => {
 		setError('');
 		try {
-			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.get(
+				`https://siftora.herokuapp.com/api/bins/${id}/`
+			);
 			if (res.status === 200) {
 				setBin(res.data);
 			}
@@ -42,7 +44,7 @@ function FormToEditBin() {
 			};
 			console.log(binToUpdate);
 			const res = await axios.put(
-				`http://localhost:8000/api/bins/${id}/`,
+				`https://siftora.herokuapp.com/api/bins/${id}/`,
 				binToUpdate
 			);
 			if (res.status === 200) {

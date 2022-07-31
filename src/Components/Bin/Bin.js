@@ -17,7 +17,9 @@ function Bin() {
 	const getProducts = async () => {
 		setError('');
 		try {
-			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.get(
+				`https://siftora.herokuapp.com/api/bins/${id}/`
+			);
 			if (res.status === 200) {
 				setBin(res.data);
 				setProducts(res.data.products);
@@ -51,7 +53,7 @@ function Bin() {
 		setError('');
 		try {
 			const res = await axios.put(
-				`http://localhost:8000/api/products/${product.id}/`,
+				`https://siftora.herokuapp.com/api/products/${product.id}/`,
 				product
 			);
 			if (res.status === 200) {
@@ -84,7 +86,7 @@ function Bin() {
 			setProducts(filteredProducts);
 			const updatedBin = { title: bin.title, products: filteredProducts };
 			const res = await axios.put(
-				`http://localhost:8000/api/bins/${id}/`,
+				`https://siftora.herokuapp.com/api/bins/${id}/`,
 				updatedBin
 			);
 			if (res.status === 200) {

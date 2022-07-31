@@ -14,8 +14,11 @@ function FormToAddBin() {
 		e.preventDefault();
 		setError('');
 		try {
-			const binToAdd = { title: e.target.title.value, products: [] };
-			const res = await axios.post('http://localhost:8000/api/bins/', binToAdd);
+			const binToAdd = { title: e.target.title.value };
+			const res = await axios.post(
+				'https://siftora.herokuapp.com/api/bins/',
+				binToAdd
+			);
 			if (res.status === 201) {
 				let updatedBins = [...bins];
 				updatedBins.push(binToAdd);
