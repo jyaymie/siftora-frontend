@@ -18,8 +18,8 @@ function Bin() {
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
 
-	// ============================================================== GET PRODUCTS
-	const getProducts = async () => {
+	// ========================================================== GET BIN PRODUCTS
+	const getBinProducts = async () => {
 		setError('');
 		try {
 			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
@@ -28,7 +28,7 @@ function Bin() {
 				setBinProducts(res.data.products);
 			}
 		} catch (error) {
-			console.log("Products weren't retrieved...", error);
+			console.log("Bin products weren't retrieved...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -36,7 +36,7 @@ function Bin() {
 	};
 
 	useEffect(() => {
-		getProducts();
+		getBinProducts();
 	}, []);
 
 	// ====================================================== SET DROPDOWN OPTIONS
@@ -46,8 +46,6 @@ function Bin() {
 			const res = await axios.get(`http://localhost:8000/api/products/`);
 			if (res.status === 200) {
 				setProducts(res.data);
-				console.log('binProducts', binProducts);
-				console.log('products', products);
 				// In the Add Product dropdown menu,
 				// list all products that are not already in the bin
 				const remainingProducts = products.filter((product) => {
@@ -57,12 +55,10 @@ function Bin() {
 						) === -1
 					);
 				});
-				console.log('remainingProducts', remainingProducts);
 				setDropdownProducts(remainingProducts);
-				console.log('dropdownProducts', dropdownProducts);
 			}
 		} catch (error) {
-			console.log("Products weren't retrieved...", error);
+			console.log("Dropdown products weren't retrieved...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -90,7 +86,7 @@ function Bin() {
 				product
 			);
 			if (res.status === 200) {
-				getProducts();
+				getBinProducts();
 			}
 		} catch (error) {
 			console.log("Use count wasn't updated...", error);
@@ -133,7 +129,7 @@ function Bin() {
 		}
 	};
 
-	// =========================================== UPDATE BIN WITH ADDED PRODUCT
+	// ============================================= UPDATE BIN WITH ADDED PRODUCT
 	const addProductToBin = async (product) => {
 		setError('');
 		try {
@@ -144,8 +140,7 @@ function Bin() {
 				products: binProducts,
 			});
 			if (res.status === 200) {
-				return;
-				// Close dropdown menu
+				getBinProducts();
 			}
 		} catch (error) {
 			console.log("Bin wasn't updated...", error);
