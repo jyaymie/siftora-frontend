@@ -77,6 +77,7 @@ function FormToAddProductToBin() {
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
+
 		// =========================================== UPDATE BIN WITH ADDED PRODUCT
 		const updateBin = async () => {
 			setError('');

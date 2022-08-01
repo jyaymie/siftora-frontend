@@ -1,3 +1,4 @@
+import './Bin.css';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +13,8 @@ function Bin() {
 	const [error, setError] = useState('');
 	const [bin, setBin] = useState({});
 	const [products, setProducts] = useState([]);
+	const [binProducts, setBinProducts] = useState([]);
+	const [dropdownProducts, setDropdownProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
 
@@ -22,7 +25,7 @@ function Bin() {
 			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
-				setProducts(res.data.products);
+				setBinProducts(res.data.products);
 			}
 		} catch (error) {
 			console.log("Products weren't retrieved...", error);
@@ -35,6 +38,36 @@ function Bin() {
 	useEffect(() => {
 		getProducts();
 	}, []);
+
+	// ====================================================== SET DROPDOWN OPTIONS
+	const setDropdownOptions = async () => {
+		setError('');
+		try {
+			const res = await axios.get(`http://localhost:8000/api/products/`);
+			if (res.status === 200) {
+				setProducts(res.data);
+				console.log('binProducts', binProducts);
+				console.log('products', products);
+				// In the Add Product dropdown menu,
+				// list all products that are not already in the bin
+				const remainingProducts = products.filter((product) => {
+					return (
+						binProducts.findIndex(
+							(binProduct) => binProduct.id === product.id
+						) === -1
+					);
+				});
+				console.log('remainingProducts', remainingProducts);
+				setDropdownProducts(remainingProducts);
+				console.log('dropdownProducts', dropdownProducts);
+			}
+		} catch (error) {
+			console.log("Products weren't retrieved...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
 
 	// ========================================================== UPDATE USE COUNT
 	const incrementUse = (product) => {
@@ -80,11 +113,11 @@ function Bin() {
 		closeModal();
 		setError('');
 		try {
-			const filteredProducts = products.filter(
+			const filteredBinProducts = binProducts.filter(
 				(product) => product !== productToRemove
 			);
-			setProducts(filteredProducts);
-			const updatedBin = { title: bin.title, products: filteredProducts };
+			setBinProducts(filteredBinProducts);
+			const updatedBin = { title: bin.title, products: filteredBinProducts };
 			const res = await axios.put(
 				`http://localhost:8000/api/bins/${id}/`,
 				updatedBin
@@ -100,25 +133,45 @@ function Bin() {
 		}
 	};
 
-	const handleSort = (e) => {
-		e.preventDefault();
+	// =========================================== UPDATE BIN WITH ADDED PRODUCT
+	const addProductToBin = async (product) => {
+		setError('');
+		try {
+			binProducts.push(product);
+			const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
+				id: bin.id,
+				title: bin.title,
+				products: binProducts,
+			});
+			if (res.status === 200) {
+				return;
+				// Close dropdown menu
+			}
+		} catch (error) {
+			console.log("Bin wasn't updated...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
 	};
 
 	// ======================================================================= JSX
-
 	return (
 		<div>
 			<Link to={`/bins/${bin.id}/add-product`}>Add Product</Link>
-			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
-				<Dropdown.Item onClick={handleSort} id='purchase-date'>
-					Purchase Date
-				</Dropdown.Item>
-				<Dropdown.Item onClick={handleSort}>Price</Dropdown.Item>
-				<Dropdown.Item onClick={handleSort}>Open Date</Dropdown.Item>
-				<Dropdown.Item onClick={handleSort}>Expiry Date</Dropdown.Item>
-				<Dropdown.Item onClick={handleSort}># of Uses</Dropdown.Item>
+			<DropdownButton
+				id='dropdown-basic-button'
+				title='Add Product'
+				onClick={setDropdownOptions}>
+				{dropdownProducts.map((product) => (
+					<Dropdown.Item
+						key={product.id}
+						onClick={() =>
+							addProductToBin(product)
+						}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
+				))}
 			</DropdownButton>
-			{products.map((product) => (
+			{binProducts.map((product) => (
 				<Accordion key={product.id}>
 					<Accordion.Item eventKey='0'>
 						<Accordion.Header>
