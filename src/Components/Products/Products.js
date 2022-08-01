@@ -2,8 +2,50 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
+
+const DROPDOWN_OPTIONS = [
+	{ id: 'brand', name: 'Brand', params: 'brand' },
+	{ id: 'name', name: 'Product Name', params: 'name' },
+	{ id: 'purchase_date', name: 'Recently Purchased', params: 'purchase_date' },
+	{ id: 'price', name: 'Price (Low to High)', params: 'price' },
+	{ id: 'price_desc', name: 'Price (High to Low)', params: '-price' },
+	{ id: 'open_date', name: 'Recent Opened', params: 'open_date' },
+	{ id: 'expiry_date', name: 'Expiring Soon', params: 'expiry_date' },
+	{ id: 'use_count', name: '# of Uses (Low to High)', params: 'use_count' },
+	{
+		id: 'use_count_desc',
+		name: '# of Uses (High to Low)',
+		params: '-use_count',
+	},
+];
+
+// function getQueryParams() {
+// 	const urlSearchParams = new URLSearchParams(window.location.search);
+// 	const params = Object.fromEntries(urlSearchParams.entries());
+// 	return params;
+// }
+
+// Params parameter will be an object of query parameters
+// Ex. { sort: "use_count", order: "asc" }
+function updateQueryParams(params) {
+	const url = new URL(window.location.href);
+
+	// Iterate through each property
+	for (const key in params) {
+		if (params[key] !== undefined) {
+			// and set each as a query parameter
+			// Ex. '...products/?sort=use_count&order=asc'
+			url.searchParams.set(key, params[key]);
+		}
+	}
+
+	// Update the URL without reloading the page
+	window.history.pushState({}, '', url.toString());
+}
 
 function Products() {
 	const [error, setError] = useState('');
@@ -15,9 +57,11 @@ function Products() {
 	const getProducts = async () => {
 		setError('');
 		try {
-			const res = await axios.get(
-				'https://siftora.herokuapp.com/api/products/'
-			);
+			// Use window.location.search to save the last used query parameters
+			// This way, when a product's use count is updated,
+			// the products will remain sorted by whatever option the user last chose
+			const url = `http://localhost:8000/api/products/${window.location.search}`;
+			const res = await axios.get(url);
 			if (res.status === 200) {
 				setProducts(res.data);
 			}
@@ -50,14 +94,14 @@ function Products() {
 		setError('');
 		try {
 			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/products/${product.id}/`,
+				`http://localhost:8000/api/products/${product.id}/`,
 				product
 			);
 			if (res.status === 200) {
 				getProducts();
 			}
 		} catch (error) {
-			console.log("Use count wasn't udpated...", error);
+			console.log("Use count wasn't updated...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -79,7 +123,7 @@ function Products() {
 		const id = productToDelete.id;
 		try {
 			const res = await axios.delete(
-				`https://siftora.herokuapp.com/api/products/${id}/`
+				`http://localhost:8000/api/products/${id}/`
 			);
 			if (res.status === 204) {
 				const filteredProducts = products.filter(
@@ -96,11 +140,39 @@ function Products() {
 		}
 	};
 
+	// ============================================================= SORT PRODUCTS
+	const sortProducts = async (option) => {
+		const sortName = option.id;
+		setError('');
+		try {
+			const res = await axios.get(
+				`http://localhost:8000/api/products/?sort=${option.params}`
+			);
+			if (res.status === 200) {
+				updateQueryParams({
+					sort: `${option.params}`,
+				});
+				setProducts(res.data);
+			}
+		} catch (error) {
+			console.log(`Products weren't sorted by ${sortName}...`, error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
 	// ======================================================================= JSX
 	return (
 		<div>
 			<Link to='/add-product'>Add Product</Link>
-
+			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
+				{DROPDOWN_OPTIONS.map((option) => (
+					<Dropdown.Item onClick={() => sortProducts(option)} key={option.id}>
+						{option.name}
+					</Dropdown.Item>
+				))}
+			</DropdownButton>
 			{products.map((product) => (
 				<Accordion key={product.id}>
 					<Accordion.Item eventKey='0'>

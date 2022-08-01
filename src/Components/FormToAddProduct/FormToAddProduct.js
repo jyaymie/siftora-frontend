@@ -42,7 +42,7 @@ function FormToAddProduct() {
 			};
 			console.log(productToAdd);
 			const res = await axios.post(
-				'https://siftora.herokuapp.com/api/products/',
+				'http://localhost:8000/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {

@@ -15,6 +15,8 @@ function Dashboard() {
 	const getBins = async () => {
 		setError('');
 		try {
+			console.log((await axios.get('http://localhost:8000/api/whoami/')).data);
+
 			const res = await axios.get('http://localhost:8000/api/bins/');
 			if (res.status === 200) {
 				setBins(res.data);
@@ -45,9 +47,7 @@ function Dashboard() {
 		setError('');
 		const id = binToDelete.id;
 		try {
-			const res = await axios.delete(
-				`https://siftora.herokuapp.com/api/bins/${id}/`
-			);
+			const res = await axios.delete(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 204) {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);

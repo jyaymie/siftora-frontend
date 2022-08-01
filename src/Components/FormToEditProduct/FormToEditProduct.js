@@ -14,9 +14,7 @@ function FormToEditProduct() {
 	const getProduct = async () => {
 		setError('');
 		try {
-			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/products/${id}/`
-			);
+			const res = await axios.get(`http://localhost:8000/api/products/${id}/`);
 			if (res.status === 200) {
 				setProduct(res.data);
 			}
@@ -64,7 +62,7 @@ function FormToEditProduct() {
 				notes: e.target.will_repurchase.value,
 			};
 			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/products/${id}/`,
+				`http://localhost:8000/api/products/${id}/`,
 				productToUpdate
 			);
 			if (res.status === 200) {

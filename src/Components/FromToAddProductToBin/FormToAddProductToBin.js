@@ -14,9 +14,7 @@ function FormToAddProductToBin() {
 	const getBin = async () => {
 		setError('');
 		try {
-			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/bins/${id}/`
-			);
+			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
 			}
@@ -65,7 +63,7 @@ function FormToAddProductToBin() {
 			};
 			console.log('producttoadd', productToAdd);
 			const res = await axios.post(
-				'https://siftora.herokuapp.com/api/products/',
+				'http://localhost:8000/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {
@@ -84,14 +82,11 @@ function FormToAddProductToBin() {
 			setError('');
 			console.log('updatedbin', bin);
 			try {
-				const res = await axios.put(
-					`https://siftora.herokuapp.com/api/bins/${id}/`,
-					{
-						id: id,
-						title: bin.title,
-						products: bin.products,
-					}
-				);
+				const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
+					id: id,
+					title: bin.title,
+					products: bin.products,
+				});
 				if (res.status === 200) {
 					navigate(`/bins/${id}`);
 				}

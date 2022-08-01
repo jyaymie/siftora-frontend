@@ -19,9 +19,7 @@ function Bin() {
 	const getProducts = async () => {
 		setError('');
 		try {
-			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/bins/${id}/`
-			);
+			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
 				setProducts(res.data.products);
@@ -55,7 +53,7 @@ function Bin() {
 		setError('');
 		try {
 			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/products/${product.id}/`,
+				`http://localhost:8000/api/products/${product.id}/`,
 				product
 			);
 			if (res.status === 200) {
@@ -88,7 +86,7 @@ function Bin() {
 			setProducts(filteredProducts);
 			const updatedBin = { title: bin.title, products: filteredProducts };
 			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/bins/${id}/`,
+				`http://localhost:8000/api/bins/${id}/`,
 				updatedBin
 			);
 			if (res.status === 200) {
@@ -102,16 +100,23 @@ function Bin() {
 		}
 	};
 
+	const handleSort = (e) => {
+		e.preventDefault();
+	};
+
 	// ======================================================================= JSX
+
 	return (
 		<div>
 			<Link to={`/bins/${bin.id}/add-product`}>Add Product</Link>
 			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
-				<Dropdown.Item>Purchase Date</Dropdown.Item>
-				<Dropdown.Item>Price</Dropdown.Item>
-				<Dropdown.Item>Open Date</Dropdown.Item>
-				<Dropdown.Item>Expiry Date</Dropdown.Item>
-				<Dropdown.Item># of Uses</Dropdown.Item>
+				<Dropdown.Item onClick={handleSort} id='purchase-date'>
+					Purchase Date
+				</Dropdown.Item>
+				<Dropdown.Item onClick={handleSort}>Price</Dropdown.Item>
+				<Dropdown.Item onClick={handleSort}>Open Date</Dropdown.Item>
+				<Dropdown.Item onClick={handleSort}>Expiry Date</Dropdown.Item>
+				<Dropdown.Item onClick={handleSort}># of Uses</Dropdown.Item>
 			</DropdownButton>
 			{products.map((product) => (
 				<Accordion key={product.id}>

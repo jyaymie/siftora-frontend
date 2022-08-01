@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -7,28 +8,48 @@ import Button from 'react-bootstrap/Button';
 function SigninPage() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const { setUser } = useContext(DataContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-	const handleSignUp = (e) => {
+	const getCookie = (name) => {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i].trim();
+				if (cookie.substring(0, name.length + 1) === name + '=') {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	};
+
+	const signInUser = (e) => {
 		e.preventDefault();
 		const post = async () => {
 			setError('');
 			try {
-				const res = await axios
-					.post(
-						'https://siftora.herokuapp.com/admin/auth/user/',
-						{
-							username: username,
-							password: password,
-						},
-						{ withCredentials: true }
-					)
-					.then((res) => {
-						setIsLoggedIn(true);
-						navigate('/');
-					});
+				const res = await axios.post(
+					'http://localhost:8000/api/signin/',
+					{
+						username: username,
+						password: password,
+					},
+					{
+						// headers: {
+						// 	'Content-Type': 'application/json',
+						// 	'X-CSRFToken': getCookie('csrftoken'),
+						// },
+						// withCredentials: true,
+					}
+				);
+				if (res.status === 200) {
+					setUser(res.data);
+					navigate('/bins');
+				}
 			} catch (error) {
 				console.log("User wasn't created...", error);
 				setError(
@@ -42,7 +63,7 @@ function SigninPage() {
 	return (
 		<div>
 			<p>So good to have you back!</p>
-			<Form onSubmit={handleSignUp}>
+			<Form onSubmit={signInUser}>
 				<Form.Group className='mb-3'>
 					<Form.Label htmlFor='username'>Username</Form.Label>
 					<Form.Control

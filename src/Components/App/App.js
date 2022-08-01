@@ -1,7 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { DataContext } from '../../dataContext';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import About from '../About/About';
 import SignupPage from '../SignupPage/SignupPage';
 import SigninPage from '../SigninPage/SigninPage';
@@ -15,42 +17,70 @@ import FormToEditProduct from '../FormToEditProduct/FormToEditProduct';
 import FormToAddProductToBin from '../FromToAddProductToBin/FormToAddProductToBin';
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState('');
-	
+	const navigate = useNavigate();
+	const [error, setError] = useState('');
+	const [user, setUser] = useState({
+		csrf: '',
+		username: '',
+		password: '',
+		error: '',
+		isAuthenticated: false,
+	});
+
+	const signOutUser = async () => {
+		setError('');
+		try {
+			const res = await axios.post('http://localhost:8000/api/signout/');
+			if (res.status === 200) {
+				navigate('/');
+			}
+		} catch (error) {
+			console.log("User wasn't signed out...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
 	return (
-		<div>
-			<header>
-				<ul>
-					<li>
-						<Link to='/bins'>My Collection</Link>
-					</li>
-					<li>
-						<Link to='/' onClick={() => setIsLoggedIn(false)}>
-							Sign Out
-						</Link>
-					</li>
-				</ul>
-			</header>
-			<main>
-				<Routes>
-					<Route path='/' element={<About />} />
-					<Route path='/signup' element={<SignupPage />} />
-					<Route path='/signin' element={<SigninPage />} />
-					<Route path='/bins' element={<Dashboard />} />
-					<Route path='/bins/:id' element={<Bin />} />
-					<Route path='/add-bin' element={<FormToAddBin />} />
-					<Route path='/bins/:id/edit' element={<FormToEditBin />} />
-					<Route path='/products' element={<Products />} />
-					<Route path='/add-product' element={<FormToAddProduct />} />
-					<Route path='/products/:id/edit' element={<FormToEditProduct />} />
-					<Route
-						path='/bins/:id/add-product'
-						element={<FormToAddProductToBin />}
-					/>
-				</Routes>
-			</main>
-			<footer>&copy; SIFTORA 2022</footer>
-		</div>
+		<DataContext.Provider
+			value={{
+				user,
+				setUser,
+			}}>
+			<div>
+				<header>
+					<ul>
+						<li>
+							<Link to='/bins'>My Collection</Link>
+						</li>
+						<li>
+							<Link to='/' onClick={signOutUser}>
+								Sign Out
+							</Link>
+						</li>
+					</ul>
+				</header>
+				<main>
+					<Routes>
+						<Route path='/' element={<About />} />
+						<Route path='/signup' element={<SignupPage />} />
+						<Route path='/signin' element={<SigninPage />} />
+						<Route path='/bins' element={<Dashboard />} />
+						<Route path='/bins/:id' element={<Bin />} />
+						<Route path='/add-bin' element={<FormToAddBin />} />
+						<Route path='/bins/:id/edit' element={<FormToEditBin />} />
+						<Route path='/products' element={<Products />} />
+						<Route path='/add-product' element={<FormToAddProduct />} />
+						<Route path='/products/:id/edit' element={<FormToEditProduct />} />
+						<Route
+							path='/bins/:id/add-product'
+							element={<FormToAddProductToBin />}
+						/>
+					</Routes>
+				</main>
+				<footer>&copy; SIFTORA 2022</footer>
+			</div>
+		</DataContext.Provider>
 	);
 }
 
