@@ -77,6 +77,28 @@ function Products() {
 		getProducts();
 	}, []);
 
+	// =================================================== SORT PRODUCTS BY OPTION
+	const sortByOption = async (option) => {
+		const sortName = option.id;
+		setError('');
+		try {
+			const res = await axios.get(
+				`http://localhost:8000/api/products/?sort=${option.params}`
+			);
+			if (res.status === 200) {
+				updateQueryParams({
+					sort: `${option.params}`,
+				});
+				setProducts(res.data);
+			}
+		} catch (error) {
+			console.log(`Products weren't sorted by ${sortName}...`, error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
 	// ========================================================== UPDATE USE COUNT
 	const incrementUse = (product) => {
 		product.use_count++;
@@ -140,35 +162,13 @@ function Products() {
 		}
 	};
 
-	// ============================================================= SORT PRODUCTS
-	const sortProducts = async (option) => {
-		const sortName = option.id;
-		setError('');
-		try {
-			const res = await axios.get(
-				`http://localhost:8000/api/products/?sort=${option.params}`
-			);
-			if (res.status === 200) {
-				updateQueryParams({
-					sort: `${option.params}`,
-				});
-				setProducts(res.data);
-			}
-		} catch (error) {
-			console.log(`Products weren't sorted by ${sortName}...`, error);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
-
 	// ======================================================================= JSX
 	return (
 		<div>
-			<Link to='/add-product'>Add Product</Link>
+			<Link to='/add-product'>Add New Product</Link>
 			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
 				{DROPDOWN_OPTIONS.map((option) => (
-					<Dropdown.Item onClick={() => sortProducts(option)} key={option.id}>
+					<Dropdown.Item onClick={() => sortByOption(option)} key={option.id}>
 						{option.name}
 					</Dropdown.Item>
 				))}

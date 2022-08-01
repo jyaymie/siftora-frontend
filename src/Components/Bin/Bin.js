@@ -8,12 +8,46 @@ import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+const DROPDOWN_OPTIONS = [
+	{ id: 'brand', name: 'Brand', params: 'brand' },
+	{ id: 'name', name: 'Product Name', params: 'name' },
+	{ id: 'purchase_date', name: 'Recently Purchased', params: 'purchase_date' },
+	{ id: 'price', name: 'Price (Low to High)', params: 'price' },
+	{ id: 'price_desc', name: 'Price (High to Low)', params: '-price' },
+	{ id: 'open_date', name: 'Recent Opened', params: 'open_date' },
+	{ id: 'expiry_date', name: 'Expiring Soon', params: 'expiry_date' },
+	{ id: 'use_count', name: '# of Uses (Low to High)', params: 'use_count' },
+	{
+		id: 'use_count_desc',
+		name: '# of Uses (High to Low)',
+		params: '-use_count',
+	},
+];
+
+// Params parameter will be an object of query parameters
+// Ex. { sort: "use_count", order: "asc" }
+function updateQueryParams(params) {
+	const url = new URL(window.location.href);
+
+	// Iterate through each property
+	for (const key in params) {
+		if (params[key] !== undefined) {
+			// and set each as a query parameter
+			// Ex. '...products/?sort=use_count&order=asc'
+			url.searchParams.set(key, params[key]);
+		}
+	}
+
+	// Update the URL without reloading the page
+	window.history.pushState({}, '', url.toString());
+}
+
 function Bin() {
 	const { id } = useParams();
 	const [error, setError] = useState('');
 	const [bin, setBin] = useState({});
-	const [products, setProducts] = useState([]);
 	const [binProducts, setBinProducts] = useState([]);
+	const [products, setProducts] = useState([]);
 	const [dropdownProducts, setDropdownProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
@@ -39,8 +73,31 @@ function Bin() {
 		getBinProducts();
 	}, []);
 
-	// ====================================================== SET DROPDOWN OPTIONS
-	const setDropdownOptions = async () => {
+	// ============================================================= SORT PRODUCTS
+	const sortProductsByOption = async (option) => {
+		const sortName = option.id;
+		setError('');
+		try {
+			const res = await axios.get(
+				`http://localhost:8000/api/bins/${id}/?sort=${option.params}`
+			);
+			if (res.status === 200) {
+				updateQueryParams({
+					sort: `${option.params}`,
+				});
+				setBin(res.data);
+				setBinProducts(res.data.products);
+			}
+		} catch (error) {
+			console.log(`Products weren't sorted by ${sortName}...`, error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
+	// ======================================== SET 'Add Product' DROPDOWN OPTIONS
+	const setDropdownProductOptions = async () => {
 		setError('');
 		try {
 			const res = await axios.get(`http://localhost:8000/api/products/`);
@@ -49,10 +106,8 @@ function Bin() {
 				// In the Add Product dropdown menu,
 				// list all products that are not already in the bin
 				const remainingProducts = products.filter((product) => {
-					return (
-						binProducts.findIndex(
-							(binProduct) => binProduct.id === product.id
-						) === -1
+					return !binProducts.find(
+						(binProduct) => binProduct.id === product.id
 					);
 				});
 				setDropdownProducts(remainingProducts);
@@ -153,11 +208,20 @@ function Bin() {
 	// ======================================================================= JSX
 	return (
 		<div>
-			<Link to={`/bins/${bin.id}/add-product`}>Add Product</Link>
+			<Link to={`/bins/${bin.id}/add-product`}>Add New Product</Link>
+			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
+				{DROPDOWN_OPTIONS.map((option) => (
+					<Dropdown.Item
+						onClick={() => sortProductsByOption(option)}
+						key={option.id}>
+						{option.name}
+					</Dropdown.Item>
+				))}
+			</DropdownButton>
 			<DropdownButton
 				id='dropdown-basic-button'
-				title='Add Product'
-				onClick={setDropdownOptions}>
+				title='Add Existing Product'
+				onClick={setDropdownProductOptions}>
 				{dropdownProducts.map((product) => (
 					<Dropdown.Item
 						key={product.id}
