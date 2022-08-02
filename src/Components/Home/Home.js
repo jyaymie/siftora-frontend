@@ -6,7 +6,7 @@ function Home() {
 		<section className='home'>
 			<div className='home-content'>
 				<h1>SIFTORA</h1>
-				<Link to='/bins' className='bins-link'>
+				<Link to='/bins' className='button-css bins-link'>
 					SEE MY COLLECTION
 				</Link>
 				{/* <ul>

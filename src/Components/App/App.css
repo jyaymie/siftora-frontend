@@ -6,17 +6,46 @@ body {
 	margin: 0;
 	color: rgb(30, 30, 30);
 	font-family: 'Courier New', Courier, monospace;
+	font-size: 15px;
+}
+
+section {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
 }
 
 p {
 	margin-bottom: 0px;
-	font-size: 15px;
 }
 
 a,
-a:hover {
+a:hover,
+a:visited {
+	transition-duration: 0.3s;
 	text-decoration: none;
 	color: rgb(30, 30, 30);
+}
+
+.button-css {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition-duration: 0.3s;
+	border: none;
+	background-color: transparent;
+	color: rgb(30, 30, 30);
+}
+
+.button-css:hover {
+	background-color: rgb(30, 30, 30);
+	color: rgb(255, 255, 255);
+}
+
+header {
+	top: 0;
+	left: 0;
 }
 
 nav {
@@ -26,11 +55,14 @@ nav {
 	position: absolute;
 	z-index: 1;
 	width: 100vw;
-	background-color: rgba(180, 140, 140, 0.5);
+	background-color: rgb(180, 140, 140, 0.8);
 }
 
-.nav-icon-link {
+.nav-icon-link,
+.nav-icon-link:visited {
 	margin: 0 10px;
+	text-decoration: none;
+	color: rgb(30, 30, 30);
 	font-family: 'Bodoni Moda', serif;
 	font-size: 30px;
 }
@@ -39,9 +71,18 @@ nav {
 	margin: 0 10px;
 }
 
+.nav-icon-link:hover,
+.nav-text-links a:hover {
+	color: rgb(255, 255, 255);
+}
+
 footer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	position: absolute;
 	bottom: 0;
-	width: 100vw;
-	text-align: center;
+	width: 100%;
+	height: 50px;
+	background-color: rgb(180, 140, 140, 0.8);
 }

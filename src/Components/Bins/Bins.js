@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 function Bins() {
@@ -76,31 +75,34 @@ function Bins() {
 					<Card key={bin.id}>
 						<Card.Body>
 							<Link to={`/bins/${bin.id}`} className='card-title'>
-								<Card.Text>
-									{bin.title} ({bin.product_count})
-								</Card.Text>
+								{bin.title} ({bin.product_count})
 							</Link>
-							<div>
-								<Link to={`/bins/${bin.id}/edit`} className='btn card-edit'>EDIT</Link>
-								<Button
-									type='button' className='card-delete'
+							<div className='icons-container'>
+								<Link to={`/bins/${bin.id}/edit`} className='button-css edit-icon'>
+									<i class='icon-pencil'></i>
+								</Link>
+								<button
+									type='button'
+									className='button-css delete-icon'
 									onClick={() => showModal(bin)}>
-									DELETE
-								</Button>
+									<i class='icon-trash'></i>
+								</button>
 							</div>
 						</Card.Body>
 					</Card>
 				))}
+
 				<Card>
 					<Card.Body>
 						<Link to={`/add-bin`} className='card-title'>
-							<Card.Text>Add Bin</Card.Text>
+							Add Bin
 						</Link>
-						<Button
+						<button
 							type='button'
+							className='button-css'
 							onClick={() => navigate('/add-bin')}>
 							+
-						</Button>
+						</button>
 					</Card.Body>
 				</Card>
 			</div>
@@ -113,15 +115,15 @@ function Bins() {
 					{`Deleting your ${binToDelete.title} bin cannot be undone.`}
 				</Modal.Body>
 				<Modal.Footer>
-					<Button type='button' variant='secondary' onClick={closeModal}>
+					<button type='button' className='button-css' onClick={closeModal}>
 						CANCEL
-					</Button>
-					<Button type='button' variant='primary' onClick={deleteBin}>
+					</button>
+					<button type='button' className='button-css' onClick={deleteBin}>
 						DELETE BIN
-					</Button>
+					</button>
 				</Modal.Footer>
 			</Modal>
-
+			
 			{loading && 'Loading...'}
 			{error && error}
 		</section>

@@ -1,3 +1,4 @@
+import './FormToAddBin.css';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -32,19 +33,21 @@ function FormToAddBin() {
 
 	// ======================================================================= JSX
 	return (
-		<div>
+		<section>
 			<Form onSubmit={addBin}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Title</Form.Label>
 					<Form.Control id='title' required />
 				</Form.Group>
-				<Link to='/bins'>Cancel</Link>
-				<Button type='submit' variant='primary'>
-					Add
-				</Button>
+				<div className='form-options'>
+					<Link to='/bins' className='button-css cancel'>Cancel</Link>
+					<button type='submit' className='button-css submit'>
+						Add
+					</button>
+				</div>
 			</Form>
 			{error && error}
-		</div>
+		</section>
 	);
 }
 
