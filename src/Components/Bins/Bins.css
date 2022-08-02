@@ -1,0 +1,50 @@
+.bins {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.bins-container {
+	display: grid;
+	grid-template-columns: repeat(2, 250px);
+	gap: 20px;
+	grid-auto-rows: 250px;
+}
+
+.card {
+	border-radius: 0;
+}
+
+.card-body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.card-title:hover {
+	font-weight: bold;
+}
+
+.card-edit,
+.card-delete {
+	margin: 0 5px;
+}
+
+.btn {
+	padding: 15px 15px;
+	border: 1px solid rgb(30, 30, 30);
+	border-radius: 0;
+	background-color: rgb(255, 255, 255);
+	line-height: 0;
+	color: rgb(30, 30, 30);
+	font-size: 15px;
+	font-weight: normal;
+}
+
+.btn:hover {
+	border: 1px solid rgb(30, 30, 30);
+	background-color: rgb(30, 30, 30);
+	color: rgb(255, 255, 255);
+}

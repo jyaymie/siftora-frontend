@@ -3,9 +3,9 @@ import './App.css';
 // import { useContext, useState } from 'react';
 // import { DataContext } from '../../dataContext';
 // import { useNavigate } from 'react-router-dom';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
 // import axios from 'axios';
-import About from '../About/About';
+import Home from '../Home/Home';
 // import SignupPage from '../SignupPage/SignupPage';
 // import SigninPage from '../SigninPage/SigninPage';
 import Bins from '../Bins/Bins';
@@ -47,6 +47,10 @@ function App() {
 	// 	}
 	// };
 
+	// Grab the current route
+	const location = useLocation();
+
+	// ======================================================================= JSX
 	return (
 		// <DataContext.Provider
 		// 	value={{
@@ -54,19 +58,25 @@ function App() {
 		// 		setUser,
 		// 	}}>
 		<div>
-			<header>
-				<nav>
-					<Link to='/' className='home-link'>
-						SIFTORA
-					</Link>
+			{location.pathname !== '/' && (
+				<header>
+					<nav>
+						<Link to='/bins' className='nav-icon-link'>
+							S
+						</Link>
+						<div className='nav-text-links'>
+							<Link to='/bins'>BINS</Link>
+							<Link to='/products'>PRODUCTS</Link>
+						</div>
+					</nav>
 					{/* <Link to='/' onClick={signOutUser}>
 						Sign Out
 					</Link> */}
-				</nav>
-			</header>
+				</header>
+			)}
 			<main>
 				<Routes>
-					<Route path='/' element={<About />} />
+					<Route path='/' element={<Home />} />
 					{/* <Route path='/signup' element={<SignupPage />} />
 					<Route path='/signin' element={<SigninPage />} /> */}
 					<Route path='/bins' element={<Bins />} />
@@ -82,7 +92,10 @@ function App() {
 					/>
 				</Routes>
 			</main>
-			<footer>&copy; SIFTORA 2022</footer>
+			{location.pathname !== '/' && <footer>&copy; SIFTORA 2022</footer>}
+
+			{/* {loading && 'Loading...'}
+			{error && error} */}
 		</div>
 		// </DataContext.Provider>
 	);

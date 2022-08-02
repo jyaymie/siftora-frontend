@@ -13,7 +13,35 @@ p {
 	font-size: 15px;
 }
 
+a,
+a:hover {
+	text-decoration: none;
+	color: rgb(30, 30, 30);
+}
+
 nav {
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
+	align-items: center;
+	position: absolute;
+	z-index: 1;
+	width: 100vw;
+	background-color: rgba(180, 140, 140, 0.5);
+}
+
+.nav-icon-link {
+	margin: 0 10px;
+	font-family: 'Bodoni Moda', serif;
+	font-size: 30px;
+}
+
+.nav-text-links a {
+	margin: 0 10px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100vw;
+	text-align: center;
 }

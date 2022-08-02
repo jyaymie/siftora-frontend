@@ -1,12 +1,15 @@
+import './Bins.css';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 function Bins() {
+	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [bins, setBins] = useState([]);
 	const [show, setShow] = useState(false);
 	const [binToDelete, setBinToDelete] = useState({});
@@ -14,15 +17,16 @@ function Bins() {
 	// ============================================================= RETRIEVE BINS
 	const getBins = async () => {
 		setError('');
+		setLoading(true);
 		try {
-			console.log((await axios.get('http://localhost:8000/api/whoami/')).data);
-
 			const res = await axios.get('http://localhost:8000/api/bins/');
 			if (res.status === 200) {
 				setBins(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Bins weren't retrieved...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -45,6 +49,7 @@ function Bins() {
 	const deleteBin = async () => {
 		closeModal();
 		setError('');
+		setLoading(true);
 		const id = binToDelete.id;
 		try {
 			const res = await axios.delete(`http://localhost:8000/api/bins/${id}/`);
@@ -52,9 +57,11 @@ function Bins() {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);
 				getBins();
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Bin wasn't deleted...", error);
+			setLoading(true);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -63,37 +70,40 @@ function Bins() {
 
 	// ======================================================================= JSX
 	return (
-		<div>
-			<ul>
-				<li>
-					<Link to='/products'>My Products</Link>
-				</li>
-				<li>
-					<Link to='/add-bin'>Add Bin</Link>
-				</li>
-				<li>
-					<Link to='/add-product'>Add Product</Link>
-				</li>
-			</ul>
-
-			{bins.map((bin) => (
-				<Card style={{ width: '200px' }} key={bin.id}>
+		<section className='bins'>
+			<div className='bins-container'>
+				{bins.map((bin) => (
+					<Card key={bin.id}>
+						<Card.Body>
+							<Link to={`/bins/${bin.id}`} className='card-title'>
+								<Card.Text>
+									{bin.title} ({bin.product_count})
+								</Card.Text>
+							</Link>
+							<div>
+								<Link to={`/bins/${bin.id}/edit`} className='btn card-edit'>EDIT</Link>
+								<Button
+									type='button' className='card-delete'
+									onClick={() => showModal(bin)}>
+									DELETE
+								</Button>
+							</div>
+						</Card.Body>
+					</Card>
+				))}
+				<Card>
 					<Card.Body>
-						<Link to={`/bins/${bin.id}`}>
-							<Card.Text>
-								{bin.title} ({bin.product_count})
-							</Card.Text>
+						<Link to={`/add-bin`} className='card-title'>
+							<Card.Text>Add Bin</Card.Text>
 						</Link>
-						<Link to={`/bins/${bin.id}/edit`}>Edit</Link>
 						<Button
 							type='button'
-							variant='secondary'
-							onClick={() => showModal(bin)}>
-							Delete
+							onClick={() => navigate('/add-bin')}>
+							+
 						</Button>
 					</Card.Body>
 				</Card>
-			))}
+			</div>
 
 			<Modal show={show} onHide={closeModal}>
 				<Modal.Header>
@@ -104,16 +114,17 @@ function Bins() {
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type='button' variant='secondary' onClick={closeModal}>
-						Cancel
+						CANCEL
 					</Button>
 					<Button type='button' variant='primary' onClick={deleteBin}>
-						Delete Bin
+						DELETE BIN
 					</Button>
 				</Modal.Footer>
 			</Modal>
 
+			{loading && 'Loading...'}
 			{error && error}
-		</div>
+		</section>
 	);
 }
 

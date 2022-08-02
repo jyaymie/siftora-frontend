@@ -1,4 +1,4 @@
-.app {
+.home {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -7,19 +7,19 @@
 	height: 100vh;
 }
 
-.app::before {
+.home::before {
 	position: absolute;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	opacity: 50%;
+	opacity: 25%;
 	background-image: url('../../assets/background-image.jpg');
 	background-size: cover;
 	content: '';
 }
 
-.app-content {
+.home-content {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -29,19 +29,17 @@
 }
 
 h1 {
+	margin: 10px 10px;
 	font-family: 'Bodoni Moda', serif;
-	font-size: 50px;
+	font-size: 60px;
 }
 
 .bins-link {
 	padding: 10px 10px;
 	border: 1px solid rgb(30, 30, 30);
-	text-decoration: none;
-	color: rgb(30, 30, 30);
 }
 
 .bins-link:hover {
-	border: 1px solid rgb(30, 30, 30);
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
 }
