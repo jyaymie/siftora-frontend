@@ -89,7 +89,7 @@ function FormToAddProductToBin() {
 					products: bin.products,
 				});
 				if (res.status === 200) {
-					navigate(`/bins/${id}`);
+					navigate(-1);
 				}
 			} catch (error) {
 				console.log("Bin wasn't updated...", error);

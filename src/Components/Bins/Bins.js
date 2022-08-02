@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function Dashboard() {
+function Bins() {
 	const [error, setError] = useState('');
 	const [bins, setBins] = useState([]);
 	const [show, setShow] = useState(false);
@@ -117,4 +117,4 @@ function Dashboard() {
 	);
 }
 
-export default Dashboard;
+export default Bins;

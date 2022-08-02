@@ -47,7 +47,7 @@ function Bin() {
 	const [error, setError] = useState('');
 	const [bin, setBin] = useState({});
 	const [binProducts, setBinProducts] = useState([]);
-	const [products, setProducts] = useState([]);
+	const [allProducts, setAllProducts] = useState([]);
 	const [dropdownProducts, setDropdownProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
@@ -56,7 +56,11 @@ function Bin() {
 	const getBinProducts = async () => {
 		setError('');
 		try {
-			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			// Use window.location.search to save the last used query parameters
+			// This way, when a product's use count is updated,
+			// the products will remain sorted by whatever option the user last chose
+			const url = `http://localhost:8000/api/bins/${id}/${window.location.search}`;
+			const res = await axios.get(url);
 			if (res.status === 200) {
 				setBin(res.data);
 				setBinProducts(res.data.products);
@@ -69,8 +73,32 @@ function Bin() {
 		}
 	};
 
+	const getAllProducts = async () => {
+		setError('');
+		try {
+			const res = await axios.get(`http://localhost:8000/api/products/`);
+			if (res.status === 200) {
+				setAllProducts(res.data);
+			}
+		} catch (error) {
+			console.log("All products weren't retrieved...", error);
+			setError(
+				'Hm, something went wrong. Please try again or contact support@siftora.com.'
+			);
+		}
+	};
+
+	const getDropdownOptions = () => {
+		// In the 'Add Existing Product' dropdown menu,
+		// list all products that are not already in the bin
+		return allProducts.filter((product) => {
+			return !binProducts.find((binProduct) => binProduct.id === product.id);
+		});
+	};
+
 	useEffect(() => {
 		getBinProducts();
+		getAllProducts();
 	}, []);
 
 	// ============================================================= SORT PRODUCTS
@@ -90,30 +118,6 @@ function Bin() {
 			}
 		} catch (error) {
 			console.log(`Products weren't sorted by ${sortName}...`, error);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
-
-	// ======================================== SET 'Add Product' DROPDOWN OPTIONS
-	const setDropdownProductOptions = async () => {
-		setError('');
-		try {
-			const res = await axios.get(`http://localhost:8000/api/products/`);
-			if (res.status === 200) {
-				setProducts(res.data);
-				// In the Add Product dropdown menu,
-				// list all products that are not already in the bin
-				const remainingProducts = products.filter((product) => {
-					return !binProducts.find(
-						(binProduct) => binProduct.id === product.id
-					);
-				});
-				setDropdownProducts(remainingProducts);
-			}
-		} catch (error) {
-			console.log("Dropdown products weren't retrieved...", error);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -218,11 +222,9 @@ function Bin() {
 					</Dropdown.Item>
 				))}
 			</DropdownButton>
-			<DropdownButton
-				id='dropdown-basic-button'
-				title='Add Existing Product'
-				onClick={setDropdownProductOptions}>
-				{dropdownProducts.map((product) => (
+
+			<DropdownButton id='dropdown-basic-button' title='Add Existing Product'>
+				{getDropdownOptions().map((product) => (
 					<Dropdown.Item
 						key={product.id}
 						onClick={() =>
@@ -230,6 +232,7 @@ function Bin() {
 						}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
 				))}
 			</DropdownButton>
+
 			{binProducts.map((product) => (
 				<Accordion key={product.id}>
 					<Accordion.Item eventKey='0'>
