@@ -8,6 +8,7 @@ function FormToEditProduct() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [product, setProduct] = useState([]);
 
 	// =============================================================== GET PRODUCT

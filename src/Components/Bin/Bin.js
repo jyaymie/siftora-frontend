@@ -45,16 +45,17 @@ function updateQueryParams(params) {
 function Bin() {
 	const { id } = useParams();
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [bin, setBin] = useState({});
 	const [binProducts, setBinProducts] = useState([]);
 	const [allProducts, setAllProducts] = useState([]);
-	const [dropdownProducts, setDropdownProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
 
 	// ========================================================== GET BIN PRODUCTS
 	const getBinProducts = async () => {
 		setError('');
+		setLoading(true);
 		try {
 			// Use window.location.search to save the last used query parameters
 			// This way, when a product's use count is updated,
@@ -64,31 +65,38 @@ function Bin() {
 			if (res.status === 200) {
 				setBin(res.data);
 				setBinProducts(res.data.products);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Bin products weren't retrieved...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
+	// ===================================================== GET ALL USER PRODUCTS
 	const getAllProducts = async () => {
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.get(`http://localhost:8000/api/products/`);
 			if (res.status === 200) {
 				setAllProducts(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
-			console.log("All products weren't retrieved...", error);
+			console.log("The user's products weren't retrieved...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
-	const getDropdownOptions = () => {
+	// ========================================= GET PRODUCTS IN THE DROPDOWN MENU
+	const getDropdownProducts = () => {
 		// In the 'Add Existing Product' dropdown menu,
 		// list all products that are not already in the bin
 		return allProducts.filter((product) => {
@@ -96,15 +104,11 @@ function Bin() {
 		});
 	};
 
-	useEffect(() => {
-		getBinProducts();
-		getAllProducts();
-	}, []);
-
-	// ============================================================= SORT PRODUCTS
-	const sortProductsByOption = async (option) => {
+	// ========================================================= SORT BIN PRODUCTS
+	const sortBinProducts = async (option) => {
 		const sortName = option.id;
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.get(
 				`http://localhost:8000/api/bins/${id}/?sort=${option.params}`
@@ -115,9 +119,11 @@ function Bin() {
 				});
 				setBin(res.data);
 				setBinProducts(res.data.products);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log(`Products weren't sorted by ${sortName}...`, error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -139,6 +145,7 @@ function Bin() {
 
 	const updateCount = async (product) => {
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.put(
 				`http://localhost:8000/api/products/${product.id}/`,
@@ -146,9 +153,11 @@ function Bin() {
 			);
 			if (res.status === 200) {
 				getBinProducts();
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Use count wasn't updated...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -167,6 +176,7 @@ function Bin() {
 	const removeProduct = async () => {
 		closeModal();
 		setError('');
+		setLoading(true);
 		try {
 			const filteredBinProducts = binProducts.filter(
 				(product) => product !== productToRemove
@@ -179,18 +189,22 @@ function Bin() {
 			);
 			if (res.status === 200) {
 				setBin(updatedBin);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Product wasn't removed...", error);
+			setLoading(false);
+
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
-	// ============================================= UPDATE BIN WITH ADDED PRODUCT
+	// ======================================================== ADD PRODUCT TO BIN
 	const addProductToBin = async (product) => {
 		setError('');
+		setLoading(true);
 		try {
 			binProducts.push(product);
 			const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
@@ -200,103 +214,123 @@ function Bin() {
 			});
 			if (res.status === 200) {
 				getBinProducts();
+				setLoading(false);
 			}
 		} catch (error) {
-			console.log("Bin wasn't updated...", error);
+			console.log("Product wasn't added...", error);
+			setLoading(false);
+
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
+	// ================================================================= useEffect
+	useEffect(() => {
+		getBinProducts();
+		getAllProducts();
+	}, []);
+
 	// ======================================================================= JSX
 	return (
 		<div>
-			<Link to={`/bins/${bin.id}/add-product`}>Add New Product</Link>
-			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
-				{DROPDOWN_OPTIONS.map((option) => (
-					<Dropdown.Item
-						onClick={() => sortProductsByOption(option)}
-						key={option.id}>
-						{option.name}
-					</Dropdown.Item>
-				))}
-			</DropdownButton>
+			{!loading && (
+				<>
+					<Link to={`/bins/${bin.id}/add-product`} className='button-css'>
+						Add New Product
+					</Link>
+					{/* ================================ DROPDOWN FOR SORTING PRODUCTS */}
+					<DropdownButton title='Sort Products By'>
+						{DROPDOWN_OPTIONS.map((option) => (
+							<Dropdown.Item
+								onClick={() => sortBinProducts(option)}
+								key={option.id}>
+								{option.name}
+							</Dropdown.Item>
+						))}
+					</DropdownButton>
 
-			<DropdownButton id='dropdown-basic-button' title='Add Existing Product'>
-				{getDropdownOptions().map((product) => (
-					<Dropdown.Item
-						key={product.id}
-						onClick={() =>
-							addProductToBin(product)
-						}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
-				))}
-			</DropdownButton>
+					{/* ======================== DROPDOWN FOR ADDING EXISTING PRODUCTS */}
+					<DropdownButton
+						id='dropdown-basic-button'
+						title='Add Existing Product'>
+						{getDropdownProducts().map((product) => (
+							<Dropdown.Item
+								key={product.id}
+								onClick={() =>
+									addProductToBin(product)
+								}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
+						))}
+					</DropdownButton>
 
-			{binProducts.map((product) => (
-				<Accordion key={product.id}>
-					<Accordion.Item eventKey='0'>
-						<Accordion.Header>
-							{`${product.name} by ${product.brand}`}
-						</Accordion.Header>
-						<Accordion.Body>
-							<ul>
-								<li>Shade: {product.shade}</li>
-								<li>Finish: {product.finish}</li>
-								<li>Purchase Date: {product.purchase_date}</li>
-								<li>Price: {product.price}</li>
-								<li>Open Date: {product.open_date}</li>
-								<li>Expiry Date: {product.expiry_date}</li>
-								<li>
-									# of Uses: {product.use_count}
+					{/* =========================================  BIN PRODUCT DETAILS */}
+					{binProducts.map((product) => (
+						<Accordion key={product.id}>
+							<Accordion.Item eventKey={'{product.id}'}>
+								<Accordion.Header>
+									{`${product.name} by ${product.brand}`}
+								</Accordion.Header>
+								<Accordion.Body>
+									<ul>
+										<li>Shade: {product.shade}</li>
+										<li>Finish: {product.finish}</li>
+										<li>Purchase Date: {product.purchase_date}</li>
+										<li>Price: {product.price}</li>
+										<li>Open Date: {product.open_date}</li>
+										<li>Expiry Date: {product.expiry_date}</li>
+										<li>
+											# of Uses: {product.use_count}
+											<Button
+												type='button'
+												variant='secondary'
+												onClick={() => decrementUse(product)}>
+												-
+											</Button>
+											<Button
+												type='button'
+												variant='secondary'
+												onClick={() => incrementUse(product)}>
+												+
+											</Button>
+										</li>
+										<li>Finish Date: {product.finish_date}</li>
+										<li>Will Repurchase: {product.will_repurchase}</li>
+										<li>Notes: {product.notes}</li>
+									</ul>
+									<Link to={`/products/${product.id}/edit`}>Edit</Link>
+
 									<Button
 										type='button'
 										variant='secondary'
-										onClick={() => decrementUse(product)}>
-										-
+										onClick={() => showModal(product)}>
+										Remove from Bin
 									</Button>
-									<Button
-										type='button'
-										variant='secondary'
-										onClick={() => incrementUse(product)}>
-										+
-									</Button>
-								</li>
-								<li>Finish Date: {product.finish_date}</li>
-								<li>Will Repurchase: {product.will_repurchase}</li>
-								<li>Notes: {product.notes}</li>
-							</ul>
-							<Link to={`/products/${product.id}/edit`}>Edit</Link>
-
-							<Button
-								type='button'
-								variant='secondary'
-								onClick={() => showModal(product)}>
+								</Accordion.Body>
+							</Accordion.Item>
+						</Accordion>
+					))}
+					<Modal show={show} onHide={closeModal}>
+						<Modal.Header>
+							<Modal.Title>Just so you know!</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							{`Removing ${productToRemove.name} from this bin will not remove it from your products inventory. To delete this product, please go to `}
+							<Link to='/products'>My Products</Link>.
+						</Modal.Body>
+						<Modal.Footer>
+							<Button type='button' variant='secondary' onClick={closeModal}>
+								Cancel
+							</Button>
+							<Button type='button' variant='primary' onClick={removeProduct}>
 								Remove from Bin
 							</Button>
-						</Accordion.Body>
-					</Accordion.Item>
-				</Accordion>
-			))}
+						</Modal.Footer>
+					</Modal>
+				</>
+			)}
 
-			<Modal show={show} onHide={closeModal}>
-				<Modal.Header>
-					<Modal.Title>Just so you know!</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{`Removing ${productToRemove.name} from this bin will not remove it from your products inventory. To delete this product, please go to `}
-					<Link to='/products'>My Products</Link>.
-				</Modal.Body>
-				<Modal.Footer>
-					<Button type='button' variant='secondary' onClick={closeModal}>
-						Cancel
-					</Button>
-					<Button type='button' variant='primary' onClick={removeProduct}>
-						Remove from Bin
-					</Button>
-				</Modal.Footer>
-			</Modal>
-
+			{loading && 'Loading...'}
 			{error && error}
 		</div>
 	);

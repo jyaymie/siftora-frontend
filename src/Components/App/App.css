@@ -23,66 +23,79 @@ p {
 a,
 a:hover,
 a:visited {
-	transition-duration: 0.3s;
 	text-decoration: none;
 	color: rgb(30, 30, 30);
+	transition-duration: 0.3s;
 }
 
 .button-css {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	transition-duration: 0.3s;
+	height: 40px;
+	padding-top: 3px;
 	border: none;
 	background-color: transparent;
 	color: rgb(30, 30, 30);
+	transition-duration: 0.3s;
 }
 
 .button-css:hover {
+	border: 1px solid rgb(30, 30, 30);
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
-}
+} */
 
-header {
+/* header {
+	position: absolute;
 	top: 0;
 	left: 0;
-}
+	width: 100vw;
+	z-index: 1;
+} */
 
 nav {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	position: absolute;
-	z-index: 1;
-	width: 100vw;
-	background-color: rgb(180, 140, 140, 0.8);
+	background-color: rgb(30, 30, 30);
 }
 
 .nav-icon-link,
+.nav-icon-link:active,
 .nav-icon-link:visited {
-	margin: 0 10px;
+	margin: 10px 20px;
 	text-decoration: none;
-	color: rgb(30, 30, 30);
+	color: rgb(255, 255, 255);
 	font-family: 'Bodoni Moda', serif;
 	font-size: 30px;
+	transition: 0.5s;
 }
 
-.nav-text-links a {
-	margin: 0 10px;
+.nav-icon-link:hover {
+	transform: rotateY(180deg);
 }
 
-.nav-icon-link:hover,
-.nav-text-links a:hover {
-	color: rgb(255, 255, 255);
+.nav-text-link {
+	margin: 0 20px;
+	padding-top: 3px;
+	color: rgb(255, 255, 255) !important;
 }
 
-footer {
+.nav-text-link:hover {
+	text-decoration: line-through;
+}
+
+/* footer {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
+	right: 0;
+	left: 0;
 	bottom: 0;
 	width: 100%;
 	height: 50px;
-	background-color: rgb(180, 140, 140, 0.8);
-}
+	background-color: rgb(30, 30, 30);
+	color: rgb(255, 255, 255);
+} */

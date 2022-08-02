@@ -165,8 +165,13 @@ function Products() {
 	// ======================================================================= JSX
 	return (
 		<div>
-			<Link to='/add-product'>Add New Product</Link>
-			<DropdownButton id='dropdown-basic-button' title='Sort Products By'>
+			<Link to='/add-product' className='button-css'>
+				Add New Product
+			</Link>
+			<DropdownButton
+				className='button-css'
+				id='dropdown-basic-button'
+				title='Sort Products By'>
 				{DROPDOWN_OPTIONS.map((option) => (
 					<Dropdown.Item onClick={() => sortByOption(option)} key={option.id}>
 						{option.name}

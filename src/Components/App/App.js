@@ -14,8 +14,8 @@ import FormToAddBin from '../FormToAddBin/FormToAddBin';
 import FormToEditBin from '../FormToEditBin/FormToEditBin';
 import Products from '../Products/Products';
 import FormToAddProduct from '../FormToAddProduct/FormToAddProduct';
-import FormToEditProduct from '../FormToEditProduct/FormToEditProduct';
 import FormToAddProductToBin from '../FromToAddProductToBin/FormToAddProductToBin';
+import FormToEditProduct from '../FormToEditProduct/FormToEditProduct';
 
 function App() {
 	// const navigate = useNavigate();
@@ -47,7 +47,6 @@ function App() {
 	// 	}
 	// };
 
-	// Grab the current route
 	const location = useLocation();
 
 	// ======================================================================= JSX
@@ -58,15 +57,20 @@ function App() {
 		// 		setUser,
 		// 	}}>
 		<div>
+			{/* Don't display the header/footer on the landing page */}
 			{location.pathname !== '/' && (
 				<header>
 					<nav>
 						<Link to='/bins' className='nav-icon-link'>
 							S
 						</Link>
-						<div className='nav-text-links'>
-							<Link to='/bins'>BINS</Link>
-							<Link to='/products'>PRODUCTS</Link>
+						<div className='nav-text-link-container'>
+							<Link to='/bins' className='nav-text-link'>
+								BINS
+							</Link>
+							<Link to='/products' className='nav-text-link'>
+								PRODUCTS
+							</Link>
 						</div>
 					</nav>
 					{/* <Link to='/' onClick={signOutUser}>
@@ -85,11 +89,11 @@ function App() {
 					<Route path='/bins/:id/edit' element={<FormToEditBin />} />
 					<Route path='/products' element={<Products />} />
 					<Route path='/add-product' element={<FormToAddProduct />} />
-					<Route path='/products/:id/edit' element={<FormToEditProduct />} />
 					<Route
 						path='/bins/:id/add-product'
 						element={<FormToAddProductToBin />}
 					/>
+					<Route path='/products/:id/edit' element={<FormToEditProduct />} />
 				</Routes>
 			</main>
 			{location.pathname !== '/' && <footer>&copy; SIFTORA 2022</footer>}

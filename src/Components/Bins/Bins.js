@@ -32,12 +32,10 @@ function Bins() {
 		}
 	};
 
-	useEffect(() => {
-		getBins();
-	}, []);
-
 	// ========================================================== SHOW/CLOSE MODAL
-	const showModal = (bin) => {
+	const showModal = (e, bin) => {
+		console.log('open modal');
+		e.preventDefault();
 		setBinToDelete(bin);
 		setShow(true);
 	};
@@ -67,66 +65,73 @@ function Bins() {
 		}
 	};
 
+	useEffect(() => {
+		getBins();
+	}, []);
+
 	// ======================================================================= JSX
 	return (
-		<section className='bins'>
-			<div className='bins-container'>
-				{bins.map((bin) => (
-					<Card key={bin.id}>
-						<Card.Body>
-							<Link to={`/bins/${bin.id}`} className='card-title'>
-								{bin.title} ({bin.product_count})
-							</Link>
-							<div className='icons-container'>
-								<Link to={`/bins/${bin.id}/edit`} className='button-css edit-icon'>
-									<i class='icon-pencil'></i>
-								</Link>
-								<button
-									type='button'
-									className='button-css delete-icon'
-									onClick={() => showModal(bin)}>
-									<i class='icon-trash'></i>
-								</button>
-							</div>
-						</Card.Body>
-					</Card>
-				))}
-
-				<Card>
-					<Card.Body>
-						<Link to={`/add-bin`} className='card-title'>
-							Add Bin
+			<section className='bins'>
+				<div className='bins-container'>
+					{bins.map((bin) => (
+						<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
+							<Card>
+								<p className='card-text'>
+									{bin.title} ({bin.product_count})
+								</p>
+								<div className='icons-container'>
+									<Link
+										to={`/bins/${bin.id}/edit`}
+										className='edit-icon button-css'>
+										<i className='icon-pencil'></i>
+									</Link>
+									<button
+										type='button'
+										className='delete-icon button-css'
+										onClick={(e) => showModal(e, bin)}>
+										<i className='icon-trash'></i>
+									</button>
+								</div>
+							</Card>
 						</Link>
-						<button
-							type='button'
-							className='button-css'
-							onClick={() => navigate('/add-bin')}>
-							+
-						</button>
-					</Card.Body>
-				</Card>
-			</div>
+					))}
 
-			<Modal show={show} onHide={closeModal}>
-				<Modal.Header>
-					<Modal.Title>Are you sure?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{`Deleting your ${binToDelete.title} bin cannot be undone.`}
-				</Modal.Body>
-				<Modal.Footer>
-					<button type='button' className='button-css' onClick={closeModal}>
-						CANCEL
-					</button>
-					<button type='button' className='button-css' onClick={deleteBin}>
-						DELETE BIN
-					</button>
-				</Modal.Footer>
-			</Modal>
-			
-			{loading && 'Loading...'}
-			{error && error}
-		</section>
+					{!loading && (
+						<Link to={`/add-bin`}>
+							<Card>
+								<p className='card-text'>Add Bin</p>
+								<div className='icons-container'>
+									<button
+										type='button'
+										className='add-icon button-css'
+										onClick={() => navigate('/add-bin')}>
+										+
+									</button>
+								</div>
+							</Card>
+						</Link>
+					)}
+				</div>
+
+				<Modal show={show} onHide={closeModal}>
+					<Modal.Header>
+						<Modal.Title>Are you sure?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						Deleting your <span className='bin-name'>${binToDelete.title}</span> bin cannot be undone.
+					</Modal.Body>
+					<Modal.Footer>
+						<button type='button' className='modal-cancel button-css' onClick={closeModal}>
+							CANCEL
+						</button>
+						<button type='button' className='modal-delete button-css' onClick={deleteBin}>
+							DELETE BIN
+						</button>
+					</Modal.Footer>
+				</Modal>
+				{loading && 'Loading...'}
+				{error && error}
+			</section>
 	);
 }
 

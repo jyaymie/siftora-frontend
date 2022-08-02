@@ -1,4 +1,20 @@
+.btn,
+.btn-primary {
+	border: 1px solid rgb(30, 30, 30);
+	border-radius: 0;
+	background-image: none;
+	background-color: transparent;
+	color: black;
+}
+
+.btn:focus,
+.btn:hover {
+	border: 1px solid rgb(30, 30, 30);
+	background-color: rgb(30, 30, 30);
+	color: rgb(255, 255, 255);
+}
+
 .dropdown-menu {
-	height: 300px;
-	overflow-y: scroll;
+	height: 200px;
+	overflow: auto;
 }

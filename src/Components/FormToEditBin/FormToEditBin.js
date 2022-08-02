@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 
 function FormToEditBin() {
 	const { id } = useParams();
@@ -30,10 +29,6 @@ function FormToEditBin() {
 			);
 		}
 	};
-
-	useEffect(() => {
-		getBin();
-	}, []);
 
 	// ================================================================ UPDATE BIN
 	const updateBin = async (e) => {
@@ -63,29 +58,33 @@ function FormToEditBin() {
 		}
 	};
 
+	// ================================================================= useEffect
+	useEffect(() => {
+		getBin();
+	}, []);
+
 	// ======================================================================= JSX
 	return (
 		<section>
-			<Form onSubmit={updateBin}>
-				<Form.Group className='mb-3'>
-					<Form.Label>BIN TITLE</Form.Label>
-					<Form.Control
-						id='title'
-						defaultValue={bin.title}
-						onClick={(e) => e.target.select()}
-						required
-					/>
-				</Form.Group>
-				<div className='form-options'>
-					<Link to='/bins' className='button-css cancel'>CANCEL</Link>
-					<button type='submit' className='button-css submit'>
-						SUBMIT
-					</button>
-				</div>
+			{!loading && (
+				<Form onSubmit={updateBin}>
+					<Form.Group className='mb-3'>
+						<Form.Label>BIN TITLE</Form.Label>
+						<Form.Control id='title' defaultValue={bin.title} required />
+					</Form.Group>
+					<div className='form-options'>
+						<Link to='/bins' className='cancel button-css'>
+							CANCEL
+						</Link>
+						<button type='submit' className='submit button-css'>
+							SUBMIT
+						</button>
+					</div>
+				</Form>
+			)}
 
-				{loading && 'Loading...'}
-				{error && error}
-			</Form>
+			{loading && 'Loading...'}
+			{error && error}
 		</section>
 	);
 }
