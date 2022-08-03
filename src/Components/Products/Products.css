@@ -1,0 +1,8 @@
+.products-nav {
+  display: flex;
+  flex-direction: row;
+}
+
+.add-product-link {
+  position: absolute;
+}

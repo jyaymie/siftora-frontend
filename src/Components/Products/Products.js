@@ -49,6 +49,7 @@ function updateQueryParams(params) {
 
 function Products() {
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [products, setProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToDelete, setProductToDelete] = useState({});
@@ -56,6 +57,7 @@ function Products() {
 	// ============================================================== GET PRODUCTS
 	const getProducts = async () => {
 		setError('');
+		setLoading(true);
 		try {
 			// Use window.location.search to save the last used query parameters
 			// This way, when a product's use count is updated,
@@ -64,9 +66,11 @@ function Products() {
 			const res = await axios.get(url);
 			if (res.status === 200) {
 				setProducts(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Products weren't retrieved...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -77,10 +81,11 @@ function Products() {
 		getProducts();
 	}, []);
 
-	// =================================================== SORT PRODUCTS BY OPTION
-	const sortByOption = async (option) => {
+	// ============================================================= SORT PRODUCTS
+	const sortProducts = async (option) => {
 		const sortName = option.id;
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.get(
 				`http://localhost:8000/api/products/?sort=${option.params}`
@@ -90,9 +95,11 @@ function Products() {
 					sort: `${option.params}`,
 				});
 				setProducts(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log(`Products weren't sorted by ${sortName}...`, error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -114,6 +121,7 @@ function Products() {
 
 	const updateCount = async (product) => {
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.put(
 				`http://localhost:8000/api/products/${product.id}/`,
@@ -121,9 +129,11 @@ function Products() {
 			);
 			if (res.status === 200) {
 				getProducts();
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Use count wasn't updated...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -142,6 +152,7 @@ function Products() {
 	const deleteProduct = async () => {
 		closeModal();
 		setError('');
+		setLoading(true);
 		const id = productToDelete.id;
 		try {
 			const res = await axios.delete(
@@ -153,9 +164,11 @@ function Products() {
 				);
 				setProducts(filteredProducts);
 				getProducts();
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Product wasn't deleted...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -164,20 +177,23 @@ function Products() {
 
 	// ======================================================================= JSX
 	return (
-		<div>
-			<Link to='/add-product' className='button-css'>
-				Add New Product
-			</Link>
-			<DropdownButton
-				className='button-css'
-				id='dropdown-basic-button'
-				title='Sort Products By'>
-				{DROPDOWN_OPTIONS.map((option) => (
-					<Dropdown.Item onClick={() => sortByOption(option)} key={option.id}>
-						{option.name}
-					</Dropdown.Item>
-				))}
-			</DropdownButton>
+		<section className='products'>
+			<nav className='products-nav'>
+				<Link to='/add-product' className='add-product-link button-css'>
+					Add New Product
+				</Link>
+				<DropdownButton
+					className='button-css'
+					id='dropdown-basic-button'
+					title='Sort Products By'>
+					{DROPDOWN_OPTIONS.map((option) => (
+						<Dropdown.Item onClick={() => sortProducts(option)} key={option.id}>
+							{option.name}
+						</Dropdown.Item>
+					))}
+				</DropdownButton>
+			</nav>
+
 			{products.map((product) => (
 				<Accordion key={product.id}>
 					<Accordion.Item eventKey='0'>
@@ -241,7 +257,7 @@ function Products() {
 			</Modal>
 
 			{error && error}
-		</div>
+		</section>
 	);
 }
 

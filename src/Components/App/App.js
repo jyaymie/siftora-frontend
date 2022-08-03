@@ -60,7 +60,7 @@ function App() {
 			{/* Don't display the header/footer on the landing page */}
 			{location.pathname !== '/' && (
 				<header>
-					<nav>
+					<nav className='app-nav'>
 						<Link to='/bins' className='nav-icon-link'>
 							S
 						</Link>

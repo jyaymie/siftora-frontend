@@ -58,8 +58,8 @@ function FormToAddProductToBin() {
 				expiry_date: e.target.expiry_date.value,
 				use_count: e.target.use_count.value,
 				finish_date: e.target.finish_date.value,
-				will_repurchase: e.target.will_repurchase.value,
-				notes: e.target.will_repurchase.value,
+				will_repurchase: e.target.will_repurchase.checked,
+				notes: e.target.notes.value,
 			};
 			console.log('producttoadd', productToAdd);
 			const res = await axios.post(

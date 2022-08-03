@@ -26,7 +26,7 @@
 	box-shadow: inset 250px 0 0 0 rgb(180, 140, 140, 0.3);
 }
 
-.icons-container {
+.bins-icons-container {
 	display: flex;
 	position: absolute;
 	bottom: 0;
@@ -36,6 +36,7 @@
 .delete-icon,
 .add-icon {
 	width: 40px;
+	border: none;
 }
 
 .delete-icon {

@@ -34,8 +34,8 @@ a:visited {
 	align-items: center;
 	height: 40px;
 	padding-top: 3px;
-	border: none;
-	background-color: transparent;
+	border: 1px solid rgb(30, 30, 30);
+	background-color: rgb(255, 255, 255);
 	color: rgb(30, 30, 30);
 	transition-duration: 0.3s;
 }
@@ -44,7 +44,8 @@ a:visited {
 	border: 1px solid rgb(30, 30, 30);
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
-} */
+}
+*/
 
 /* header {
 	position: absolute;
@@ -54,7 +55,7 @@ a:visited {
 	z-index: 1;
 } */
 
-nav {
+.app-nav {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;

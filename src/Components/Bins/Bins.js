@@ -58,80 +58,89 @@ function Bins() {
 			}
 		} catch (error) {
 			console.log("Bin wasn't deleted...", error);
-			setLoading(true);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
+	// ================================================================= useEffect
 	useEffect(() => {
 		getBins();
 	}, []);
 
 	// ======================================================================= JSX
 	return (
-			<section className='bins'>
-				<div className='bins-container'>
-					{bins.map((bin) => (
-						<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
-							<Card>
-								<p className='card-text'>
-									{bin.title} ({bin.product_count})
-								</p>
-								<div className='icons-container'>
-									<Link
-										to={`/bins/${bin.id}/edit`}
-										className='edit-icon button-css'>
-										<i className='icon-pencil'></i>
-									</Link>
-									<button
-										type='button'
-										className='delete-icon button-css'
-										onClick={(e) => showModal(e, bin)}>
-										<i className='icon-trash'></i>
-									</button>
-								</div>
-							</Card>
-						</Link>
-					))}
+		<section className='bins'>
+			<div className='bins-container'>
+				{bins.map((bin) => (
+					<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
+						<Card>
+							<p className='card-text'>
+								{bin.title} ({bin.product_count})
+							</p>
+							<div className='bins-icons-container'>
+								<Link
+									to={`/bins/${bin.id}/edit`}
+									className='edit-icon button-css'>
+									<i className='icon-pencil'></i>
+								</Link>
+								<button
+									type='button'
+									className='delete-icon button-css'
+									onClick={(e) => showModal(e, bin)}>
+									<i className='icon-trash'></i>
+								</button>
+							</div>
+						</Card>
+					</Link>
+				))}
 
-					{!loading && (
-						<Link to={`/add-bin`}>
-							<Card>
-								<p className='card-text'>Add Bin</p>
-								<div className='icons-container'>
-									<button
-										type='button'
-										className='add-icon button-css'
-										onClick={() => navigate('/add-bin')}>
-										+
-									</button>
-								</div>
-							</Card>
-						</Link>
-					)}
-				</div>
+				{!loading && (
+					<Link to={`/add-bin`}>
+						<Card>
+							<p className='card-text'>Add Bin</p>
+							<div className='icons-container'>
+								<button
+									type='button'
+									className='add-icon button-css'
+									onClick={() => navigate('/add-bin')}>
+									+
+								</button>
+							</div>
+						</Card>
+					</Link>
+				)}
+			</div>
 
-				<Modal show={show} onHide={closeModal}>
-					<Modal.Header>
-						<Modal.Title>Are you sure?</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						Deleting your <span className='bin-name'>${binToDelete.title}</span> bin cannot be undone.
-					</Modal.Body>
-					<Modal.Footer>
-						<button type='button' className='modal-cancel button-css' onClick={closeModal}>
-							CANCEL
-						</button>
-						<button type='button' className='modal-delete button-css' onClick={deleteBin}>
-							DELETE BIN
-						</button>
-					</Modal.Footer>
-				</Modal>
-				{loading && 'Loading...'}
-				{error && error}
-			</section>
+			<Modal show={show} onHide={closeModal}>
+				<Modal.Header>
+					<Modal.Title>Are you sure?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					Deleting your <span className='bin-name'>${binToDelete.title}</span>{' '}
+					bin cannot be undone.
+				</Modal.Body>
+				<Modal.Footer>
+					<button
+						type='button'
+						className='modal-cancel button-css'
+						onClick={closeModal}>
+						CANCEL
+					</button>
+					<button
+						type='button'
+						className='modal-delete button-css'
+						onClick={deleteBin}>
+						DELETE BIN
+					</button>
+				</Modal.Footer>
+			</Modal>
+
+			{loading && 'Loading...'}
+			{error && error}
+		</section>
 	);
 }
 
