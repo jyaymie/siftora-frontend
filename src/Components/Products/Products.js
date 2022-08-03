@@ -207,7 +207,10 @@ function Products() {
 					<Accordion key={product.id}>
 						<Accordion.Item eventKey={'${product.id}'}>
 							<Accordion.Header>
-								{`${product.name} by ${product.brand}`}
+								<div className='accordion-header-content'>
+									{`${product.name} by ${product.brand}`}
+									<img src={product.image} className='product-image-small' />
+								</div>
 							</Accordion.Header>
 							<Accordion.Body className='product-details'>
 								<p>Shade: {product.shade}</p>
@@ -232,6 +235,10 @@ function Products() {
 								</p>
 								<p>Finish Date: {product.finish_date}</p>
 								<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>
+								<p>
+									Image:{' '}
+									<img src={product.notes} className='product-image-large' />
+								</p>
 								<p>Notes: {product.notes}</p>
 
 								<div className='products-icon-container'>

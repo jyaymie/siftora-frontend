@@ -1,4 +1,4 @@
-.bin{
+.bin {
 	flex-direction: column;
 }
 
@@ -52,6 +52,13 @@
 .accordion-header {
 	border: 1px solid rgb(30, 30, 30);
 	border-radius: 0;
+}
+
+.accordion-header-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
 }
 
 .accordion-button {

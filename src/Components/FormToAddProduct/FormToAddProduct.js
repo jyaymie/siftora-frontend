@@ -41,6 +41,7 @@ function FormToAddProduct() {
 				use_count: e.target.use_count.value,
 				finish_date: e.target.finish_date.value,
 				will_repurchase: e.target.will_repurchase.checked,
+				image: e.target.image.value,
 				notes: e.target.notes.value,
 			};
 			console.log(productToAdd);
@@ -90,6 +91,8 @@ function FormToAddProduct() {
 						id='will_repurchase'
 						label='Will Repurchase'
 					/>
+					<Form.Label htmlFor='image'>Image URL</Form.Label>
+					<Form.Control id='image' />
 					<Form.Label htmlFor='notes'>Notes</Form.Label>
 					<Form.Control as='textarea' rows={3} id='notes' />
 				</Form.Group>

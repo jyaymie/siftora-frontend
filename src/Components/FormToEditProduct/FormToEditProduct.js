@@ -59,6 +59,7 @@ function FormToEditProduct() {
 				use_count: e.target.use_count.value,
 				finish_date: e.target.finish_date.value,
 				will_repurchase: e.target.will_repurchase.checked,
+				image: e.target.image.value,
 				notes: e.target.notes.value,
 			};
 			const res = await axios.put(
@@ -140,6 +141,8 @@ function FormToEditProduct() {
 						checked={Boolean(product.will_repurchase)}
 						onChange={(e) => onInputChange(e, 'will_repurchase')}
 					/>
+					<Form.Label htmlFor='image'>Image URL</Form.Label>
+					<Form.Control id='image' defaultValue={product.image} />
 					<Form.Label htmlFor='notes'>Notes</Form.Label>
 					<Form.Control id='notes' defaultValue={product.notes} />
 				</Form.Group>

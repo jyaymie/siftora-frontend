@@ -279,7 +279,10 @@ function Bin() {
 						<Accordion key={product.id}>
 							<Accordion.Item eventKey={'${product.id}'}>
 								<Accordion.Header>
-									{`${product.name} by ${product.brand}`}
+									<div className='accordion-header-content'>
+										<p>{`${product.name} by ${product.brand}`}</p>
+										<img src={product.image} className='product-image-small' />
+									</div>
 								</Accordion.Header>
 								<Accordion.Body className='product-details'>
 									<p>Shade: {product.shade}</p>
@@ -305,6 +308,10 @@ function Bin() {
 									<p>Finish Date: {product.finish_date}</p>
 									<p>
 										Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}
+									</p>
+									<p>
+										Image:{' '}
+										<img src={product.image} className='product-image-large' />
 									</p>
 									<p>Notes: {product.notes}</p>
 									<div className='bin-icon-container'>
@@ -358,7 +365,9 @@ function Bin() {
 			)}
 
 			{bin.products && !bin.products.length ? (
-				<p className='bin-empty-message'>This bin is empty. Please add a product.</p>
+				<p className='bin-empty-message'>
+					This bin is empty. Please add a product.
+				</p>
 			) : null}
 
 			{loading && 'Loading...'}
