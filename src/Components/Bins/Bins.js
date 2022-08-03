@@ -119,7 +119,7 @@ function Bins() {
 					<Modal.Title>Are you sure?</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					Deleting your <span className='bin-name'>${binToDelete.title}</span>{' '}
+					Deleting your <span className='bin-name'>{binToDelete.title}</span>{' '}
 					bin cannot be undone.
 				</Modal.Body>
 				<Modal.Footer>

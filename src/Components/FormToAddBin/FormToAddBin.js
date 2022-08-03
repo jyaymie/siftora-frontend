@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 
 function FormToAddBin() {
 	const navigate = useNavigate();
@@ -33,7 +32,8 @@ function FormToAddBin() {
 
 	// ======================================================================= JSX
 	return (
-		<section>
+		<section className='form-for-bin-add'>
+			<h2>New Bin{' '}</h2>
 			<Form onSubmit={addBin}>
 				<Form.Group className='mb-3'>
 					<Form.Label>Title</Form.Label>

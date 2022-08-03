@@ -1,3 +1,4 @@
+import './Products.css';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -76,10 +77,6 @@ function Products() {
 			);
 		}
 	};
-
-	useEffect(() => {
-		getProducts();
-	}, []);
 
 	// ============================================================= SORT PRODUCTS
 	const sortProducts = async (option) => {
@@ -175,40 +172,50 @@ function Products() {
 		}
 	};
 
+	// ================================================================= useEffect
+	useEffect(() => {
+		getProducts();
+	}, []);
+
 	// ======================================================================= JSX
 	return (
 		<section className='products'>
-			<nav className='products-nav'>
-				<Link to='/add-product' className='add-product-link button-css'>
-					Add New Product
-				</Link>
-				<DropdownButton
-					className='button-css'
-					id='dropdown-basic-button'
-					title='Sort Products By'>
-					{DROPDOWN_OPTIONS.map((option) => (
-						<Dropdown.Item onClick={() => sortProducts(option)} key={option.id}>
-							{option.name}
-						</Dropdown.Item>
-					))}
-				</DropdownButton>
-			</nav>
+			<div className='products-container'>
+				<h2>All Products</h2>
+				<nav className='products-actions'>
+					<Link to='/add-product' className='product-add-link button-css'>
+						Add New Product ▸
+					</Link>
 
-			{products.map((product) => (
-				<Accordion key={product.id}>
-					<Accordion.Item eventKey='0'>
-						<Accordion.Header>
-							{`${product.name} by ${product.brand}`}
-						</Accordion.Header>
-						<Accordion.Body>
-							<ul>
-								<li>Shade: {product.shade}</li>
-								<li>Finish: {product.finish}</li>
-								<li>Purchase Date: {product.purchase_date}</li>
-								<li>Price: {product.price}</li>
-								<li>Open Date: {product.open_date}</li>
-								<li>Expiry Date: {product.expiry_date}</li>
-								<li>
+					{/* ============================== DROPDOWN FOR SORTING PRODUCTS */}
+					<DropdownButton
+						title={`Sort Products By${' '}`}
+						className='dropdown-to-sort'
+						id='dropdown-menu-align-end'>
+						{DROPDOWN_OPTIONS.map((option) => (
+							<Dropdown.Item
+								onClick={() => sortProducts(option)}
+								key={option.id}>
+								{option.name}
+							</Dropdown.Item>
+						))}
+					</DropdownButton>
+				</nav>
+
+				{/* =============================================  BIN PRODUCT DETAILS */}
+				{products.map((product) => (
+					<Accordion key={product.id}>
+						<Accordion.Item eventKey={'${product.id}'}>
+							<Accordion.Header>
+								{`${product.name} by ${product.brand}`}
+							</Accordion.Header>
+							<Accordion.Body className='product-details'>
+								<p>Shade: {product.shade}</p>
+								<p>Purchase Date: {product.purchase_date}</p>
+								<p>Price: {product.price}</p>
+								<p>Open Date: {product.open_date}</p>
+								<p>Expiry Date: {product.expiry_date}</p>
+								<p>
 									# of Uses: {product.use_count}
 									<Button
 										type='button'
@@ -222,40 +229,56 @@ function Products() {
 										onClick={() => incrementUse(product)}>
 										+
 									</Button>
-								</li>
-								<li>Finish Date: {product.finish_date}</li>
-								<li>Will Repurchase: {product.will_repurchase}</li>
-								<li>Notes: {product.notes}</li>
-							</ul>
-							<Link to={`/products/${product.id}/edit`}>Edit</Link>
-							<Button
-								type='button'
-								variant='secondary'
-								onClick={() => showModal(product)}>
-								Delete
-							</Button>
-						</Accordion.Body>
-					</Accordion.Item>
-				</Accordion>
-			))}
+								</p>
+								<p>Finish Date: {product.finish_date}</p>
+								<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>
+								<p>Notes: {product.notes}</p>
 
-			<Modal show={show} onHide={closeModal}>
-				<Modal.Header>
-					<Modal.Title>Are you sure?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{`Deleting ${productToDelete.name} cannot be undone.`}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button type='button' variant='secondary' onClick={closeModal}>
-						Cancel
-					</Button>
-					<Button type='button' variant='primary' onClick={deleteProduct}>
-						Delete Product
-					</Button>
-				</Modal.Footer>
-			</Modal>
+								<div className='products-icon-container'>
+									<Link
+										to={`/products/${product.id}/edit`}
+										className='edit-icon button-css'>
+										<i className='icon-pencil'></i>
+									</Link>
+									<button
+										type='button'
+										className='delete-icon button-css'
+										onClick={() => showModal(product)}>
+										<i className='icon-trash'></i>
+									</button>
+								</div>
+							</Accordion.Body>
+						</Accordion.Item>
+					</Accordion>
+				))}
 
+				<Modal show={show} onHide={closeModal}>
+					<Modal.Header>
+						<Modal.Title>Are you sure?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						Deleting{' '}
+						<span className='product-name'>{productToDelete.name}</span> cannot
+						be undone.
+					</Modal.Body>
+					<Modal.Footer>
+						<button
+							type='button'
+							className='products-modal-cancel button-css'
+							onClick={closeModal}>
+							CANCEL
+						</button>
+						<button
+							type='button'
+							className='products-modal-delete button-css'
+							onClick={deleteProduct}>
+							DELETE PRODUCT
+						</button>
+					</Modal.Footer>
+				</Modal>
+			</div>
+
+			{loading && 'Loading...'}
 			{error && error}
 		</section>
 	);

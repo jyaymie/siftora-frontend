@@ -238,6 +238,7 @@ function Bin() {
 		<section className='bin'>
 			{!loading && (
 				<div className='bin-container'>
+					<h2>{bin.title}</h2>
 					<nav className='bin-actions'>
 						<div className='bin-add-options'>
 							{/* ============================= DROPDOWN FOR ADDING PRODUCTS */}
@@ -282,7 +283,6 @@ function Bin() {
 								</Accordion.Header>
 								<Accordion.Body className='product-details'>
 									<p>Shade: {product.shade}</p>
-									<p>Finish: {product.finish}</p>
 									<p>Purchase Date: {product.purchase_date}</p>
 									<p>Price: {product.price}</p>
 									<p>Open Date: {product.open_date}</p>
@@ -303,10 +303,11 @@ function Bin() {
 										</Button>
 									</p>
 									<p>Finish Date: {product.finish_date}</p>
-									<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>
+									<p>
+										Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}
+									</p>
 									<p>Notes: {product.notes}</p>
-
-									<div className='bin-icons-container'>
+									<div className='bin-icon-container'>
 										<Link
 											to={`/products/${product.id}/edit`}
 											className='edit-icon button-css'>
@@ -323,21 +324,27 @@ function Bin() {
 							</Accordion.Item>
 						</Accordion>
 					))}
+
 					<Modal show={show} onHide={closeModal}>
 						<Modal.Header>
-							<Modal.Title>Just so you know!</Modal.Title>
+							<Modal.Title>Just so you know...</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							{`Removing ${productToRemove.name} from this bin will not remove it from your products inventory. To delete this product, please go to `}
-							<Link to='/products'>My Products</Link>.
+							Removing <span className='product-name'>{productToRemove.name}</span> from this bin will
+							not delete it from your products inventory. To fully part ways with this
+							product, please go to{' '}
+							<Link to='/products' className='modal-link'>My Products</Link>.
 						</Modal.Body>
 						<Modal.Footer>
-							<Button type='button' variant='secondary' onClick={closeModal}>
-								Cancel
-							</Button>
-							<Button type='button' variant='primary' onClick={removeProduct}>
-								Remove from Bin
-							</Button>
+							<button type='button' className='modal-cancel button-css' onClick={closeModal}>
+								CANCEL
+							</button>
+							<button
+								type='button'
+								className='modal-remove button-css'
+								onClick={removeProduct}>
+								REMOVE FROM BIN
+							</button>
 						</Modal.Footer>
 					</Modal>
 				</div>

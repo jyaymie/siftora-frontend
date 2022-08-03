@@ -51,6 +51,7 @@
 }
 
 .accordion-button {
+	font-family: 'Courier New', Courier, monospace;
 	font-size: 15px;
 	background-color: rgb(255, 255, 255);
 }
@@ -60,7 +61,7 @@
 	border-bottom: 1px dashed rgba(0, 0, 0);
 }
 
-.bin-icons-container {
+.bin-icon-container {
 	display: flex;
 	justify-content: flex-end;
 	bottom: 0;
@@ -68,4 +69,18 @@
 
 .edit-icon {
 	padding-top: 0;
+}
+
+/* ==================================================================== MODAL */
+.product-name {
+	background-color: rgb(180, 140, 140, 0.3);
+}
+
+.modal-link {
+	text-decoration: underline;
+}
+
+.modal-remove {
+	width: 160px;
+	border: 1px solid rgb(30, 30, 30);
 }
