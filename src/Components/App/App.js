@@ -33,7 +33,7 @@ function App() {
 	// 	setError('');
 	// 	setLoading(true);
 	// 	try {
-	// 		const res = await axios.post('https://siftora.netlify.app/signout/');
+	// 		const res = await axios.post('https://siftora.herokuapp.com/api/signout/');
 	// 		if (res.status === 200) {
 	// 			setLoading(false);
 	// 			navigate('/');

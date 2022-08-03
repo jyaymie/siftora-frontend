@@ -46,7 +46,7 @@ function FormToAddProduct() {
 			};
 			console.log(productToAdd);
 			const res = await axios.post(
-				'https://siftora.netlify.app/products/',
+				'https://siftora.herokuapp.com/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {

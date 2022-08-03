@@ -33,11 +33,14 @@ function SignupPage() {
 		const post = async () => {
 			setError('');
 			try {
-				const res = await axios.post('https://siftora.netlify.app/signup/', {
-					username: username,
-					password: password,
-					password2: confirmedPassword,
-				});
+				const res = await axios.post(
+					'https://siftora.herokuapp.com/api/signup/',
+					{
+						username: username,
+						password: password,
+						password2: confirmedPassword,
+					}
+				);
 				if (res.status === 200) {
 					setUser(res.data);
 					navigate('/bins');

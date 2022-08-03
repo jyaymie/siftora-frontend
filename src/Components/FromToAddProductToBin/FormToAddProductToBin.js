@@ -17,7 +17,9 @@ function FormToAddProductToBin() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(`https://siftora.netlify.app/bins/${id}/`);
+			const res = await axios.get(
+				`https://siftora.herokuapp.com/api/bins/${id}/`
+			);
 			if (res.status === 200) {
 				setBin(res.data);
 				setLoading(false);
@@ -65,7 +67,7 @@ function FormToAddProductToBin() {
 				notes: e.target.notes.value,
 			};
 			const res = await axios.post(
-				'https://siftora.netlify.app/products/',
+				'https://siftora.herokuapp.com/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {
@@ -87,11 +89,14 @@ function FormToAddProductToBin() {
 			setError('');
 			setLoading(true);
 			try {
-				const res = await axios.put(`https://siftora.netlify.app/bins/${id}/`, {
-					id: id,
-					title: bin.title,
-					products: bin.products,
-				});
+				const res = await axios.put(
+					`https://siftora.herokuapp.com/api/bins/${id}/`,
+					{
+						id: id,
+						title: bin.title,
+						products: bin.products,
+					}
+				);
 				if (res.status === 200) {
 					navigate(-1);
 					setLoading(false);

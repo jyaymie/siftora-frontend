@@ -19,7 +19,7 @@ function FormToAddBin() {
 		try {
 			const binToAdd = { title: e.target.title.value };
 			const res = await axios.post(
-				'https://siftora.netlify.app/bins/',
+				'https://siftora.herokuapp.com/api/bins/',
 				binToAdd
 			);
 			if (res.status === 201) {
