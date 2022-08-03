@@ -1,7 +1,0 @@
-App
-  * Home (for users to sign up or log in)
-  * Bins (dashboard)
-  * Bin (displays the bin's products)
-  * Products (displays ALL products)
-  * Form to add/edit a bin
-  * Form to add/edit a product

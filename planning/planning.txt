@@ -1,0 +1,40 @@
+User Stories:
+* As a user, I want to add a product to more than one bin so that I can have an all-inclusive bin and a bin for when I travel.
+* As a user, I want to sort products by field so that I can see what products are expiring soon or what brands I tend to purchase from.
+* As a user, I want to add photos so that I can easily reference them when I am deciding on a shade in store.
+
+================================================================================
+Tech Stack:
+* Front-end: HTML, CSS, React, (Maybe: Tailwind, Sass)
+* Back-end: Python, Django REST Framework
+* Database: PostgreSQL
+
+================================================================================
+React Component Hierarchy:
+App
+> Home (for users to sign up or log in)
+> Bins (dashboard)
+> Bin (displays the bin's products)
+> Products (displays ALL products)
+> Form to add/edit a bin
+> Form to add/edit a product
+
+================================================================================
+### List of backend models and their properties
+Bin
+> Name
+> Product Amount
+
+Makeup
+> Brand
+> Name
+> Shade
+> Purchase Date
+> Price
+> Open Date
+> Expiry date
+> Use Count
+> Finish Date
+> Will Repurchase
+> Image
+> Notes
