@@ -46,7 +46,7 @@ function FormToAddProduct() {
 			};
 			console.log(productToAdd);
 			const res = await axios.post(
-				'https://siftora.netlify.app/api/products/',
+				'https://siftora.netlify.app/products/',
 				productToAdd
 			);
 			if (res.status === 201) {

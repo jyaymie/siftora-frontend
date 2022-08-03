@@ -63,7 +63,7 @@ function Bin() {
 			// Use window.location.search to save the last used query parameters
 			// This way, when a product's use count is updated,
 			// the products will remain sorted by whatever option the user last chose
-			const url = `https://siftora.netlify.app/api/bins/${id}/${window.location.search}`;
+			const url = `https://siftora.netlify.app/bins/${id}/${window.location.search}`;
 			const res = await axios.get(url);
 			if (res.status === 200) {
 				setBin(res.data);
@@ -84,7 +84,7 @@ function Bin() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(`https://siftora.netlify.app/api/products/`);
+			const res = await axios.get(`https://siftora.netlify.app/products/`);
 			if (res.status === 200) {
 				setAllProducts(res.data);
 				setLoading(false);
@@ -114,7 +114,7 @@ function Bin() {
 		setLoading(true);
 		try {
 			const res = await axios.get(
-				`https://siftora.netlify.app/api/bins/${id}/?sort=${option.params}`
+				`https://siftora.netlify.app/bins/${id}/?sort=${option.params}`
 			);
 			if (res.status === 200) {
 				updateQueryParams({
@@ -151,7 +151,7 @@ function Bin() {
 		setLoading(true);
 		try {
 			const res = await axios.put(
-				`https://siftora.netlify.app/api/products/${product.id}/`,
+				`https://siftora.netlify.app/products/${product.id}/`,
 				product
 			);
 			if (res.status === 200) {
@@ -187,7 +187,7 @@ function Bin() {
 			setBinProducts(filteredBinProducts);
 			const updatedBin = { title: bin.title, products: filteredBinProducts };
 			const res = await axios.put(
-				`https://siftora.netlify.app/api/bins/${id}/`,
+				`https://siftora.netlify.app/bins/${id}/`,
 				updatedBin
 			);
 			if (res.status === 200) {
@@ -210,14 +210,11 @@ function Bin() {
 		setLoading(true);
 		try {
 			binProducts.push(product);
-			const res = await axios.put(
-				`https://siftora.netlify.app/api/bins/${id}/`,
-				{
-					id: bin.id,
-					title: bin.title,
-					products: binProducts,
-				}
-			);
+			const res = await axios.put(`https://siftora.netlify.app/bins/${id}/`, {
+				id: bin.id,
+				title: bin.title,
+				products: binProducts,
+			});
 			if (res.status === 200) {
 				getBinProducts();
 				setLoading(false);

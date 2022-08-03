@@ -17,7 +17,7 @@ function FormToEditProduct() {
 		setLoading(true);
 		try {
 			const res = await axios.get(
-				`https://siftora.netlify.app/api/products/${id}/`
+				`https://siftora.netlify.app/products/${id}/`
 			);
 			if (res.status === 200) {
 				setProduct(res.data);
@@ -65,7 +65,7 @@ function FormToEditProduct() {
 				notes: e.target.notes.value,
 			};
 			const res = await axios.put(
-				`https://siftora.netlify.app/api/products/${id}/`,
+				`https://siftora.netlify.app/products/${id}/`,
 				productToUpdate
 			);
 			if (res.status === 200) {

@@ -33,7 +33,7 @@ function App() {
 	// 	setError('');
 	// 	setLoading(true);
 	// 	try {
-	// 		const res = await axios.post('https://siftora.netlify.app/api/signout/');
+	// 		const res = await axios.post('https://siftora.netlify.app/signout/');
 	// 		if (res.status === 200) {
 	// 			setLoading(false);
 	// 			navigate('/');
@@ -96,6 +96,7 @@ function App() {
 					<Route path='/products/:id/edit' element={<FormToEditProduct />} />
 				</Routes>
 			</main>
+			<footer>&copy; SIFTORA 2022</footer>
 			{location.pathname !== '/' && <footer>&copy; SIFTORA 2022</footer>}
 
 			{/* {loading && 'Loading...'}

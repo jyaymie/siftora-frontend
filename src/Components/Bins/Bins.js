@@ -19,7 +19,7 @@ function Bins() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get('https://siftora.netlify.app/api/bins/');
+			const res = await axios.get('https://siftora.netlify.app/bins/');
 			if (res.status === 200) {
 				setBins(res.data);
 				setLoading(false);
@@ -50,9 +50,7 @@ function Bins() {
 		setLoading(true);
 		const id = binToDelete.id;
 		try {
-			const res = await axios.delete(
-				`https://siftora.netlify.app/api/bins/${id}/`
-			);
+			const res = await axios.delete(`https://siftora.netlify.app/bins/${id}/`);
 			if (res.status === 204) {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);

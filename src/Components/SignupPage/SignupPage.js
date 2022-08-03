@@ -33,7 +33,7 @@ function SignupPage() {
 		const post = async () => {
 			setError('');
 			try {
-				const res = await axios.post('https://siftora.netlify.app/api/signup/', {
+				const res = await axios.post('https://siftora.netlify.app/signup/', {
 					username: username,
 					password: password,
 					password2: confirmedPassword,
