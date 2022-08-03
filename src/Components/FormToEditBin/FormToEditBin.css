@@ -1,0 +1,20 @@
+.form-control {
+	border-radius: 0;
+	width: 500px;
+	overflow: hidden;
+}
+
+.form-options {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.cancel,
+.submit {
+	width: 80px;
+	padding-top: 5.5px;
+}
+
+.submit {
+	border: 1px solid rgb(30, 30, 30);
+}
