@@ -217,23 +217,24 @@ function Products() {
 							<Accordion.Body className='product-details'>
 								<p>Shade: {product.shade}</p>
 								<p>Purchase Date: {product.purchase_date}</p>
-								<p>Price: {product.price}</p>
+								<p>Price: ${product.price}</p>
 								<p>Open Date: {product.open_date}</p>
 								<p>Expiry Date: {product.expiry_date}</p>
-								<p>
-									# of Uses: {product.use_count}
-									<Button
+								<p className='use-count-container'>
+									# of Uses:{' '}
+									<button
 										type='button'
-										variant='secondary'
+										className='decrement-button button-css'
 										onClick={() => decrementUse(product)}>
 										-
-									</Button>
-									<Button
+									</button>
+									{product.use_count}
+									<button
 										type='button'
-										variant='secondary'
+										className='increment-button button-css'
 										onClick={() => incrementUse(product)}>
 										+
-									</Button>
+									</button>
 								</p>
 								<p>Finish Date: {product.finish_date}</p>
 								<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>

@@ -87,6 +87,18 @@
 	border: 1px solid rgb(30, 30, 30);
 }
 
+.use-count-container {
+	display: flex;
+}
+
+.decrement-button,
+.increment-button {
+	width: 20px;
+	height: 20px;
+	margin: 0 10px;
+	padding-top: 5px;
+}
+
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {
 	.products-actions {

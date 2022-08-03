@@ -85,6 +85,18 @@
 	margin-top: 20px;
 }
 
+.use-count-container {
+	display: flex;
+}
+
+.decrement-button,
+.increment-button {
+	width: 20px;
+	height: 20px;
+	margin: 0 10px;
+	padding-top: 5px;
+}
+
 /* ==================================================================== MODAL */
 .product-name {
 	background-color: rgb(180, 140, 140, 0.3);
