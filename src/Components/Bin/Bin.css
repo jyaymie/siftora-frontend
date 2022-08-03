@@ -1,20 +1,94 @@
+.bin{
+	flex-direction: column;
+}
+
+.bin-actions {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+	width: 560px;
+}
+
 .btn,
 .btn-primary {
-	border: 1px solid rgb(30, 30, 30);
+	height: 40px;
+	padding-top: 10px;
+	/* border: 1px solid rgb(30, 30, 30); */
+	border: none;
 	border-radius: 0;
 	background-image: none;
-	background-color: transparent;
-	color: black;
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+	font-size: 15px;
 }
 
 .btn:focus,
 .btn:hover {
-	border: 1px solid rgb(30, 30, 30);
+	/* border: 1px solid rgb(30, 30, 30); */
+	border: none;
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
 }
 
 .dropdown-menu {
 	height: 200px;
+	/* border: 1px solid rgb(30, 30, 30); */
+	border-radius: 0;
+	background-color: rgb(30, 30, 30);
 	overflow: auto;
+}
+
+.dropdown-item {
+	color: rgb(255, 255, 255);
+	font-size: 15px;
+}
+
+.dropdown-item:hover {
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+}
+
+.accordion-header {
+	border: 1px solid rgb(30, 30, 30);
+	border-radius: 0;
+}
+
+.accordion-button {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 15px;
+	background-color: rgb(255, 255, 255);
+}
+
+.product-details p {
+	margin-top: 3px;
+	border-bottom: 1px dashed rgba(0, 0, 0);
+}
+
+.bin-icon-container {
+	display: flex;
+	justify-content: flex-end;
+	bottom: 0;
+}
+
+.edit-icon {
+	padding-top: 0;
+}
+
+.bin-empty-message {
+	margin-top: 20px;
+}
+
+/* ==================================================================== MODAL */
+.product-name {
+	background-color: rgb(180, 140, 140, 0.3);
+}
+
+.modal-link {
+	text-decoration: underline;
+}
+
+.modal-remove {
+	width: 160px;
+	border: 1px solid rgb(30, 30, 30);
 }

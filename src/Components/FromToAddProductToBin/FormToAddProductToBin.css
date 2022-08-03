@@ -1,0 +1,30 @@
+.form-for-bin-product {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.form-label {
+	margin-top: 20px;
+	margin-bottom: 0;
+}
+
+.form-check {
+	margin-top: 20px;
+}
+
+.form-option-container {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.form-cancel-option {
+	width: 100px;
+	border: none;
+}
+
+.form-add-option {
+	width: 130px;
+}

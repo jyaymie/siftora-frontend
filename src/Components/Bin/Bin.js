@@ -1,6 +1,6 @@
 import './Bin.css';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -14,7 +14,7 @@ const DROPDOWN_OPTIONS = [
 	{ id: 'purchase_date', name: 'Recently Purchased', params: 'purchase_date' },
 	{ id: 'price', name: 'Price (Low to High)', params: 'price' },
 	{ id: 'price_desc', name: 'Price (High to Low)', params: '-price' },
-	{ id: 'open_date', name: 'Recent Opened', params: 'open_date' },
+	{ id: 'open_date', name: 'Recently Opened', params: 'open_date' },
 	{ id: 'expiry_date', name: 'Expiring Soon', params: 'expiry_date' },
 	{ id: 'use_count', name: '# of Uses (Low to High)', params: 'use_count' },
 	{
@@ -44,6 +44,7 @@ function updateQueryParams(params) {
 
 function Bin() {
 	const { id } = useParams();
+	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [bin, setBin] = useState({});
@@ -234,105 +235,135 @@ function Bin() {
 
 	// ======================================================================= JSX
 	return (
-		<div>
+		<section className='bin'>
 			{!loading && (
-				<>
-					<Link to={`/bins/${bin.id}/add-product`} className='button-css'>
-						Add New Product
-					</Link>
-					{/* ================================ DROPDOWN FOR SORTING PRODUCTS */}
-					<DropdownButton title='Sort Products By'>
-						{DROPDOWN_OPTIONS.map((option) => (
-							<Dropdown.Item
-								onClick={() => sortBinProducts(option)}
-								key={option.id}>
-								{option.name}
-							</Dropdown.Item>
-						))}
-					</DropdownButton>
+				<div className='bin-container'>
+					<h2>{bin.title}</h2>
+					<nav className='bin-actions'>
+						<div className='bin-add-options'>
+							{/* ============================= DROPDOWN FOR ADDING PRODUCTS */}
+							<DropdownButton
+								title={`Add Product${' '}`}
+								className='dropdown-to-add'>
+								<Dropdown.Item
+									onClick={() => navigate(`/bins/${bin.id}/add-product`)}>
+									✨ ADD NEW PRODUCT ✨
+								</Dropdown.Item>
+								{getDropdownProducts().map((product) => (
+									<Dropdown.Item
+										key={product.id}
+										onClick={() =>
+											addProductToBin(product)
+										}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
+								))}
+							</DropdownButton>
+						</div>
 
-					{/* ======================== DROPDOWN FOR ADDING EXISTING PRODUCTS */}
-					<DropdownButton
-						id='dropdown-basic-button'
-						title='Add Existing Product'>
-						{getDropdownProducts().map((product) => (
-							<Dropdown.Item
-								key={product.id}
-								onClick={() =>
-									addProductToBin(product)
-								}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
-						))}
-					</DropdownButton>
+						{/* ============================== DROPDOWN FOR SORTING PRODUCTS */}
+						<DropdownButton
+							title={`Sort Products By${' '}`}
+							className='dropdown-to-sort'
+							id='dropdown-menu-align-end'>
+							{DROPDOWN_OPTIONS.map((option) => (
+								<Dropdown.Item
+									onClick={() => sortBinProducts(option)}
+									key={option.id}>
+									{option.name}
+								</Dropdown.Item>
+							))}
+						</DropdownButton>
+					</nav>
 
 					{/* =========================================  BIN PRODUCT DETAILS */}
 					{binProducts.map((product) => (
 						<Accordion key={product.id}>
-							<Accordion.Item eventKey={'{product.id}'}>
+							<Accordion.Item eventKey={'${product.id}'}>
 								<Accordion.Header>
 									{`${product.name} by ${product.brand}`}
 								</Accordion.Header>
-								<Accordion.Body>
-									<ul>
-										<li>Shade: {product.shade}</li>
-										<li>Finish: {product.finish}</li>
-										<li>Purchase Date: {product.purchase_date}</li>
-										<li>Price: {product.price}</li>
-										<li>Open Date: {product.open_date}</li>
-										<li>Expiry Date: {product.expiry_date}</li>
-										<li>
-											# of Uses: {product.use_count}
-											<Button
-												type='button'
-												variant='secondary'
-												onClick={() => decrementUse(product)}>
-												-
-											</Button>
-											<Button
-												type='button'
-												variant='secondary'
-												onClick={() => incrementUse(product)}>
-												+
-											</Button>
-										</li>
-										<li>Finish Date: {product.finish_date}</li>
-										<li>Will Repurchase: {product.will_repurchase}</li>
-										<li>Notes: {product.notes}</li>
-									</ul>
-									<Link to={`/products/${product.id}/edit`}>Edit</Link>
-
-									<Button
-										type='button'
-										variant='secondary'
-										onClick={() => showModal(product)}>
-										Remove from Bin
-									</Button>
+								<Accordion.Body className='product-details'>
+									<p>Shade: {product.shade}</p>
+									<p>Purchase Date: {product.purchase_date}</p>
+									<p>Price: {product.price}</p>
+									<p>Open Date: {product.open_date}</p>
+									<p>Expiry Date: {product.expiry_date}</p>
+									<p>
+										# of Uses: {product.use_count}
+										<Button
+											type='button'
+											variant='secondary'
+											onClick={() => decrementUse(product)}>
+											-
+										</Button>
+										<Button
+											type='button'
+											variant='secondary'
+											onClick={() => incrementUse(product)}>
+											+
+										</Button>
+									</p>
+									<p>Finish Date: {product.finish_date}</p>
+									<p>
+										Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}
+									</p>
+									<p>Notes: {product.notes}</p>
+									<div className='bin-icon-container'>
+										<Link
+											to={`/products/${product.id}/edit`}
+											className='edit-icon button-css'>
+											<i className='icon-pencil'></i>
+										</Link>
+										<button
+											type='button'
+											className='delete-icon button-css'
+											onClick={() => showModal(product)}>
+											<i className='icon-trash'></i>
+										</button>
+									</div>
 								</Accordion.Body>
 							</Accordion.Item>
 						</Accordion>
 					))}
+
 					<Modal show={show} onHide={closeModal}>
 						<Modal.Header>
-							<Modal.Title>Just so you know!</Modal.Title>
+							<Modal.Title>Just so you know...</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							{`Removing ${productToRemove.name} from this bin will not remove it from your products inventory. To delete this product, please go to `}
-							<Link to='/products'>My Products</Link>.
+							Removing{' '}
+							<span className='product-name'>{productToRemove.name}</span> from
+							this bin will not delete it from your products inventory. To fully
+							part ways with this product, please go to{' '}
+							<Link to='/products' className='modal-link'>
+								My Products
+							</Link>
+							.
 						</Modal.Body>
 						<Modal.Footer>
-							<Button type='button' variant='secondary' onClick={closeModal}>
-								Cancel
-							</Button>
-							<Button type='button' variant='primary' onClick={removeProduct}>
-								Remove from Bin
-							</Button>
+							<button
+								type='button'
+								className='modal-cancel button-css'
+								onClick={closeModal}>
+								CANCEL
+							</button>
+							<button
+								type='button'
+								className='modal-remove button-css'
+								onClick={removeProduct}>
+								REMOVE FROM BIN
+							</button>
 						</Modal.Footer>
 					</Modal>
-				</>
+				</div>
 			)}
+
+			{bin.products && !bin.products.length ? (
+				<p className='bin-empty-message'>This bin is empty. Please add a product.</p>
+			) : null}
 
 			{loading && 'Loading...'}
 			{error && error}
-		</div>
+		</section>
 	);
 }
 

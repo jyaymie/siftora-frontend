@@ -1,3 +1,4 @@
+import './Products.css';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -49,6 +50,7 @@ function updateQueryParams(params) {
 
 function Products() {
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [products, setProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToDelete, setProductToDelete] = useState({});
@@ -56,6 +58,7 @@ function Products() {
 	// ============================================================== GET PRODUCTS
 	const getProducts = async () => {
 		setError('');
+		setLoading(true);
 		try {
 			// Use window.location.search to save the last used query parameters
 			// This way, when a product's use count is updated,
@@ -64,23 +67,22 @@ function Products() {
 			const res = await axios.get(url);
 			if (res.status === 200) {
 				setProducts(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Products weren't retrieved...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
-	useEffect(() => {
-		getProducts();
-	}, []);
-
-	// =================================================== SORT PRODUCTS BY OPTION
-	const sortByOption = async (option) => {
+	// ============================================================= SORT PRODUCTS
+	const sortProducts = async (option) => {
 		const sortName = option.id;
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.get(
 				`http://localhost:8000/api/products/?sort=${option.params}`
@@ -90,9 +92,11 @@ function Products() {
 					sort: `${option.params}`,
 				});
 				setProducts(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log(`Products weren't sorted by ${sortName}...`, error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -114,6 +118,7 @@ function Products() {
 
 	const updateCount = async (product) => {
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.put(
 				`http://localhost:8000/api/products/${product.id}/`,
@@ -121,9 +126,11 @@ function Products() {
 			);
 			if (res.status === 200) {
 				getProducts();
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Use count wasn't updated...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -142,6 +149,7 @@ function Products() {
 	const deleteProduct = async () => {
 		closeModal();
 		setError('');
+		setLoading(true);
 		const id = productToDelete.id;
 		try {
 			const res = await axios.delete(
@@ -153,46 +161,61 @@ function Products() {
 				);
 				setProducts(filteredProducts);
 				getProducts();
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Product wasn't deleted...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
+	// ================================================================= useEffect
+	useEffect(() => {
+		getProducts();
+	}, []);
+
 	// ======================================================================= JSX
 	return (
-		<div>
-			<Link to='/add-product' className='button-css'>
-				Add New Product
-			</Link>
-			<DropdownButton
-				className='button-css'
-				id='dropdown-basic-button'
-				title='Sort Products By'>
-				{DROPDOWN_OPTIONS.map((option) => (
-					<Dropdown.Item onClick={() => sortByOption(option)} key={option.id}>
-						{option.name}
-					</Dropdown.Item>
-				))}
-			</DropdownButton>
-			{products.map((product) => (
-				<Accordion key={product.id}>
-					<Accordion.Item eventKey='0'>
-						<Accordion.Header>
-							{`${product.name} by ${product.brand}`}
-						</Accordion.Header>
-						<Accordion.Body>
-							<ul>
-								<li>Shade: {product.shade}</li>
-								<li>Finish: {product.finish}</li>
-								<li>Purchase Date: {product.purchase_date}</li>
-								<li>Price: {product.price}</li>
-								<li>Open Date: {product.open_date}</li>
-								<li>Expiry Date: {product.expiry_date}</li>
-								<li>
+		<section className='products'>
+			<div className='products-container'>
+				<h2>All Products</h2>
+				<nav className='products-actions'>
+					<Link to='/add-product' className='product-add-link button-css'>
+						Add New Product ▸
+					</Link>
+
+					{/* ============================== DROPDOWN FOR SORTING PRODUCTS */}
+					<DropdownButton
+						title={`Sort Products By${' '}`}
+						className='dropdown-to-sort'
+						id='dropdown-menu-align-end'>
+						{DROPDOWN_OPTIONS.map((option) => (
+							<Dropdown.Item
+								onClick={() => sortProducts(option)}
+								key={option.id}>
+								{option.name}
+							</Dropdown.Item>
+						))}
+					</DropdownButton>
+				</nav>
+
+				{/* =============================================  BIN PRODUCT DETAILS */}
+				{products.map((product) => (
+					<Accordion key={product.id}>
+						<Accordion.Item eventKey={'${product.id}'}>
+							<Accordion.Header>
+								{`${product.name} by ${product.brand}`}
+							</Accordion.Header>
+							<Accordion.Body className='product-details'>
+								<p>Shade: {product.shade}</p>
+								<p>Purchase Date: {product.purchase_date}</p>
+								<p>Price: {product.price}</p>
+								<p>Open Date: {product.open_date}</p>
+								<p>Expiry Date: {product.expiry_date}</p>
+								<p>
 									# of Uses: {product.use_count}
 									<Button
 										type='button'
@@ -206,42 +229,58 @@ function Products() {
 										onClick={() => incrementUse(product)}>
 										+
 									</Button>
-								</li>
-								<li>Finish Date: {product.finish_date}</li>
-								<li>Will Repurchase: {product.will_repurchase}</li>
-								<li>Notes: {product.notes}</li>
-							</ul>
-							<Link to={`/products/${product.id}/edit`}>Edit</Link>
-							<Button
-								type='button'
-								variant='secondary'
-								onClick={() => showModal(product)}>
-								Delete
-							</Button>
-						</Accordion.Body>
-					</Accordion.Item>
-				</Accordion>
-			))}
+								</p>
+								<p>Finish Date: {product.finish_date}</p>
+								<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>
+								<p>Notes: {product.notes}</p>
 
-			<Modal show={show} onHide={closeModal}>
-				<Modal.Header>
-					<Modal.Title>Are you sure?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					{`Deleting ${productToDelete.name} cannot be undone.`}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button type='button' variant='secondary' onClick={closeModal}>
-						Cancel
-					</Button>
-					<Button type='button' variant='primary' onClick={deleteProduct}>
-						Delete Product
-					</Button>
-				</Modal.Footer>
-			</Modal>
+								<div className='products-icon-container'>
+									<Link
+										to={`/products/${product.id}/edit`}
+										className='edit-icon button-css'>
+										<i className='icon-pencil'></i>
+									</Link>
+									<button
+										type='button'
+										className='delete-icon button-css'
+										onClick={() => showModal(product)}>
+										<i className='icon-trash'></i>
+									</button>
+								</div>
+							</Accordion.Body>
+						</Accordion.Item>
+					</Accordion>
+				))}
 
+				<Modal show={show} onHide={closeModal}>
+					<Modal.Header>
+						<Modal.Title>Are you sure?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						Deleting{' '}
+						<span className='product-name'>{productToDelete.name}</span> cannot
+						be undone.
+					</Modal.Body>
+					<Modal.Footer>
+						<button
+							type='button'
+							className='products-modal-cancel button-css'
+							onClick={closeModal}>
+							CANCEL
+						</button>
+						<button
+							type='button'
+							className='products-modal-delete button-css'
+							onClick={deleteProduct}>
+							DELETE PRODUCT
+						</button>
+					</Modal.Footer>
+				</Modal>
+			</div>
+
+			{loading && 'Loading...'}
 			{error && error}
-		</div>
+		</section>
 	);
 }
 

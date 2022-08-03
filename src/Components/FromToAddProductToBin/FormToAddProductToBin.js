@@ -1,39 +1,41 @@
+import './FormToAddProductToBin.css';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 
 function FormToAddProductToBin() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const [bin, setBin] = useState([]);
 
 	// =================================================================== GET BIN
 	const getBin = async () => {
 		setError('');
+		setLoading(true);
 		try {
 			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Bin wasn't retrieved...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
 		}
 	};
 
-	useEffect(() => {
-		getBin();
-	}, []);
-
 	// =============================================================== ADD PRODUCT
 	const addProduct = async (e) => {
 		e.preventDefault();
 		setError('');
+		setLoading(true);
+
 		if (!e.target.purchase_date.value) {
 			e.target.purchase_date.value = '0001-01-01';
 		}
@@ -51,17 +53,15 @@ function FormToAddProductToBin() {
 				brand: e.target.brand.value,
 				name: e.target.name.value,
 				shade: e.target.shade.value,
-				finish: e.target.finish.value,
 				purchase_date: e.target.purchase_date.value,
 				price: e.target.price.value,
 				open_date: e.target.open_date.value,
 				expiry_date: e.target.expiry_date.value,
 				use_count: e.target.use_count.value,
 				finish_date: e.target.finish_date.value,
-				will_repurchase: e.target.will_repurchase.value,
-				notes: e.target.will_repurchase.value,
+				will_repurchase: e.target.will_repurchase.checked,
+				notes: e.target.notes.value,
 			};
-			console.log('producttoadd', productToAdd);
 			const res = await axios.post(
 				'http://localhost:8000/api/products/',
 				productToAdd
@@ -70,9 +70,11 @@ function FormToAddProductToBin() {
 				let updatedBin = bin;
 				updatedBin.products.push(res.data);
 				setBin(updatedBin);
+				setLoading(false);
 			}
 		} catch (error) {
 			console.log("Product wasn't added...", error);
+			setLoading(false);
 			setError(
 				'Hm, something went wrong. Please try again or contact support@siftora.com.'
 			);
@@ -81,7 +83,7 @@ function FormToAddProductToBin() {
 		// =========================================== UPDATE BIN WITH ADDED PRODUCT
 		const updateBin = async () => {
 			setError('');
-			console.log('updatedbin', bin);
+			setLoading(true);
 			try {
 				const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
 					id: id,
@@ -90,9 +92,11 @@ function FormToAddProductToBin() {
 				});
 				if (res.status === 200) {
 					navigate(-1);
+					setLoading(false);
 				}
 			} catch (error) {
 				console.log("Bin wasn't updated...", error);
+				setLoading(false);
 				setError(
 					'Hm, something went wrong. Please try again or contact support@siftora.com.'
 				);
@@ -101,46 +105,58 @@ function FormToAddProductToBin() {
 		updateBin();
 	};
 
+	// ================================================================= useEffect
+	useEffect(() => {
+		getBin();
+	}, []);
+
 	// ======================================================================= JSX
 	return (
-		<div>
+		<section className='form-for-bin-product'>
+			<h2>New Product</h2>
 			<Form onSubmit={addProduct}>
 				<Form.Group className='mb-3'>
-					<Form.Label>Brand</Form.Label>
+					<Form.Label htmlFor='brand'>Brand*</Form.Label>
 					<Form.Control id='brand' required />
-					<Form.Label>Name</Form.Label>
+					<Form.Label htmlFor='name'>Name*</Form.Label>
 					<Form.Control id='name' required />
-					<Form.Label>Shade</Form.Label>
+					<Form.Label htmlFor='shade'>Shade</Form.Label>
 					<Form.Control id='shade' />
-					<Form.Label>Finish</Form.Label>
-					<Form.Control id='finish' />
-					<Form.Label>Purchase Date</Form.Label>
+					<Form.Label htmlFor='purchase_date'>Purchase Date</Form.Label>
 					<Form.Control type='date' id='purchase_date' />
-					<Form.Label>Price</Form.Label>
+					<Form.Label htmlFor='price'>Price</Form.Label>
 					<Form.Control id='price' />
-					<Form.Label>Open Date</Form.Label>
+					<Form.Label htmlFor='open_date'>Open Date</Form.Label>
 					<Form.Control type='date' id='open_date' />
-					<Form.Label>Expiry Date</Form.Label>
+					<Form.Label htmlFor='expiry_date'>Expiry Date</Form.Label>
 					<Form.Control type='date' id='expiry_date' />
-					<Form.Label>Use Count</Form.Label>
+					<Form.Label htmlFor='use_count'># of Uses</Form.Label>
 					<Form.Control type='number' id='use_count' min='0' defaultValue='0' />
-					<Form.Label>Finish Date</Form.Label>
+					<Form.Label htmlFor='finish_date'>Finish Date</Form.Label>
 					<Form.Control type='date' id='finish_date' />
 					<Form.Check
 						type='checkbox'
 						id='will_repurchase'
 						label='Will Repurchase'
 					/>
-					<Form.Label>Notes</Form.Label>
-					<Form.Control id='notes' />
+					<Form.Label htmlFor='notes'>Notes</Form.Label>
+					<Form.Control as='textarea' rows={3} id='notes' />
 				</Form.Group>
-				<Link to='/'>Cancel</Link>
-				<Button type='submit' variant='primary'>
-					Add Product
-				</Button>
+				<div className='form-option-container'>
+					<button
+						className='form-cancel-option button-css'
+						onClick={() => navigate(-1)}>
+						CANCEL
+					</button>
+					<button type='submit' className='form-add-option button-css'>
+						ADD PRODUCT
+					</button>
+				</div>
 			</Form>
+
+			{loading && 'Loading...'}
 			{error && error}
-		</div>
+		</section>
 	);
 }
 

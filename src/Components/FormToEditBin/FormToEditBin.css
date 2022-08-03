@@ -15,6 +15,6 @@
 	padding-top: 5.5px;
 }
 
-.submit {
-	border: 1px solid rgb(30, 30, 30);
+.cancel {
+	border: none;
 }
