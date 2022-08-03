@@ -3,7 +3,6 @@
 	grid-template-columns: repeat(2, 250px);
 	gap: 20px;
 	grid-auto-rows: 250px;
-	
 }
 
 .card {

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
+import Spinner from '../Spinner/Spinner';
 
 function FormToEditProduct() {
 	const { id } = useParams();
@@ -159,7 +160,7 @@ function FormToEditProduct() {
 				</div>
 			</Form>
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);

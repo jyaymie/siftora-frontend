@@ -7,6 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from '../Spinner/Spinner';
 
 const DROPDOWN_OPTIONS = [
 	{ id: 'brand', name: 'Brand', params: 'brand' },
@@ -285,7 +286,7 @@ function Products() {
 				</Modal>
 			</div>
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);

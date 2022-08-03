@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import Spinner from '../Spinner/Spinner';
 
 function FormToAddProduct() {
 	const navigate = useNavigate();
@@ -108,7 +108,7 @@ function FormToAddProduct() {
 				</div>
 			</Form>
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);

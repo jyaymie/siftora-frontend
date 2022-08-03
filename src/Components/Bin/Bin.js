@@ -7,6 +7,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from '../Spinner/Spinner';
 
 const DROPDOWN_OPTIONS = [
 	{ id: 'brand', name: 'Brand', params: 'brand' },
@@ -342,7 +343,7 @@ function Bin() {
 							this bin will not delete it from your products inventory. To fully
 							part ways with this product, please go to{' '}
 							<Link to='/products' className='modal-link'>
-								My Products
+								Products
 							</Link>
 							.
 						</Modal.Body>
@@ -370,7 +371,7 @@ function Bin() {
 				</p>
 			) : null}
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);

@@ -1,8 +1,9 @@
 import './FormToAddProductToBin.css';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
+import Spinner from '../Spinner/Spinner';
 
 function FormToAddProductToBin() {
 	const { id } = useParams();
@@ -157,7 +158,7 @@ function FormToAddProductToBin() {
 				</div>
 			</Form>
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);

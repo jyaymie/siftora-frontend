@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
+import Spinner from '../Spinner/Spinner';
 
 function FormToEditBin() {
 	const { id } = useParams();
@@ -83,7 +84,7 @@ function FormToEditBin() {
 				</Form>
 			)}
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);
