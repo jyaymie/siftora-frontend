@@ -17,7 +17,7 @@ function FormToAddProductToBin() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.get(`https://siftora.netlify.app/api/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
 				setLoading(false);
@@ -65,7 +65,7 @@ function FormToAddProductToBin() {
 				notes: e.target.notes.value,
 			};
 			const res = await axios.post(
-				'http://localhost:8000/api/products/',
+				'https://siftora.netlify.app/api/products/',
 				productToAdd
 			);
 			if (res.status === 201) {
@@ -87,7 +87,7 @@ function FormToAddProductToBin() {
 			setError('');
 			setLoading(true);
 			try {
-				const res = await axios.put(`http://localhost:8000/api/bins/${id}/`, {
+				const res = await axios.put(`https://siftora.netlify.app/api/bins/${id}/`, {
 					id: id,
 					title: bin.title,
 					products: bin.products,

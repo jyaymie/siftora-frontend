@@ -17,7 +17,7 @@ function FormToEditBin() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(`http://localhost:8000/api/bins/${id}/`);
+			const res = await axios.get(`https://siftora.netlify.app/api/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
 				setLoading(false);
@@ -43,7 +43,7 @@ function FormToEditBin() {
 				products: bin.products,
 			};
 			const res = await axios.put(
-				`http://localhost:8000/api/bins/${id}/`,
+				`https://siftora.netlify.app/api/bins/${id}/`,
 				binToUpdate
 			);
 			if (res.status === 200) {

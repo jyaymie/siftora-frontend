@@ -15,10 +15,13 @@ function FormToAddBin() {
 	const addBin = async (e) => {
 		e.preventDefault();
 		setError('');
-		setLoading(true)
+		setLoading(true);
 		try {
 			const binToAdd = { title: e.target.title.value };
-			const res = await axios.post('http://localhost:8000/api/bins/', binToAdd);
+			const res = await axios.post(
+				'https://siftora.netlify.app/api/bins/',
+				binToAdd
+			);
 			if (res.status === 201) {
 				let updatedBins = [...bins];
 				updatedBins.push(binToAdd);
@@ -38,21 +41,21 @@ function FormToAddBin() {
 	// ======================================================================= JSX
 	return (
 		<section className='form-to-add-bin'>
-				<h2>New Bin </h2>
-				<Form onSubmit={addBin}>
-					<Form.Group>
-						<Form.Label htmlFor='title'>Title</Form.Label>
-						<Form.Control id='title' required />
-					</Form.Group>
-					<div className='form-option-container'>
-						<Link to='/bins' className='bin-form-cancel-option button-css'>
-							Cancel
-						</Link>
-						<button type='submit' className='bin-form-submit-option button-css'>
-							Add
-						</button>
-					</div>
-				</Form>
+			<h2>New Bin </h2>
+			<Form onSubmit={addBin}>
+				<Form.Group>
+					<Form.Label htmlFor='title'>Title</Form.Label>
+					<Form.Control id='title' required />
+				</Form.Group>
+				<div className='form-option-container'>
+					<Link to='/bins' className='bin-form-cancel-option button-css'>
+						Cancel
+					</Link>
+					<button type='submit' className='bin-form-submit-option button-css'>
+						Add
+					</button>
+				</div>
+			</Form>
 
 			{loading && <Spinner />}
 			{error && error}
