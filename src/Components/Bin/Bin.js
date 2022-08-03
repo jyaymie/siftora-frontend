@@ -330,13 +330,20 @@ function Bin() {
 							<Modal.Title>Just so you know...</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
-							Removing <span className='product-name'>{productToRemove.name}</span> from this bin will
-							not delete it from your products inventory. To fully part ways with this
-							product, please go to{' '}
-							<Link to='/products' className='modal-link'>My Products</Link>.
+							Removing{' '}
+							<span className='product-name'>{productToRemove.name}</span> from
+							this bin will not delete it from your products inventory. To fully
+							part ways with this product, please go to{' '}
+							<Link to='/products' className='modal-link'>
+								My Products
+							</Link>
+							.
 						</Modal.Body>
 						<Modal.Footer>
-							<button type='button' className='modal-cancel button-css' onClick={closeModal}>
+							<button
+								type='button'
+								className='modal-cancel button-css'
+								onClick={closeModal}>
 								CANCEL
 							</button>
 							<button
@@ -349,6 +356,10 @@ function Bin() {
 					</Modal>
 				</div>
 			)}
+
+			{bin.products && !bin.products.length ? (
+				<p className='bin-empty-message'>This bin is empty. Please add a product.</p>
+			) : null}
 
 			{loading && 'Loading...'}
 			{error && error}

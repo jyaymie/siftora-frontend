@@ -11,9 +11,11 @@ body {
 
 section {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	height: 100%;
+	margin: 20px 0;
 }
 
 h2 {
@@ -51,15 +53,12 @@ a:visited {
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
 }
-*/
 
-/* header {
-	position: absolute;
+header {
 	top: 0;
 	left: 0;
-	width: 100vw;
-	z-index: 1;
-} */
+	width: 100%;
+}
 
 .app-nav {
 	display: flex;
@@ -90,14 +89,14 @@ a:visited {
 }
 
 .nav-text-link:hover {
-	text-decoration: line-through;
+	border-bottom: 1px dashed rgb(255, 255, 255);
 }
 
-/* footer {
+footer {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	position: absolute;
+	position: fixed;
 	right: 0;
 	left: 0;
 	bottom: 0;
@@ -105,4 +104,4 @@ a:visited {
 	height: 50px;
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
-} */
+}
