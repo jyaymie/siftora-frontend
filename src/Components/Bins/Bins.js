@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
+import Spinner from '../Spinner/Spinner';
 
 function Bins() {
 	const navigate = useNavigate();
@@ -138,7 +139,7 @@ function Bins() {
 				</Modal.Footer>
 			</Modal>
 
-			{loading && 'Loading...'}
+			{loading && <Spinner />}
 			{error && error}
 		</section>
 	);
