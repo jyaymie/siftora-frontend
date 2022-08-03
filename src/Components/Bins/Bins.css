@@ -1,6 +1,6 @@
 .bins-container {
 	display: grid;
-	grid-template-columns: repeat(2, 250px);
+	grid-template-columns: repeat(1, 250px);
 	gap: 20px;
 	grid-auto-rows: 250px;
 }
@@ -20,6 +20,10 @@
 
 .card:hover {
 	box-shadow: inset 250px 0 0 0 rgb(180, 140, 140, 0.3);
+}
+
+.add-bin-card {
+	background-color: rgb(180, 140, 140, 0.3)
 }
 
 .bins-icons-container {
@@ -61,4 +65,14 @@
 .modal-delete {
 	width: 120px;
 	border: 1px solid rgb(30, 30, 30);
+}
+
+/* =========================================================== DESKTOP STYLES */
+@media screen and (min-width: 768px) {
+	.bins-container {
+		display: grid;
+		grid-template-columns: repeat(2, 250px);
+		gap: 20px;
+		grid-auto-rows: 250px;
+	}
 }

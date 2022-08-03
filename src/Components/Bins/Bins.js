@@ -74,6 +74,7 @@ function Bins() {
 	// ======================================================================= JSX
 	return (
 		<section className='bins'>
+			<h2>Bins</h2>
 			<div className='bins-container'>
 				{bins.map((bin) => (
 					<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
@@ -100,7 +101,7 @@ function Bins() {
 
 				{!loading && (
 					<Link to={`/add-bin`}>
-						<Card>
+						<Card className='add-bin-card'>
 							<p className='card-text'>Add Bin</p>
 							<div className='icons-container'>
 								<button

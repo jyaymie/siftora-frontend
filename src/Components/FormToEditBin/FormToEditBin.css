@@ -9,12 +9,12 @@
 	justify-content: flex-end;
 }
 
-.cancel,
-.submit {
+.bin-form-cancel-option,
+.bin-form-submit-option {
 	width: 80px;
-	padding-top: 5.5px;
+	height: 40px;
 }
 
-.cancel {
+.bin-form-cancel-option {
 	border: none;
 }

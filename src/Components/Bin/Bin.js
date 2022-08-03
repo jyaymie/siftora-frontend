@@ -12,6 +12,7 @@ import Spinner from '../Spinner/Spinner';
 const DROPDOWN_OPTIONS = [
 	{ id: 'brand', name: 'Brand', params: 'brand' },
 	{ id: 'name', name: 'Product Name', params: 'name' },
+	{ id: 'shade', name: 'Shade', params: 'shade' },
 	{ id: 'purchase_date', name: 'Recently Purchased', params: 'purchase_date' },
 	{ id: 'price', name: 'Price (Low to High)', params: 'price' },
 	{ id: 'price_desc', name: 'Price (High to Low)', params: '-price' },
@@ -340,8 +341,8 @@ function Bin() {
 						<Modal.Body>
 							Removing{' '}
 							<span className='product-name'>{productToRemove.name}</span> from
-							this bin will not delete it from your products inventory. To fully
-							part ways with this product, please go to{' '}
+							this bin will not delete it from your products inventory. To
+							completely part ways with this product, please go to{' '}
 							<Link to='/products' className='modal-link'>
 								Products
 							</Link>

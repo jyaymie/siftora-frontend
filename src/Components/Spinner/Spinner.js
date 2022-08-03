@@ -1,6 +1,5 @@
 function Spinner() {
 	return (
-		// Source: https://github.com/SamHerbert/SVG-Loaders/edit/master/svg-loaders/three-dots.svg
 		<svg
 			width='60'
 			height='15'

@@ -8,18 +8,13 @@ Take a look: https://siftora.netlify.app
 
 [ SCREENSHOTS HERE ]
 
-P.S. The most fitting background photo for the app was by <a href="https://unsplash.com/@johannekristensen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Johanne Kristensen</a> on <a href="https://unsplash.com/@johannekristensen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>.
+Credits:
+
+- <a href="https://www.flaticon.com/free-icons/makeup" title="makeup icons">Makeup Favicon</a> was created by Freepik - Flaticon.
+- Background photo was created by <a href="https://unsplash.com/@johannekristensen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Johanne Kristensen</a> on <a href="https://unsplash.com/@johannekristensen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>.
+- <a href="https://github.com/SamHerbert/SVG-Loaders/edit/master/svg-loaders/three-dots.svg">Loading spinner</a> was created by Sam Herbert.
 
 ## 🗺 Planning
-
-User stories
-As a user, I want to add a product to more than one bin so that I can have an all-inclusive bin and a bin for when I travel.
-As a user, I want to sort products by property so that I can see what products are expiring soon or what brands I tend to purchase from.
-As a user, I want to add multiple photos for a product so that I can reference my photos of swatches in different lighting.
-
-## 👩‍💻 Technologies
-
-This frontend React application utilizes JSX, React-Bootstrap, React Router, as well as Axios (for fetching data).
 
 ### User Stories
 
@@ -28,6 +23,10 @@ This frontend React application utilizes JSX, React-Bootstrap, React Router, as 
 - As a user, I want to add photos so that I can reference them when I am deciding on a shade.
 
 ### Original Wireframes
+
+## 👩‍💻 Technologies
+
+This frontend React application utilizes JSX, React-Bootstrap, React Router, as well as Axios (for fetching data).
 
 ## 🛠 Installation
 

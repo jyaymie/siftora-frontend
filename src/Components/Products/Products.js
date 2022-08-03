@@ -12,6 +12,7 @@ import Spinner from '../Spinner/Spinner';
 const DROPDOWN_OPTIONS = [
 	{ id: 'brand', name: 'Brand', params: 'brand' },
 	{ id: 'name', name: 'Product Name', params: 'name' },
+	{ id: 'shade', name: 'Shade', params: 'shade' },
 	{ id: 'purchase_date', name: 'Recently Purchased', params: 'purchase_date' },
 	{ id: 'price', name: 'Price (Low to High)', params: 'price' },
 	{ id: 'price_desc', name: 'Price (High to Low)', params: '-price' },
@@ -182,7 +183,7 @@ function Products() {
 	return (
 		<section className='products'>
 			<div className='products-container'>
-				<h2>All Products</h2>
+				<h2>Products</h2>
 				<nav className='products-actions'>
 					<Link to='/add-product' className='product-add-link button-css'>
 						Add New Product ▸
@@ -238,7 +239,7 @@ function Products() {
 								<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>
 								<p>
 									Image:{' '}
-									<img src={product.notes} className='product-image-large' />
+									<img src={product.image} className='product-image-large' />
 								</p>
 								<p>Notes: {product.notes}</p>
 

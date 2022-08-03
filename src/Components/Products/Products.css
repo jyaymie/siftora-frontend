@@ -1,25 +1,25 @@
+.products-container {
+	width: 300px;
+}
+
 .products-actions {
 	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: flex-end;
-	width: 560px;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	width: 300px;
 }
 
 .product-add-link {
+	padding-left: 13px;
 	border: none;
 	transition-duration: 0.3s;
-}
-
-.product-add-link:hover {
-	width: 180px;
 }
 
 .btn,
 .btn-primary {
 	height: 40px;
 	padding-top: 10px;
-	/* border: 1px solid rgb(30, 30, 30); */
 	border: none;
 	border-radius: 0;
 	background-image: none;
@@ -30,7 +30,6 @@
 
 .btn:focus,
 .btn:hover {
-	/* border: 1px solid rgb(30, 30, 30); */
 	border: none;
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
@@ -38,7 +37,6 @@
 
 .dropdown-menu {
 	height: 200px;
-	/* border: 1px solid rgb(30, 30, 30); */
 	border-radius: 0;
 	background-color: rgb(30, 30, 30);
 	overflow: auto;
@@ -87,4 +85,28 @@
 .products-modal-delete {
 	width: 160px;
 	border: 1px solid rgb(30, 30, 30);
+}
+
+/* =========================================================== DESKTOP STYLES */
+@media screen and (min-width: 768px) {
+	.products-actions {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
+		width: 700px;
+	}
+
+	.products-container {
+		min-width: 700px;
+	}
+
+	.product-add-link {
+		padding-left: 0;
+		border: none;
+		transition-duration: 0.3s;
+	}
+
+	.product-add-link:hover {
+		width: 180px;
+	}
 }

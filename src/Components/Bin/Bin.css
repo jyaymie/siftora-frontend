@@ -1,13 +1,13 @@
-.bin {
-	flex-direction: column;
+.bin-container {
+	width: 300px;
 }
 
 .bin-actions {
 	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: flex-end;
-	width: 560px;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	width: 300px;
 }
 
 .btn,
@@ -25,15 +25,14 @@
 
 .btn:focus,
 .btn:hover {
-	/* border: 1px solid rgb(30, 30, 30); */
 	border: none;
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
 }
 
 .dropdown-menu {
-	height: 200px;
-	/* border: 1px solid rgb(30, 30, 30); */
+	width: 300px;
+	height: 300px;
 	border-radius: 0;
 	background-color: rgb(30, 30, 30);
 	overflow: auto;
@@ -98,4 +97,18 @@
 .modal-remove {
 	width: 160px;
 	border: 1px solid rgb(30, 30, 30);
+}
+
+/* =========================================================== DESKTOP STYLES */
+@media screen and (min-width: 768px) {
+	.bin-actions {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
+		width: 700px;
+	}
+
+	.bin-container {
+		min-width: 700px;
+	}
 }

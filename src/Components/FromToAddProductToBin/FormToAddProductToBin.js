@@ -114,10 +114,10 @@ function FormToAddProductToBin() {
 
 	// ======================================================================= JSX
 	return (
-		<section className='form-for-bin-product'>
+		<section className='form-to-add-product-to-bin'>
 			<h2>New Product</h2>
 			<Form onSubmit={addProduct}>
-				<Form.Group className='mb-3'>
+				<Form.Group>
 					<Form.Label htmlFor='brand'>Brand*</Form.Label>
 					<Form.Control id='brand' required />
 					<Form.Label htmlFor='name'>Name*</Form.Label>

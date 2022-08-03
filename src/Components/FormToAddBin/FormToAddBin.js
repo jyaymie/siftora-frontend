@@ -37,22 +37,22 @@ function FormToAddBin() {
 
 	// ======================================================================= JSX
 	return (
-		<section className='form-for-bin-add'>
-			<h2>New Bin </h2>
-			<Form onSubmit={addBin}>
-				<Form.Group className='mb-3'>
-					<Form.Label>Title</Form.Label>
-					<Form.Control id='title' required />
-				</Form.Group>
-				<div className='form-options'>
-					<Link to='/bins' className='button-css cancel'>
-						Cancel
-					</Link>
-					<button type='submit' className='button-css submit'>
-						Add
-					</button>
-				</div>
-			</Form>
+		<section className='form-to-add-bin'>
+				<h2>New Bin </h2>
+				<Form onSubmit={addBin}>
+					<Form.Group>
+						<Form.Label htmlFor='title'>Title</Form.Label>
+						<Form.Control id='title' required />
+					</Form.Group>
+					<div className='form-option-container'>
+						<Link to='/bins' className='bin-form-cancel-option button-css'>
+							Cancel
+						</Link>
+						<button type='submit' className='bin-form-submit-option button-css'>
+							Add
+						</button>
+					</div>
+				</Form>
 
 			{loading && <Spinner />}
 			{error && error}

@@ -66,22 +66,27 @@ function FormToEditBin() {
 
 	// ======================================================================= JSX
 	return (
-		<section>
+		<section className='form-to-edit-bin'>
 			{!loading && (
-				<Form onSubmit={updateBin}>
-					<Form.Group className='mb-3'>
-						<Form.Label>BIN TITLE</Form.Label>
-						<Form.Control id='title' defaultValue={bin.title} required />
-					</Form.Group>
-					<div className='form-options'>
-						<Link to='/bins' className='cancel button-css'>
-							CANCEL
-						</Link>
-						<button type='submit' className='submit button-css'>
-							SUBMIT
-						</button>
-					</div>
-				</Form>
+				<div className='form-to-edit-bin-container'>
+					<h2>Edit Bin </h2>
+					<Form onSubmit={updateBin}>
+						<Form.Group className='mb-3'>
+							<Form.Label>BIN TITLE</Form.Label>
+							<Form.Control id='title' defaultValue={bin.title} required />
+						</Form.Group>
+						<div className='form-option-container'>
+							<Link to='/bins' className='bin-form-cancel-option button-css'>
+								CANCEL
+							</Link>
+							<button
+								type='submit'
+								className='bin-form-submit-option button-css'>
+								SUBMIT
+							</button>
+						</div>
+					</Form>
+				</div>
 			)}
 
 			{loading && <Spinner />}
