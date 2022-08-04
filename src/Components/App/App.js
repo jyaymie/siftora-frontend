@@ -56,7 +56,7 @@ function App() {
 		// 		user,
 		// 		setUser,
 		// 	}}>
-		<div>
+		<div className='app'>
 			{/* Don't display the header/footer on the landing page */}
 			{location.pathname !== '/' && (
 				<header>
@@ -96,7 +96,7 @@ function App() {
 					<Route path='/products/:id/edit' element={<FormToEditProduct />} />
 				</Routes>
 			</main>
-			<footer>&copy; SIFTORA 2022</footer>
+
 			{location.pathname !== '/' && <footer>&copy; SIFTORA 2022</footer>}
 
 			{/* {loading && 'Loading...'}
