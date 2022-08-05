@@ -6,8 +6,8 @@ import './App.css';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 // import axios from 'axios';
 import Home from '../Home/Home';
-// import SignupPage from '../SignupPage/SignupPage';
-// import SigninPage from '../SigninPage/SigninPage';
+import SignUpPage from '../SignUpPage/SignUpPage';
+import LogIn from '../LogIn/LogIn';
 import Bins from '../Bins/Bins';
 import Bin from '../Bin/Bin';
 import FormToAddBin from '../FormToAddBin/FormToAddBin';
@@ -81,8 +81,8 @@ function App() {
 			<main>
 				<Routes>
 					<Route path='/' element={<Home />} />
-					{/* <Route path='/signup' element={<SignupPage />} />
-					<Route path='/signin' element={<SigninPage />} /> */}
+					<Route path='/sign-up' element={<SignUpPage />} />
+					<Route path='/log-in' element={<LogIn />} />
 					<Route path='/bins' element={<Bins />} />
 					<Route path='/bins/:id' element={<Bin />} />
 					<Route path='/add-bin' element={<FormToAddBin />} />

@@ -16,7 +16,7 @@ const DROPDOWN_OPTIONS = [
 	{ id: 'purchase_date', name: 'Recently Purchased', params: 'purchase_date' },
 	{ id: 'price', name: 'Price (Low to High)', params: 'price' },
 	{ id: 'price_desc', name: 'Price (High to Low)', params: '-price' },
-	{ id: 'open_date', name: 'Recent Opened', params: 'open_date' },
+	{ id: 'open_date', name: 'Recently Opened', params: 'open_date' },
 	{ id: 'expiry_date', name: 'Expiring Soon', params: 'expiry_date' },
 	{ id: 'use_count', name: '# of Uses (Low to High)', params: 'use_count' },
 	{

@@ -1,11 +1,11 @@
+import './LogIn.css';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 
-function SigninPage() {
+function LogIn() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const { setUser } = useContext(DataContext);
@@ -61,11 +61,11 @@ function SigninPage() {
 	};
 
 	return (
-		<div>
-			<p>So good to have you back!</p>
+		<section className='log-in-page'>
+			<h2>Log In</h2>
 			<Form onSubmit={signInUser}>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='username'>Username</Form.Label>
+					<Form.Label htmlFor='username'>Username*</Form.Label>
 					<Form.Control
 						type='text'
 						id='username'
@@ -75,7 +75,7 @@ function SigninPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='password'>Password</Form.Label>
+					<Form.Label htmlFor='password'>Password*</Form.Label>
 					<Form.Control
 						type='password'
 						id='password'
@@ -85,17 +85,22 @@ function SigninPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'></Form.Group>
-				<Button variant='primary' type='submit'>
-					Log In
-				</Button>
+				<div className='form-option-container'>
+					<button type='submit' className='button-css'>
+						Submit
+					</button>
+				</div>
 			</Form>
-			<p>
-				New to Siftora?
-				<Link to='/signup'>Create an account.</Link>
+			<p className='form-bottom-text'>
+				New to Siftora? Create an{' '}
+				<Link to='/sign-up' className='modal-link'>
+					account
+				</Link>
+				.
 			</p>
 			{error && error}
-		</div>
+		</section>
 	);
 }
 
-export default SigninPage;
+export default LogIn;

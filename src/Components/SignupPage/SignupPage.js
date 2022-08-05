@@ -1,13 +1,16 @@
+import './SignUpPage.css';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Spinner from '../Spinner/Spinner';
 
-function SignupPage() {
+function SignUpPage() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 	const { setUser } = useContext(DataContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
@@ -32,6 +35,7 @@ function SignupPage() {
 		e.preventDefault();
 		const post = async () => {
 			setError('');
+			setLoading(true);
 			try {
 				const res = await axios.post(
 					'https://siftora.herokuapp.com/api/signup/',
@@ -44,9 +48,11 @@ function SignupPage() {
 				if (res.status === 200) {
 					setUser(res.data);
 					navigate('/bins');
+					setLoading(false);
 				}
 			} catch (error) {
 				console.log("User wasn't created...", error);
+				setLoading(false);
 				setError(
 					'Hm, something went wrong. Please try again or contact support@siftora.com.'
 				);
@@ -56,11 +62,11 @@ function SignupPage() {
 	};
 
 	return (
-		<div>
-			<p>Join the SIFTORA community!</p>
+		<section className='sign-up-page'>
+			<h2>Sign Up</h2>
 			<Form onSubmit={signUpUser}>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='username'>Username</Form.Label>
+					<Form.Label htmlFor='username'>Username*</Form.Label>
 					<Form.Control
 						type='text'
 						id='username'
@@ -70,7 +76,7 @@ function SignupPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='password'>Password</Form.Label>
+					<Form.Label htmlFor='password'>Password*</Form.Label>
 					<Form.Control
 						type='password'
 						id='password'
@@ -82,7 +88,7 @@ function SignupPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='password'>Confirm Password</Form.Label>
+					<Form.Label htmlFor='password'>Confirm Password*</Form.Label>
 					<Form.Control
 						type='password'
 						id='password'
@@ -93,17 +99,24 @@ function SignupPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'></Form.Group>
-				<Button variant='primary' type='submit'>
-					Sign Up
-				</Button>
+				<div className='form-option-container'>
+					<button type='submit' className='button-css'>
+						Submit
+					</button>
+				</div>
 			</Form>
-			<p>
-				Already a member?
-				<Link to='/signin'>Sign in.</Link>
+			<p className='form-bottom-text'>
+				Already a member? Log in{' '}
+				<Link to='/log-in' className='modal-link'>
+					here
+				</Link>
+				.
 			</p>
+
+			{loading && <Spinner />}
 			{error && error}
-		</div>
+		</section>
 	);
 }
 
-export default SignupPage;
+export default SignUpPage;
