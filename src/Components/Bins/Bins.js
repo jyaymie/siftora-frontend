@@ -6,6 +6,8 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
 
+import { BASE_API_URL } from '../../utils/enums';
+
 function Bins() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
@@ -19,7 +21,7 @@ function Bins() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get('https://siftora.herokuapp.com/api/bins/');
+			const res = await axios.get(`${BASE_API_URL}/bins/`);
 			if (res.status === 200) {
 				setBins(res.data);
 				setLoading(false);
@@ -50,9 +52,7 @@ function Bins() {
 		setLoading(true);
 		const id = binToDelete.id;
 		try {
-			const res = await axios.delete(
-				`https://siftora.herokuapp.com/api/bins/${id}/`
-			);
+			const res = await axios.delete(`${BASE_API_URL}/bins/${id}/`);
 			if (res.status === 204) {
 				const filteredBins = bins.filter((bin) => bin !== binToDelete);
 				setBins(filteredBins);

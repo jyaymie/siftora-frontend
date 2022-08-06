@@ -4,6 +4,8 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
 
+import { BASE_API_URL } from '../../utils/enums';
+
 function FormToEditProduct() {
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -16,9 +18,7 @@ function FormToEditProduct() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/products/${id}/`
-			);
+			const res = await axios.get(`${BASE_API_URL}/products/${id}/`);
 			if (res.status === 200) {
 				setProduct(res.data);
 				setLoading(false);
@@ -65,7 +65,7 @@ function FormToEditProduct() {
 				notes: e.target.notes.value,
 			};
 			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/products/${id}/`,
+				`${BASE_API_URL}/products/${id}/`,
 				productToUpdate
 			);
 			if (res.status === 200) {

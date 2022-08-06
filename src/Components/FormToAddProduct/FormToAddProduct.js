@@ -1,15 +1,17 @@
 import './FormToAddProduct.css';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
+
+import { BASE_API_URL } from '../../utils/enums';
 
 function FormToAddProduct() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [products, setProducts] = useState([]);
+	// const [products, setProducts] = useState([]);
 
 	// =============================================================== ADD PRODUCT
 	const addProduct = async (e) => {
@@ -45,10 +47,7 @@ function FormToAddProduct() {
 				notes: e.target.notes.value,
 			};
 			console.log(productToAdd);
-			const res = await axios.post(
-				'https://siftora.herokuapp.com/api/products/',
-				productToAdd
-			);
+			const res = await axios.post(`${BASE_API_URL}/products/`, productToAdd);
 			if (res.status === 201) {
 				navigate('/products');
 				setLoading(false);

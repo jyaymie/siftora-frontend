@@ -2,12 +2,13 @@ import './Products.css';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
+
+import { BASE_API_URL } from '../../utils/enums';
 
 const DROPDOWN_OPTIONS = [
 	{ id: 'brand', name: 'Brand', params: 'brand' },
@@ -65,7 +66,7 @@ function Products() {
 			// Use window.location.search to save the last used query parameters
 			// This way, when a product's use count is updated,
 			// the products will remain sorted by whatever option the user last chose
-			const url = `https://siftora.herokuapp.com/api/products/${window.location.search}`;
+			const url = `${BASE_API_URL}/products/${window.location.search}`;
 			const res = await axios.get(url);
 			if (res.status === 200) {
 				setProducts(res.data);
@@ -87,7 +88,7 @@ function Products() {
 		setLoading(true);
 		try {
 			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/products/?sort=${option.params}`
+				`${BASE_API_URL}/products/?sort=${option.params}`
 			);
 			if (res.status === 200) {
 				updateQueryParams({
@@ -123,7 +124,7 @@ function Products() {
 		setLoading(true);
 		try {
 			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/products/${product.id}/`,
+				`${BASE_API_URL}/products/${product.id}/`,
 				product
 			);
 			if (res.status === 200) {
@@ -154,9 +155,7 @@ function Products() {
 		setLoading(true);
 		const id = productToDelete.id;
 		try {
-			const res = await axios.delete(
-				`https://siftora.herokuapp.com/api/products/${id}/`
-			);
+			const res = await axios.delete(`${BASE_API_URL}/products/${id}/`);
 			if (res.status === 204) {
 				const filteredProducts = products.filter(
 					(product) => product !== productToDelete
@@ -207,7 +206,7 @@ function Products() {
 				{/* =============================================  BIN PRODUCT DETAILS */}
 				{products.map((product) => (
 					<Accordion key={product.id}>
-						<Accordion.Item eventKey={'${product.id}'}>
+						<Accordion.Item eventKey={`${product.id}`}>
 							<Accordion.Header>
 								<div className='accordion-header-content'>
 									{`${product.name} by ${product.brand}`}

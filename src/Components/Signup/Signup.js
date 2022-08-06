@@ -1,13 +1,14 @@
-import './SignUpPage.css';
+import './Signup.css';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataContext } from '../../dataContext';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import Spinner from '../Spinner/Spinner';
 
-function SignUpPage() {
+import { BASE_API_URL } from '../../utils/enums';
+
+function SignUp() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
@@ -16,35 +17,17 @@ function SignUpPage() {
 	const [password, setPassword] = useState('');
 	const [confirmedPassword, setConfirmedPassword] = useState('');
 
-	const getCookie = (name) => {
-		let cookieValue = null;
-		if (document.cookie && document.cookie !== '') {
-			const cookies = document.cookie.split(';');
-			for (let i = 0; i < cookies.length; i++) {
-				const cookie = cookies[i].trim();
-				if (cookie.substring(0, name.length + 1) === name + '=') {
-					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-					break;
-				}
-			}
-		}
-		return cookieValue;
-	};
-
 	const signUpUser = (e) => {
 		e.preventDefault();
 		const post = async () => {
 			setError('');
 			setLoading(true);
 			try {
-				const res = await axios.post(
-					'https://siftora.herokuapp.com/api/signup/',
-					{
-						username: username,
-						password: password,
-						password2: confirmedPassword,
-					}
-				);
+				const res = await axios.post(`${BASE_API_URL}/signup/`, {
+					username: username,
+					password: password,
+					password2: confirmedPassword,
+				});
 				if (res.status === 200) {
 					setUser(res.data);
 					navigate('/bins');
@@ -62,11 +45,12 @@ function SignUpPage() {
 	};
 
 	return (
-		<section className='sign-up-page'>
+		<section className='sign-up'>
+			<h1>SIFTORA</h1>
 			<h2>Sign Up</h2>
 			<Form onSubmit={signUpUser}>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='username'>Username*</Form.Label>
+					<Form.Label htmlFor='username'>Username</Form.Label>
 					<Form.Control
 						type='text'
 						id='username'
@@ -76,11 +60,11 @@ function SignUpPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='password'>Password*</Form.Label>
+					<Form.Label htmlFor='password'>Password</Form.Label>
 					<Form.Control
 						type='password'
 						id='password'
-						minlength='5'
+						minLength='5'
 						placeholder='At least 5 characters'
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
@@ -88,11 +72,11 @@ function SignUpPage() {
 					/>
 				</Form.Group>
 				<Form.Group className='mb-3'>
-					<Form.Label htmlFor='password'>Confirm Password*</Form.Label>
+					<Form.Label htmlFor='password'>Confirm Password</Form.Label>
 					<Form.Control
 						type='password'
 						id='password'
-						minlength='5'
+						minLength='5'
 						value={confirmedPassword}
 						onChange={(e) => setConfirmedPassword(e.target.value)}
 						required
@@ -119,4 +103,4 @@ function SignUpPage() {
 	);
 }
 
-export default SignUpPage;
+export default SignUp;

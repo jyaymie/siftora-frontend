@@ -17,9 +17,7 @@ function FormToEditBin() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/bins/${id}/`
-			);
+			const res = await axios.get(`${BASE_API_URL}/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
 				setLoading(false);
@@ -44,10 +42,7 @@ function FormToEditBin() {
 				title: e.target.title.value,
 				products: bin.products,
 			};
-			const res = await axios.put(
-				`https://siftora.herokuapp.com/api/bins/${id}/`,
-				binToUpdate
-			);
+			const res = await axios.put(`${BASE_API_URL}/bins/${id}/`, binToUpdate);
 			if (res.status === 200) {
 				navigate(-1);
 				setLoading(false);

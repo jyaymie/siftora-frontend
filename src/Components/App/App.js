@@ -6,8 +6,8 @@ import './App.css';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 // import axios from 'axios';
 import Home from '../Home/Home';
-import SignUpPage from '../SignUpPage/SignUpPage';
-import LogIn from '../LogIn/LogIn';
+import Signup from '../Signup/Signup';
+import Login from '../Login/Login';
 import Bins from '../Bins/Bins';
 import Bin from '../Bin/Bin';
 import FormToAddBin from '../FormToAddBin/FormToAddBin';
@@ -33,7 +33,7 @@ function App() {
 	// 	setError('');
 	// 	setLoading(true);
 	// 	try {
-	// 		const res = await axios.post('https://siftora.herokuapp.com/api/signout/');
+	// 		const res = await axios.post('${BASE_API_URL}/signout/');
 	// 		if (res.status === 200) {
 	// 			setLoading(false);
 	// 			navigate('/');
@@ -81,8 +81,8 @@ function App() {
 			<main>
 				<Routes>
 					<Route path='/' element={<Home />} />
-					<Route path='/sign-up' element={<SignUpPage />} />
-					<Route path='/log-in' element={<LogIn />} />
+					<Route path='/signup' element={<Signup />} />
+					<Route path='/login' element={<Login />} />
 					<Route path='/bins' element={<Bins />} />
 					<Route path='/bins/:id' element={<Bin />} />
 					<Route path='/add-bin' element={<FormToAddBin />} />

@@ -5,6 +5,8 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
 
+import { BASE_API_URL } from '../../utils/enums';
+
 function FormToAddProductToBin() {
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -17,9 +19,7 @@ function FormToAddProductToBin() {
 		setError('');
 		setLoading(true);
 		try {
-			const res = await axios.get(
-				`https://siftora.herokuapp.com/api/bins/${id}/`
-			);
+			const res = await axios.get(`${BASE_API_URL}/bins/${id}/`);
 			if (res.status === 200) {
 				setBin(res.data);
 				setLoading(false);
@@ -66,10 +66,7 @@ function FormToAddProductToBin() {
 				image: e.target.image.value,
 				notes: e.target.notes.value,
 			};
-			const res = await axios.post(
-				'https://siftora.herokuapp.com/api/products/',
-				productToAdd
-			);
+			const res = await axios.post(`${BASE_API_URL}/products/`, productToAdd);
 			if (res.status === 201) {
 				let updatedBin = bin;
 				updatedBin.products.push(res.data);
@@ -89,14 +86,11 @@ function FormToAddProductToBin() {
 			setError('');
 			setLoading(true);
 			try {
-				const res = await axios.put(
-					`https://siftora.herokuapp.com/api/bins/${id}/`,
-					{
-						id: id,
-						title: bin.title,
-						products: bin.products,
-					}
-				);
+				const res = await axios.put(`${BASE_API_URL}/bins/${id}/`, {
+					id: id,
+					title: bin.title,
+					products: bin.products,
+				});
 				if (res.status === 200) {
 					navigate(-1);
 					setLoading(false);

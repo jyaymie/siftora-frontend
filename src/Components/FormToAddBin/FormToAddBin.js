@@ -5,6 +5,8 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
 
+import { BASE_API_URL } from '../../utils/enums';
+
 function FormToAddBin() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
@@ -18,10 +20,7 @@ function FormToAddBin() {
 		setLoading(true);
 		try {
 			const binToAdd = { title: e.target.title.value };
-			const res = await axios.post(
-				'https://siftora.herokuapp.com/api/bins/',
-				binToAdd
-			);
+			const res = await axios.post(`${BASE_API_URL}/bins/`, binToAdd);
 			if (res.status === 201) {
 				let updatedBins = [...bins];
 				updatedBins.push(binToAdd);
