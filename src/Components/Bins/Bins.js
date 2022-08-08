@@ -13,7 +13,7 @@ function Bins() {
 	const [binToDelete, setBinToDelete] = useState({});
 
 	// ============================================================= RETRIEVE BINS
-	const { data, loading, error, deleteItem } = useAuthFetch('bins');
+	const { data, loading, error, deleteItem } = useAuthFetch('/bins');
 
 	// ========================================================== SHOW/CLOSE MODAL
 	const showModal = (e, bin) => {

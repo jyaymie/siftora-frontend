@@ -9,13 +9,13 @@
 	right: 0;
 	bottom: 0;
 	left: 0;
-	opacity: 50%;
+	opacity: 35%;
 	background-image: url('../../assets/background-image.jpg');
 	background-size: cover;
 	content: '';
 }
 
-.home-mobile {
+.home-content {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -26,7 +26,7 @@
 h1 {
 	margin-bottom: 20px;
 	font-family: 'Bodoni Moda', serif;
-	font-size: 60px;
+	font-size: 70px;
 }
 
 .home-link-container {
@@ -35,25 +35,18 @@ h1 {
 	align-items: center;
 }
 
-#signup-link {
+.login-link {
+	margin-right: 5px;
+}
+
+.login-link:hover {
+	background-color: rgb(255, 255, 255);
+	color: rgb(30, 30, 30);
+}
+
+.signup-link {
 	margin-left: 5px;
-	width: 80px;
-	border: 1px solid rgb(30, 30, 30);
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255) !important;
-}
-
-#login-link {
-	margin-right: 5px;
-	width: 80px;
-	background-color: transparent;
-}
-
-#log-in-link:hover {
-	background-color: rgb(30, 30, 30);
-	color: rgb(255, 255, 255);
-}
-
-.home-desktop {
-	display: none;
+	transition-duration: 0.3s;
 }

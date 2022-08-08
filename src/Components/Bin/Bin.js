@@ -1,14 +1,13 @@
 import './Bin.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useAuthFetch } from '../../utils/common';
+import { BASE_API_URL } from '../../utils/enums';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
-
-import { BASE_API_URL } from '../../utils/enums';
 
 const DROPDOWN_OPTIONS = [
 	{ id: 'brand', name: 'Brand', params: 'brand' },
@@ -27,144 +26,83 @@ const DROPDOWN_OPTIONS = [
 	},
 ];
 
-// Params parameter will be an object of query parameters
-// Ex. { sort: "use_count", order: "asc" }
+// The 'params' parameter will be an object of query parameters.
+// Example: { sort: "use_count", order: "asc" }
 function updateQueryParams(params) {
 	const url = new URL(window.location.href);
 
-	// Iterate through each property
+	// Iterate through each property,
 	for (const key in params) {
 		if (params[key] !== undefined) {
-			// and set each as a query parameter
-			// Ex. '...products/?sort=use_count&order=asc'
+			// and set each as a query parameter.
+			// Example: '...products/?sort=use_count&order=asc'
 			url.searchParams.set(key, params[key]);
 		}
 	}
 
-	// Update the URL without reloading the page
+	// Update the URL without reloading the page.
 	window.history.pushState({}, '', url.toString());
 }
 
 function Bin() {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [error, setError] = useState('');
-	const [loading, setLoading] = useState(false);
-	const [bin, setBin] = useState({});
-	const [binProducts, setBinProducts] = useState([]);
-	const [allProducts, setAllProducts] = useState([]);
 	const [show, setShow] = useState(false);
 	const [productToRemove, setProductToRemove] = useState({});
 
 	// ========================================================== GET BIN PRODUCTS
-	const getBinProducts = async () => {
-		setError('');
-		setLoading(true);
-		try {
-			// Use window.location.search to save the last used query parameters
-			// This way, when a product's use count is updated,
-			// the products will remain sorted by whatever option the user last chose
-			const url = `${BASE_API_URL}/bins/${id}/${window.location.search}`;
-			const res = await axios.get(url);
-			if (res.status === 200) {
-				setBin(res.data);
-				setBinProducts(res.data.products);
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Bin products weren't retrieved...", error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
+	const {
+		// In the useAuthFetch hook, data's default value is an array. Change it to
+		// an object.
+		data = {},
+		loading,
+		error,
+		setUrl,
+		updateItem,
+	} = useAuthFetch(
+		// Use window.location.search to save the last used query parameters. This
+		// way, when a product's use count is updated, the products will remain
+		// sorted by whatever option the user last chose.
+		`/bins/${id}${window.location.search ? window.location.search : ''}`
+	);
 
 	// ===================================================== GET ALL USER PRODUCTS
-	const getAllProducts = async () => {
-		setError('');
-		setLoading(true);
-		try {
-			const res = await axios.get(`${BASE_API_URL}/products/`);
-			if (res.status === 200) {
-				setAllProducts(res.data);
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("The user's products weren't retrieved...", error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
+	// For this component, rename the variables to products-specific variables.
+	const {
+		data: products,
+		loading: productsLoading,
+		error: productsError,
+	} = useAuthFetch(`/products`);
 
 	// ========================================= GET PRODUCTS IN THE DROPDOWN MENU
 	const getDropdownProducts = () => {
-		// In the 'Add Existing Product' dropdown menu,
-		// list all products that are not already in the bin
-		return allProducts.filter((product) => {
-			return !binProducts.find((binProduct) => binProduct.id === product.id);
+		// In the 'Add Existing Product' dropdown menu, list all products that are
+		// not already in the bin.
+		return products.filter((product) => {
+			return !data.products.find((binProduct) => binProduct.id === product.id);
 		});
 	};
 
 	// ========================================================= SORT BIN PRODUCTS
 	const sortBinProducts = async (option) => {
-		const sortName = option.id;
-		setError('');
-		setLoading(true);
-		try {
-			const res = await axios.get(
-				`${BASE_API_URL}/bins/${id}/?sort=${option.params}`
-			);
-			if (res.status === 200) {
-				updateQueryParams({
-					sort: `${option.params}`,
-				});
-				setBin(res.data);
-				setBinProducts(res.data.products);
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log(`Products weren't sorted by ${sortName}...`, error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
+		// When the url changes, useEffect is triggered in the useAuthFetch custom
+		// hook.
+		setUrl(`${BASE_API_URL}/bins/${id}/?sort=${option.params}`);
+		updateQueryParams({
+			sort: `${option.params}`,
+		});
 	};
 
 	// ========================================================== UPDATE USE COUNT
 	const incrementUse = (product) => {
 		product.use_count++;
-		updateCount(product);
+		updateItem(product, `${BASE_API_URL}/products`);
 	};
 
 	const decrementUse = (product) => {
 		if (product.use_count > 0) {
 			product.use_count--;
-			updateCount(product);
-		}
-	};
-
-	const updateCount = async (product) => {
-		setError('');
-		setLoading(true);
-		try {
-			const res = await axios.put(
-				`${BASE_API_URL}/products/${product.id}/`,
-				product
-			);
-			if (res.status === 200) {
-				getBinProducts();
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Use count wasn't updated...", error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
+			updateItem(product, `${BASE_API_URL}/products`);
 		}
 	};
 
@@ -179,103 +117,69 @@ function Bin() {
 	// =================================================== REMOVE PRODUCT FROM BIN
 	const removeProduct = async () => {
 		closeModal();
-		setError('');
-		setLoading(true);
-		try {
-			const filteredBinProducts = binProducts.filter(
-				(product) => product !== productToRemove
-			);
-			setBinProducts(filteredBinProducts);
-			const updatedBin = { title: bin.title, products: filteredBinProducts };
-			const res = await axios.put(`${BASE_API_URL}/bins/${id}/`, updatedBin);
-			if (res.status === 200) {
-				setBin(updatedBin);
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Product wasn't removed...", error);
-			setLoading(false);
-
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
+		const filteredBinProducts = data.products.filter(
+			(product) => product !== productToRemove
+		);
+		const updatedBin = {
+			id: data.id,
+			title: data.title,
+			products: filteredBinProducts,
+		};
+		updateItem(updatedBin, `${BASE_API_URL}/bins`);
 	};
 
 	// ======================================================== ADD PRODUCT TO BIN
 	const addProductToBin = async (product) => {
-		setError('');
-		setLoading(true);
-		try {
-			binProducts.push(product);
-			const res = await axios.put(`${BASE_API_URL}/bins/${id}/`, {
-				id: bin.id,
-				title: bin.title,
-				products: binProducts,
-			});
-			if (res.status === 200) {
-				getBinProducts();
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Product wasn't added...", error);
-			setLoading(false);
-
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
+		data.products.push(product);
+		updateItem(data, `${BASE_API_URL}/bins`);
 	};
-
-	// ================================================================= useEffect
-	useEffect(() => {
-		getBinProducts();
-		getAllProducts();
-	}, []);
 
 	// ======================================================================= JSX
 	return (
 		<section className='bin'>
-			{!loading && (
-				<div className='bin-container'>
-					<h2>{bin.title}</h2>
-					<nav className='bin-actions'>
-						<div className='bin-add-options'>
-							{/* ============================= DROPDOWN FOR ADDING PRODUCTS */}
-							<DropdownButton
-								title={`Add Product${' '}`}
-								className='dropdown-to-add'>
-								<Dropdown.Item
-									onClick={() => navigate(`/bins/${bin.id}/add-product`)}>
-									✨ ADD NEW PRODUCT ✨
-								</Dropdown.Item>
-								{getDropdownProducts().map((product) => (
-									<Dropdown.Item
-										key={product.id}
-										onClick={() =>
-											addProductToBin(product)
-										}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
-								))}
-							</DropdownButton>
-						</div>
-
-						{/* ============================== DROPDOWN FOR SORTING PRODUCTS */}
+			<div className='bin-container'>
+				<h2>{data.title}</h2>
+				<div className='bin-actions'>
+					<div className='bin-add-options'>
+						{/* ============================= DROPDOWN FOR ADDING PRODUCTS */}
 						<DropdownButton
-							title={`Sort Products By${' '}`}
-							className='dropdown-to-sort'
-							id='dropdown-menu-align-end'>
-							{DROPDOWN_OPTIONS.map((option) => (
+							title={`Add Product${' '}`}
+							className='dropdown-to-add'>
+							<Dropdown.Item
+								onClick={() =>
+									navigate(`/
+									bins/${data.id}/add-product`)
+								}>
+								✨ ADD NEW PRODUCT ✨
+							</Dropdown.Item>
+							{getDropdownProducts().map((product) => (
 								<Dropdown.Item
-									onClick={() => sortBinProducts(option)}
-									key={option.id}>
-									{option.name}
-								</Dropdown.Item>
+									key={product.id}
+									onClick={() =>
+										addProductToBin(product)
+									}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
 							))}
 						</DropdownButton>
-					</nav>
+					</div>
 
-					{/* =========================================  BIN PRODUCT DETAILS */}
-					{binProducts.map((product) => (
+					{/* ============================== DROPDOWN FOR SORTING PRODUCTS */}
+					<DropdownButton
+						title={`Sort Products By${' '}`}
+						className='dropdown-to-sort'
+						id='dropdown-menu-align-end'>
+						{DROPDOWN_OPTIONS.map((option) => (
+							<Dropdown.Item
+								onClick={() => sortBinProducts(option)}
+								key={option.id}>
+								{option.name}
+							</Dropdown.Item>
+						))}
+					</DropdownButton>
+				</div>
+
+				{/* =========================================  BIN PRODUCT DETAILS */}
+				{data.products &&
+					data.products.map((product) => (
 						<Accordion key={product.id}>
 							<Accordion.Item eventKey={'${product.id}'}>
 								<Accordion.Header>
@@ -333,46 +237,45 @@ function Bin() {
 						</Accordion>
 					))}
 
-					<Modal show={show} onHide={closeModal}>
-						<Modal.Header>
-							<Modal.Title>Just so you know...</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							Removing{' '}
-							<span className='modal-product-name'>{productToRemove.name}</span> from
-							this bin will not delete it from your products inventory. To
-							completely part ways with this product, please go to{' '}
-							<Link to='/products' className='modal-link'>
-								Products
-							</Link>
-							.
-						</Modal.Body>
-						<Modal.Footer>
-							<button
-								type='button'
-								className='modal-cancel button-css'
-								onClick={closeModal}>
-								CANCEL
-							</button>
-							<button
-								type='button'
-								className='modal-remove button-css'
-								onClick={removeProduct}>
-								REMOVE FROM BIN
-							</button>
-						</Modal.Footer>
-					</Modal>
-				</div>
-			)}
+				<Modal show={show} onHide={closeModal}>
+					<Modal.Header>
+						<Modal.Title>Just so you know...</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						Removing{' '}
+						<span className='modal-product-name'>{productToRemove.name}</span>{' '}
+						from this bin will not delete it from your products inventory. To
+						completely part ways with this product, please go to{' '}
+						<Link to='/products' className='modal-link'>
+							Products
+						</Link>
+						.
+					</Modal.Body>
+					<Modal.Footer>
+						<button
+							type='button'
+							className='modal-cancel button-css'
+							onClick={closeModal}>
+							CANCEL
+						</button>
+						<button
+							type='button'
+							className='modal-remove button-css'
+							onClick={removeProduct}>
+							REMOVE FROM BIN
+						</button>
+					</Modal.Footer>
+				</Modal>
+			</div>
 
-			{bin.products && !bin.products.length ? (
+			{data.products && !data.products.length ? (
 				<p className='bin-empty-message'>
 					This bin is empty. Please add a product.
 				</p>
 			) : null}
 
-			{loading && <Spinner />}
-			{error && error}
+			{loading || productsLoading ? <Spinner /> : null}
+			{error || productsError ? error : null}
 		</section>
 	);
 }

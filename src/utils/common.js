@@ -33,7 +33,10 @@ export function useAuthFetch(path) {
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
-	const [url, setUrl] = useState(`${BASE_API_URL}${path}/`);
+	const [url, setUrl] = useState(`${BASE_API_URL}${path}`);
+	const [refetchIndex, setRefetchIndex] = useState(0);
+	const refetch = () =>
+		setRefetchIndex((prevRefetchIndex) => prevRefetchIndex + 1);
 
 	// ======================================================================= GET
 	const fetchItems = () => {
@@ -63,7 +66,7 @@ export function useAuthFetch(path) {
 		setError('');
 		setLoading(true);
 		axios
-			.delete(`${noQueryUrl}${item.id}/`, {
+			.delete(`${noQueryUrl}${item.id}`, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
@@ -80,12 +83,12 @@ export function useAuthFetch(path) {
 	};
 
 	// ======================================================================= PUT
-	const updateItem = (item) => {
-		const noQueryUrl = getPathFromUrl(url);
+	const updateItem = (item, path) => {
+		const noQueryUrl = getPathFromUrl(path ? path : url);
 		setError('');
 		setLoading(true);
 		axios
-			.put(`${noQueryUrl}${item.id}/`, item, {
+			.put(`${noQueryUrl}${item.id}`, item, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
@@ -103,7 +106,7 @@ export function useAuthFetch(path) {
 	// ================================================================= useEffect
 	useEffect(() => {
 		fetchItems();
-	}, [url, token]);
+	}, [url, token, refetchIndex]);
 
-	return { data, loading, error, deleteItem, setUrl, updateItem };
+	return { data, loading, error, deleteItem, setUrl, updateItem, refetch };
 }

@@ -55,8 +55,12 @@ function Products() {
 	const [productToDelete, setProductToDelete] = useState({});
 
 	// ============================================================== GET PRODUCTS
-	const { data, loading, error, setUrl, deleteItem, updateItem } =
-		useAuthFetch(`/products`);
+	const { data, loading, error, setUrl, deleteItem, updateItem } = useAuthFetch(
+		// Use window.location.search to save the last used query parameters. This
+		// way, when a product's use count is updated, the products will remain
+		// sorted by whatever option the user last chose.
+		`/products${window.location.search ? window.location.search : ''}`
+	);
 
 	// ============================================================= SORT PRODUCTS
 	const sortProducts = async (option) => {

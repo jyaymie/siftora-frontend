@@ -10,25 +10,25 @@
 	width: 300px;
 }
 
-.btn,
+/* .btn,
 .btn-primary {
 	height: 40px;
 	padding-top: 10px;
-	/* border: 1px solid rgb(30, 30, 30); */
+	border: 1px solid rgb(30, 30, 30);
 	border: none;
 	border-radius: 0;
 	background-image: none;
 	background-color: rgb(255, 255, 255);
 	color: rgb(0, 0, 0);
 	font-size: 15px;
-}
+} */
 
-.btn:focus,
+/* .btn:focus,
 .btn:hover {
 	border: none;
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
-}
+} */
 
 .dropdown-menu {
 	width: 300px;
