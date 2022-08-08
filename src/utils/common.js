@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { BASE_API_URL, LOCAL_STORAGE_KEY } from './enums';
+import axios from 'axios';
 
 export function setAuthLocalStorage(token) {
 	localStorage.setItem(LOCAL_STORAGE_KEY, token);
@@ -33,13 +33,12 @@ export function useAuthFetch(path) {
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
-	const [url, setUrl] = useState(`${BASE_API_URL}/${path}/`);
+	const [url, setUrl] = useState(`${BASE_API_URL}${path}/`);
 
 	// ======================================================================= GET
 	const fetchItems = () => {
 		setError('');
 		setLoading(true);
-
 		axios
 			.get(url, {
 				// A token is required to access any API route.
@@ -63,7 +62,6 @@ export function useAuthFetch(path) {
 		const noQueryUrl = getPathFromUrl(url);
 		setError('');
 		setLoading(true);
-
 		axios
 			.delete(`${noQueryUrl}${item.id}/`, {
 				headers: {
@@ -76,7 +74,7 @@ export function useAuthFetch(path) {
 			})
 			.catch((err) => {
 				setLoading(false);
-				console.log(err);
+				console.log('Something went wrong...', err);
 				setError(errorMessage);
 			});
 	};
@@ -86,7 +84,6 @@ export function useAuthFetch(path) {
 		const noQueryUrl = getPathFromUrl(url);
 		setError('');
 		setLoading(true);
-
 		axios
 			.put(`${noQueryUrl}${item.id}/`, item, {
 				headers: {
@@ -98,7 +95,7 @@ export function useAuthFetch(path) {
 			})
 			.catch((err) => {
 				setLoading(false);
-				console.log(err);
+				console.log('Something went wrong...', err);
 				setError(errorMessage);
 			});
 	};

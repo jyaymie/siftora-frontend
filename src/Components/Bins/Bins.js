@@ -1,39 +1,19 @@
 import './Bins.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
 
-import { BASE_API_URL } from '../../utils/enums';
+import { useAuthFetch } from '../../utils/common';
 
 function Bins() {
 	const navigate = useNavigate();
-	const [error, setError] = useState('');
-	const [loading, setLoading] = useState(false);
-	const [bins, setBins] = useState([]);
 	const [show, setShow] = useState(false);
 	const [binToDelete, setBinToDelete] = useState({});
 
 	// ============================================================= RETRIEVE BINS
-	const getBins = async () => {
-		setError('');
-		setLoading(true);
-		try {
-			const res = await axios.get(`${BASE_API_URL}/bins/`);
-			if (res.status === 200) {
-				setBins(res.data);
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Bins weren't retrieved...", error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
+	const { data, loading, error, deleteItem } = useAuthFetch('bins');
 
 	// ========================================================== SHOW/CLOSE MODAL
 	const showModal = (e, bin) => {
@@ -47,38 +27,18 @@ function Bins() {
 
 	// ================================================================ DELETE BIN
 	const deleteBin = async () => {
-		closeModal();
-		setError('');
-		setLoading(true);
 		const id = binToDelete.id;
-		try {
-			const res = await axios.delete(`${BASE_API_URL}/bins/${id}/`);
-			if (res.status === 204) {
-				const filteredBins = bins.filter((bin) => bin !== binToDelete);
-				setBins(filteredBins);
-				getBins();
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log("Bin wasn't deleted...", error);
-			setLoading(false);
-			setError(
-				'Hm, something went wrong. Please try again or contact support@siftora.com.'
-			);
-		}
-	};
 
-	// ================================================================= useEffect
-	useEffect(() => {
-		getBins();
-	}, []);
+		closeModal();
+		deleteItem(id);
+	};
 
 	// ======================================================================= JSX
 	return (
 		<section className='bins'>
 			<h2>Bins</h2>
 			<div className='bins-container'>
-				{bins.map((bin) => (
+				{data.map((bin) => (
 					<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
 						<Card>
 							<p className='card-text'>

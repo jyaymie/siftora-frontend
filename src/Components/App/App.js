@@ -1,8 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-// import { useContext, useState } from 'react';
-// import { DataContext } from '../../dataContext';
-// import { useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { DataContext } from '../../dataContext';
+import { useNavigate } from 'react-router-dom';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 // import axios from 'axios';
 import Home from '../Home/Home';
@@ -18,16 +18,10 @@ import FormToAddProductToBin from '../FromToAddProductToBin/FormToAddProductToBi
 import FormToEditProduct from '../FormToEditProduct/FormToEditProduct';
 
 function App() {
-	// const navigate = useNavigate();
-	// const [error, setError] = useState('');
-	// const [loading, setLoading] = useState(false);
-	// const [user, setUser] = useState({
-	// 	csrf: '',
-	// 	username: '',
-	// 	password: '',
-	// 	error: '',
-	// 	isAuthenticated: false,
-	// });
+	const navigate = useNavigate();
+	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
+	const [token, setToken] = useState('');
 
 	// const signOutUser = async () => {
 	// 	setError('');
@@ -51,58 +45,58 @@ function App() {
 
 	// ======================================================================= JSX
 	return (
-		// <DataContext.Provider
-		// 	value={{
-		// 		user,
-		// 		setUser,
-		// 	}}>
-		<div className='app'>
-			{/* Don't display the header/footer on the landing page */}
-			{location.pathname !== '/' && (
-				<header>
-					<nav className='app-nav'>
-						<Link to='/bins' className='nav-icon-link'>
-							S
-						</Link>
-						<div className='nav-text-link-container'>
-							<Link to='/bins' className='nav-text-link'>
-								BINS
+		<DataContext.Provider
+			value={{
+				token,
+				setToken,
+			}}>
+			<div className='app'>
+				{/* Don't display the header/footer on the landing page */}
+				{location.pathname !== '/' && (
+					<header>
+						<nav className='app-nav'>
+							<Link to='/bins' className='nav-icon-link'>
+								S
 							</Link>
-							<Link to='/products' className='nav-text-link'>
-								PRODUCTS
-							</Link>
-						</div>
-					</nav>
-					{/* <Link to='/' onClick={signOutUser}>
+							<div className='nav-text-link-container'>
+								<Link to='/bins' className='nav-text-link'>
+									BINS
+								</Link>
+								<Link to='/products' className='nav-text-link'>
+									PRODUCTS
+								</Link>
+							</div>
+						</nav>
+						{/* <Link to='/' onClick={signOutUser}>
 						Sign Out
 					</Link> */}
-				</header>
-			)}
-			<main>
-				<Routes>
-					<Route path='/' element={<Home />} />
-					<Route path='/signup' element={<Signup />} />
-					<Route path='/login' element={<Login />} />
-					<Route path='/bins' element={<Bins />} />
-					<Route path='/bins/:id' element={<Bin />} />
-					<Route path='/add-bin' element={<FormToAddBin />} />
-					<Route path='/bins/:id/edit' element={<FormToEditBin />} />
-					<Route path='/products' element={<Products />} />
-					<Route path='/add-product' element={<FormToAddProduct />} />
-					<Route
-						path='/bins/:id/add-product'
-						element={<FormToAddProductToBin />}
-					/>
-					<Route path='/products/:id/edit' element={<FormToEditProduct />} />
-				</Routes>
-			</main>
+					</header>
+				)}
+				<main>
+					<Routes>
+						<Route path='/' element={<Home />} />
+						<Route path='/signup' element={<Signup />} />
+						<Route path='/login' element={<Login />} />
+						<Route path='/bins' element={<Bins />} />
+						<Route path='/bins/:id' element={<Bin />} />
+						<Route path='/add-bin' element={<FormToAddBin />} />
+						<Route path='/bins/:id/edit' element={<FormToEditBin />} />
+						<Route path='/products' element={<Products />} />
+						<Route path='/add-product' element={<FormToAddProduct />} />
+						<Route
+							path='/bins/:id/add-product'
+							element={<FormToAddProductToBin />}
+						/>
+						<Route path='/products/:id/edit' element={<FormToEditProduct />} />
+					</Routes>
+				</main>
 
-			{location.pathname !== '/' && <footer>&copy; SIFTORA 2022</footer>}
+				{location.pathname !== '/' && <footer>&copy; SIFTORA 2022</footer>}
 
-			{/* {loading && 'Loading...'}
-			{error && error} */}
-		</div>
-		// </DataContext.Provider>
+				{loading && 'Loading...'}
+				{error && error}
+			</div>
+		</DataContext.Provider>
 	);
 }
 

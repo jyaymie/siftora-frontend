@@ -98,7 +98,8 @@
 }
 
 /* ==================================================================== MODAL */
-.product-name {
+.modal-product-name {
+	padding: 2px 5px;
 	background-color: rgb(180, 140, 140, 0.3);
 }
 

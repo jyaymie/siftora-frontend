@@ -1,8 +1,5 @@
 import './Home.css';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Signup from '../Signup/Signup';
-import Login from '../Login/Login';
 
 function Home() {
 	const switchForm = () => {
@@ -24,17 +21,6 @@ function Home() {
 					<Link to='/signup' id='signup-link' className='button-css'>
 						SIGN UP
 					</Link>
-				</div>
-			</div>
-			<div className='home-desktop'>
-				<div className='home-desktop-left'></div>
-				<div className='home-desktop-right'>
-					<div className='signup-wrapper'>
-						<Signup />
-					</div>
-					<div className='login-wrapper'>
-						<Login />
-					</div>
 				</div>
 			</div>
 		</section>

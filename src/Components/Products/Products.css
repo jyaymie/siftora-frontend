@@ -10,29 +10,9 @@
 	width: 300px;
 }
 
-.product-add-link {
-	padding-left: 13px;
-	border: none;
-	transition-duration: 0.3s;
-}
-
-.btn,
-.btn-primary {
-	height: 40px;
-	padding-top: 10px;
-	border: none;
-	border-radius: 0;
-	background-image: none;
-	background-color: rgb(255, 255, 255);
-	color: rgb(0, 0, 0);
-	font-size: 15px;
-}
-
-.btn:focus,
-.btn:hover {
-	border: none;
-	background-color: rgb(30, 30, 30);
-	color: rgb(255, 255, 255);
+.add-product-link {
+	padding: 0 13px;
+	border: 1px solid rgb(255, 255, 255);
 }
 
 .dropdown-menu {
@@ -57,34 +37,9 @@
 	border-radius: 0;
 }
 
-.accordion-button {
-	font-size: 15px;
-	background-color: rgb(255, 255, 255);
-}
-
-.product-details p {
-	margin-top: 3px;
-	border-bottom: 1px dashed rgba(0, 0, 0);
-}
-
-.products-icon-container {
-	display: flex;
-	justify-content: flex-end;
-	bottom: 0;
-}
-
-.edit-icon {
-	padding-top: 0;
-}
-
-.products-modal-cancel {
-	width: 100px;
-	border: none;
-}
-
-.products-modal-delete {
-	width: 160px;
-	border: 1px solid rgb(30, 30, 30);
+.product-detail p {
+	margin-top: 2px;
+	border-bottom: 1px dashed rgb(0, 0, 0);
 }
 
 .use-count-container {
@@ -96,29 +51,32 @@
 	width: 20px;
 	height: 20px;
 	margin: 0 10px;
-	padding-top: 5px;
+}
+
+.products-icon-container {
+	display: flex;
+	justify-content: flex-end;
+	bottom: 0;
+}
+
+.modal-cancel-button {
+	border: 1px solid rgb(255, 255, 255);
+}
+
+.modal-delete-button {
+	border: 1px solid rgb(30, 30, 30);
 }
 
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {
+	.products-container {
+		width: 700px;
+	}
+
 	.products-actions {
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: flex-end;
 		width: 700px;
-	}
-
-	.products-container {
-		min-width: 700px;
-	}
-
-	.product-add-link {
-		padding-left: 0;
-		border: none;
-		transition-duration: 0.3s;
-	}
-
-	.product-add-link:hover {
-		width: 180px;
 	}
 }

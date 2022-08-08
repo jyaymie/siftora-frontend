@@ -1,77 +1,53 @@
 import './Login.css';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DataContext } from '../../dataContext';
+import { setAuthLocalStorage } from '../../utils/common';
+import { BASE_API_URL } from '../../utils/enums';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
-
-import { BASE_API_URL } from '../../utils/enums';
 
 function Login() {
 	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
-	const { setUser } = useContext(DataContext);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
-	// const getCookie = (name) => {
-	// 	let cookieValue = null;
-	// 	if (document.cookie && document.cookie !== '') {
-	// 		const cookies = document.cookie.split(';');
-	// 		for (let i = 0; i < cookies.length; i++) {
-	// 			const cookie = cookies[i].trim();
-	// 			if (cookie.substring(0, name.length + 1) === name + '=') {
-	// 				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-	// 				break;
-	// 			}
-	// 		}
-	// 	}
-	// 	return cookieValue;
-	// };
-
-	const signInUser = (e) => {
+	const handleLogin = (e) => {
 		e.preventDefault();
+
 		const post = async () => {
 			setError('');
 			setLoading(true);
 			try {
-				const res = await axios.post(
-					`${BASE_API_URL}/api/signin/`,
-					{
-						username: username,
-						password: password,
-					},
-					{
-						// headers: {
-						// 	'Content-Type': 'application/json',
-						// 	'X-CSRFToken': getCookie('csrftoken'),
-						// },
-						// withCredentials: true,
-					}
-				);
+				const res = await axios.post(`${BASE_API_URL}/login/`, {
+					username: username,
+					password: password,
+				});
 				if (res.status === 200) {
-					setUser(res.data);
-					navigate('/bins');
 					setLoading(false);
+					setAuthLocalStorage(res.data.token);
+					navigate('/bins');
 				}
 			} catch (error) {
-				console.log("User wasn't authenticated...", error);
 				setLoading(false);
+				console.log('Something went wrong...', error);
 				setError(
-					'Hm, something went wrong. Please try again or contact support@siftora.com.'
+					'Hm, something went wrong. Please try again or contact jamieparkemail@gmail.com.'
 				);
 			}
 		};
+
 		post();
 	};
 
 	return (
-		<section className='log-in'>
+		<section className='login'>
 			<h2>Log In</h2>
-			<Form onSubmit={signInUser}>
-				<Form.Group className='mb-3'>
+
+			<Form className='login-form' onSubmit={handleLogin}>
+				<Form.Group>
 					<Form.Label htmlFor='username'>Username</Form.Label>
 					<Form.Control
 						type='text'
@@ -81,7 +57,7 @@ function Login() {
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3'>
+				<Form.Group>
 					<Form.Label htmlFor='password'>Password</Form.Label>
 					<Form.Control
 						type='password'
@@ -91,20 +67,21 @@ function Login() {
 						required
 					/>
 				</Form.Group>
-				<Form.Group className='mb-3'></Form.Group>
 				<div className='form-option-container'>
 					<button type='submit' className='button-css'>
 						Submit
 					</button>
 				</div>
 			</Form>
-			<p className='form-bottom-text'>
+
+			<p className='login-bottom-text'>
 				New to Siftora? Sign up{' '}
-				<Link to='/sign-up' className='modal-link'>
+				<Link to='/signup' className='modal-link'>
 					here
 				</Link>
 				.
 			</p>
+
 			{loading && <Spinner />}
 			{error && error}
 		</section>
