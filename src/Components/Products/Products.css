@@ -11,11 +11,12 @@
 }
 
 .add-product-link {
-	border: 1px solid rgb(255, 255, 255);
+	border: 0.5px solid rgb(255, 255, 255);
 }
 
 .dropdown-menu {
-	height: 200px;
+	width: 300px;
+	height: 300px;
 	border-radius: 0;
 	background-color: rgb(30, 30, 30);
 	overflow: auto;
@@ -32,8 +33,21 @@
 }
 
 .accordion-header {
-	border: 1px solid rgb(30, 30, 30);
+	border: 0.5px solid rgb(30, 30, 30);
 	border-radius: 0;
+}
+
+.accordion-header-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.accordion-button {
+	background-color: rgb(255, 255, 255);
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 15px;
 }
 
 .product-detail p {
@@ -59,11 +73,11 @@
 }
 
 .modal-cancel-button {
-	border: 1px solid rgb(255, 255, 255);
+	border: 0.5px solid rgb(255, 255, 255);
 }
 
 .modal-delete-button {
-	border: 1px solid rgb(30, 30, 30);
+	border: 0.5px solid rgb(30, 30, 30);
 }
 
 /* =========================================================== DESKTOP STYLES */

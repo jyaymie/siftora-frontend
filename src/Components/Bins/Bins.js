@@ -36,8 +36,8 @@ function Bins() {
 	// ======================================================================= JSX
 	return (
 		<section className='bins'>
-			<h2>Bins</h2>
 			<div className='bins-container'>
+				<h2>Bins</h2>
 				{data.map((bin) => (
 					<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
 						<Card>

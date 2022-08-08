@@ -139,33 +139,32 @@ function Bin() {
 		<section className='bin'>
 			<div className='bin-container'>
 				<h2>{data.title}</h2>
+
 				<div className='bin-actions'>
-					<div className='bin-add-options'>
-						{/* ============================= DROPDOWN FOR ADDING PRODUCTS */}
-						<DropdownButton
-							title={`Add Product${' '}`}
-							className='dropdown-to-add'>
-							<Dropdown.Item
-								onClick={() =>
-									navigate(`/
+					{/* ============================= DROPDOWN FOR ADDING PRODUCTS */}
+					<DropdownButton
+						title={`Add Product${' '}`}
+						className='dropdown-button'>
+						<Dropdown.Item
+							onClick={() =>
+								navigate(`/
 									bins/${data.id}/add-product`)
-								}>
-								✨ ADD NEW PRODUCT ✨
-							</Dropdown.Item>
-							{getDropdownProducts().map((product) => (
-								<Dropdown.Item
-									key={product.id}
-									onClick={() =>
-										addProductToBin(product)
-									}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
-							))}
-						</DropdownButton>
-					</div>
+							}>
+							✨ ADD NEW PRODUCT ✨
+						</Dropdown.Item>
+						{getDropdownProducts().map((product) => (
+							<Dropdown.Item
+								key={product.id}
+								onClick={() =>
+									addProductToBin(product)
+								}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
+						))}
+					</DropdownButton>
 
 					{/* ============================== DROPDOWN FOR SORTING PRODUCTS */}
 					<DropdownButton
 						title={`Sort Products By${' '}`}
-						className='dropdown-to-sort'
+						className='dropdown-button'
 						id='dropdown-menu-align-end'>
 						{DROPDOWN_OPTIONS.map((option) => (
 							<Dropdown.Item
@@ -181,14 +180,17 @@ function Bin() {
 				{data.products &&
 					data.products.map((product) => (
 						<Accordion key={product.id}>
-							<Accordion.Item eventKey={'${product.id}'}>
+							<Accordion.Item eventKey={`${product.id}`}>
 								<Accordion.Header>
 									<div className='accordion-header-content'>
-										<p>{`${product.name} by ${product.brand}`}</p>
+										<p>
+											<span className='bold'>{product.name}</span>
+											{` by ${product.brand}`}
+										</p>
 										<img src={product.image} className='product-image-small' />
 									</div>
 								</Accordion.Header>
-								<Accordion.Body className='product-details'>
+								<Accordion.Body className='product-detail'>
 									<p>Shade: {product.shade}</p>
 									<p>Purchase Date: {product.purchase_date}</p>
 									<p>Price: ${product.price}</p>
@@ -219,6 +221,7 @@ function Bin() {
 										<img src={product.image} className='product-image-large' />
 									</p>
 									<p>Notes: {product.notes}</p>
+									{/* ================================== EDIT & DELETE ICONS */}
 									<div className='bin-icon-container'>
 										<Link
 											to={`/products/${product.id}/edit`}
@@ -254,13 +257,13 @@ function Bin() {
 					<Modal.Footer>
 						<button
 							type='button'
-							className='modal-cancel button-css'
+							className='modal-cancel-button button-css'
 							onClick={closeModal}>
 							CANCEL
 						</button>
 						<button
 							type='button'
-							className='modal-remove button-css'
+							className='modal-remove-button button-css'
 							onClick={removeProduct}>
 							REMOVE FROM BIN
 						</button>
@@ -268,11 +271,11 @@ function Bin() {
 				</Modal>
 			</div>
 
-			{data.products && !data.products.length ? (
+			{data.products && !data.products.length && (
 				<p className='bin-empty-message'>
 					This bin is empty. Please add a product.
 				</p>
-			) : null}
+			)}
 
 			{loading || productsLoading ? <Spinner /> : null}
 			{error || productsError ? error : null}

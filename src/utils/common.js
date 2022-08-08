@@ -88,7 +88,7 @@ export function useAuthFetch(path) {
 		setError('');
 		setLoading(true);
 		axios
-			.put(`${noQueryUrl}${item.id}`, item, {
+			.put(`${noQueryUrl}/${item.id}/`, item, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},

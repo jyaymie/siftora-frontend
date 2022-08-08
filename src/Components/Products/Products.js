@@ -110,7 +110,10 @@ function Products() {
 						Add New Product ▸
 					</Link>
 					{/* ================================ DROPDOWN FOR SORTING PRODUCTS */}
-					<DropdownButton title={`Sort Products By${' '}`}>
+					<DropdownButton
+						title={`Sort Products By${' '}`}
+						className='dropdown-button'
+						id='dropdown-menu-align-end'>
 						{DROPDOWN_OPTIONS.map((option) => (
 							<Dropdown.Item
 								onClick={() => sortProducts(option)}
