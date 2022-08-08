@@ -23,10 +23,14 @@
 }
 
 .add-bin-card {
-	background-color: rgb(180, 140, 140, 0.3);
+	background-color: rgb(180, 140, 140, 0.15);
 }
 
-.bins-icons-container {
+.add-bin-card:hover {
+	background-color: rgb(180, 140, 140, 0.15);
+}
+
+.bins-icon-container {
 	display: flex;
 	position: absolute;
 	bottom: 0;
@@ -35,16 +39,10 @@
 .edit-icon,
 .delete-icon,
 .add-icon {
-	width: 40px;
 	border: none;
 	background-color: transparent;
 }
 
-.delete-icon {
-	z-index: 1;
-}
-
-/* ==================================================================== MODAL */
 .modal-content {
 	border-radius: 0;
 }
@@ -53,7 +51,8 @@
 	font-size: 15px;
 }
 
-.bin-name {
+.modal-bin-name {
+	padding: 2px 5px;
 	background-color: rgb(180, 140, 140, 0.3);
 }
 
@@ -70,9 +69,6 @@
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {
 	.bins-container {
-		display: grid;
 		grid-template-columns: repeat(2, 250px);
-		gap: 20px;
-		grid-auto-rows: 250px;
 	}
 }
