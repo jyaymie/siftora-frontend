@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { BASE_API_URL } from '../../utils/enums';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
-
-import { BASE_API_URL } from '../../utils/enums';
 
 function FormToEditProduct() {
 	const { id } = useParams();

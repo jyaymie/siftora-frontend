@@ -1,11 +1,10 @@
 import './FormToAddProduct.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BASE_API_URL } from '../../utils/enums';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Spinner from '../Spinner/Spinner';
-
-import { BASE_API_URL } from '../../utils/enums';
 
 function FormToAddProduct() {
 	const navigate = useNavigate();
