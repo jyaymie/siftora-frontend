@@ -1,16 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { DataContext } from '../../dataContext';
-import { useNavigate } from 'react-router-dom';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-// import axios from 'axios';
 import Home from '../Home/Home';
 import Signup from '../Signup/Signup';
 import Login from '../Login/Login';
 import Bins from '../Bins/Bins';
 import Bin from '../Bin/Bin';
-import FormToAddBin from '../FormToAddBin/FormToAddBin';
 import FormToEditBin from '../FormToEditBin/FormToEditBin';
 import Products from '../Products/Products';
 import FormToAddProduct from '../FormToAddProduct/FormToAddProduct';
@@ -18,7 +15,6 @@ import FormToAddProductToBin from '../FromToAddProductToBin/FormToAddProductToBi
 import FormToEditProduct from '../FormToEditProduct/FormToEditProduct';
 
 function App() {
-	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [token, setToken] = useState('');
@@ -79,7 +75,6 @@ function App() {
 						<Route path='/login' element={<Login />} />
 						<Route path='/bins' element={<Bins />} />
 						<Route path='/bins/:id' element={<Bin />} />
-						<Route path='/add-bin' element={<FormToAddBin />} />
 						<Route path='/bins/:id/edit' element={<FormToEditBin />} />
 						<Route path='/products' element={<Products />} />
 						<Route path='/add-product' element={<FormToAddProduct />} />

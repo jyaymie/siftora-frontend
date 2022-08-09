@@ -1,6 +1,6 @@
 import './Bins.css';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuthFetch } from '../../utils/common';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -8,8 +8,10 @@ import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
 
 function Bins() {
-	const navigate = useNavigate();
-	const [show, setShow] = useState({ modalToAdd: false, modalToDelete: false });
+	const [show, setShow] = useState({
+		modalForAdding: false,
+		modalForDeleting: false,
+	});
 	const [binToDelete, setBinToDelete] = useState({});
 	const [binToAdd, setBinToAdd] = useState({ title: '' });
 
@@ -62,7 +64,7 @@ function Bins() {
 								<button
 									type='button'
 									className='delete-icon button-css'
-									onClick={(e) => showModal(e, bin, 'modalToDelete')}>
+									onClick={(e) => showModal(e, bin, 'modalForDeleting')}>
 									<i className='icon-trash'></i>
 								</button>
 							</div>
@@ -78,7 +80,7 @@ function Bins() {
 							<button
 								type='button'
 								className='add-icon button-css'
-								onClick={(e) => showModal(e, '', 'modalToAdd')}>
+								onClick={(e) => showModal(e, '', 'modalForAdding')}>
 								+
 							</button>
 						</div>
@@ -88,9 +90,9 @@ function Bins() {
 
 			{/* ============================================== MODAL TO DELETE BIN */}
 			<Modal
-				show={show.modalToDelete}
+				show={show.modalForDeleting}
 				onHide={() => {
-					closeModal('modalToDelete');
+					closeModal('modalForDeleting');
 				}}>
 				<Modal.Header>
 					<Modal.Title>Are you sure?</Modal.Title>
@@ -105,23 +107,25 @@ function Bins() {
 						type='button'
 						className='modal-cancel-button button-css'
 						onClick={() => {
-							closeModal('modalToDelete');
+							closeModal('modalForDeleting');
 						}}>
 						CANCEL
 					</button>
 					<button
 						type='button'
 						className='modal-delete-button button-css'
-						onClick={() => deleteBin('modalToDelete')}>
+						onClick={() => deleteBin('modalForDeleting')}>
 						DELETE BIN
 					</button>
 				</Modal.Footer>
 			</Modal>
 
 			{/* ================================================= MODAL TO ADD BIN */}
-			<Modal show={show.modalToAdd} onHide={() => closeModal('modalToAdd')}>
+			<Modal
+				show={show.modalForAdding}
+				onHide={() => closeModal('modalForAdding')}>
 				<Modal.Body>
-					<h2>New Bin </h2>
+					<h2>New Bin</h2>
 					<Form>
 						<Form.Group>
 							<Form.Label htmlFor='title'>Title</Form.Label>
@@ -137,7 +141,7 @@ function Bins() {
 								type='button'
 								className='modal-cancel-button button-css'
 								onClick={() => {
-									closeModal('modalToAdd');
+									closeModal('modalForAdding');
 								}}>
 								CANCEL
 							</button>
@@ -145,7 +149,7 @@ function Bins() {
 								type='button'
 								className='modal-submit-button button-css'
 								onClick={() => {
-									addBin('modalToAdd');
+									addBin('modalForAdding');
 								}}>
 								ADD BIN
 							</button>
