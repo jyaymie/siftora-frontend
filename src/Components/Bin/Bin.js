@@ -116,7 +116,7 @@ function Bin() {
 
 	// ========================================================== SHOW/CLOSE MODAL
 	const showModal = (e, name, product) => {
-		e.preventDefault();
+		// e.preventDefault();
 		product && setProductToRemove(product);
 		const data = { ...show, [name]: true };
 		setShow(data);
@@ -142,25 +142,27 @@ function Bin() {
 	};
 
 	// ======================================================== ADD PRODUCT TO BIN
-	const addProduct = async (e, name = '', product) => {
-		setProductToAdd({
-			brand: e.target.brand.value,
-			name: e.target.name.value,
-			shade: e.target.shade.value,
-			purchase_date: e.target.purchase_date.value,
-			price: e.target.price.value,
-			open_date: e.target.open_date.value,
-			expiry_date: e.target.expiry_date.value,
-			use_count: e.target.use_count.value,
-			finish_date: e.target.finish_date.value,
-			will_repurchase: e.target.will_repurchase.checked,
-			image: e.target.image.value,
-			notes: e.target.notes.value,
-		});
+	const addProduct = async (e, name, product) => {
+		if (name) {
+			setProductToAdd({
+				brand: e.target.brand.value,
+				name: e.target.name.value,
+				shade: e.target.shade.value,
+				purchase_date: e.target.purchase_date.value,
+				price: e.target.price.value,
+				open_date: e.target.open_date.value,
+				expiry_date: e.target.expiry_date.value,
+				use_count: e.target.use_count.value,
+				finish_date: e.target.finish_date.value,
+				will_repurchase: e.target.will_repurchase.checked,
+				image: e.target.image.value,
+				notes: e.target.notes.value,
+			});
+			closeModal(name);
+		}
 
-		closeModal(name);
 		data.products.push(product ? product : productToAdd);
-		updateItem(data, `${BASE_API_URL}/bins`);
+		updateItem(data, `${BASE_API_URL}/bins/`);
 	};
 
 	// ======================================================================= JSX
@@ -180,8 +182,8 @@ function Bin() {
 						{getDropdownProducts().map((product) => (
 							<Dropdown.Item
 								key={product.id}
-								onClick={() =>
-									addProduct(product)
+								onClick={(e) =>
+									addProduct(e, '', product)
 								}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
 						))}
 					</DropdownButton>

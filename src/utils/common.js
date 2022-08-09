@@ -87,7 +87,7 @@ export function useAuthFetch(path) {
 		setError('');
 		setLoading(true);
 		axios
-			.delete(`${noQueryUrl}/${item.id}`, {
+			.delete(`${noQueryUrl}/${item.id}/`, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
@@ -109,7 +109,7 @@ export function useAuthFetch(path) {
 		setError('');
 		setLoading(true);
 		axios
-			.put(`${noQueryUrl}${item.id}`, item, {
+			.put(`${noQueryUrl}${item.id}/`, item, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
