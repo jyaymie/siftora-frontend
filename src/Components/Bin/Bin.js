@@ -84,6 +84,9 @@ function Bin() {
 		// In the 'Add Existing Product' dropdown menu, list all products that are
 		// not already in the bin.
 		return products.filter((product) => {
+			if (!data.products) {
+				return false;
+			}
 			return !data.products.find((binProduct) => binProduct.id === product.id);
 		});
 	};
