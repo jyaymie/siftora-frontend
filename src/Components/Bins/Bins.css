@@ -72,3 +72,42 @@
 		grid-template-columns: repeat(2, 250px);
 	}
 }
+
+
+
+
+
+
+
+
+/* .form-label {
+	font-size: 15px;
+}
+
+.form-control {
+	border-radius: 0;
+	max-width: 300px;
+	overflow: hidden;
+}
+
+.form-options {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.bin-form-cancel-option,
+.bin-form-submit-option {
+	width: 80px;
+	height: 40px;
+}
+
+.bin-form-cancel-option {
+	border: none;
+}
+
+/* =========================================================== DESKTOP STYLES */
+@media screen and (min-width: 768px) {
+	.form-control {
+		min-width: 500px;
+	}
+} */

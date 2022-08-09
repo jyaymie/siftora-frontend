@@ -3,30 +3,42 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthFetch } from '../../utils/common';
 import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
 
 function Bins() {
 	const navigate = useNavigate();
-	const [show, setShow] = useState(false);
+	const [show, setShow] = useState({ modalToAdd: false, modalToDelete: false });
 	const [binToDelete, setBinToDelete] = useState({});
+	const [binToAdd, setBinToAdd] = useState({ title: '' });
 
 	// ============================================================= RETRIEVE BINS
-	const { data, loading, error, deleteItem } = useAuthFetch('/bins');
+	const { data, loading, error, deleteItem, addItem } = useAuthFetch('/bins');
 
 	// ========================================================== SHOW/CLOSE MODAL
-	const showModal = (e, bin) => {
+	const showModal = (e, bin, name) => {
 		e.preventDefault();
-		setBinToDelete(bin);
-		setShow(true);
+		bin && setBinToDelete(bin);
+		const data = { ...show, [name]: true };
+		setShow(data);
 	};
 
-	const closeModal = () => setShow(false);
+	const closeModal = (name) => {
+		const data = { ...show, [name]: false };
+		setShow(data);
+	};
 
 	// ================================================================ DELETE BIN
-	const deleteBin = async () => {
-		closeModal();
+	const deleteBin = async (name) => {
+		closeModal(name);
 		deleteItem(binToDelete);
+	};
+
+	// =================================================================== ADD BIN
+	const addBin = async (name) => {
+		closeModal(name);
+		addItem(binToAdd);
 	};
 
 	// ======================================================================= JSX
@@ -50,7 +62,7 @@ function Bins() {
 								<button
 									type='button'
 									className='delete-icon button-css'
-									onClick={(e) => showModal(e, bin)}>
+									onClick={(e) => showModal(e, bin, 'modalToDelete')}>
 									<i className='icon-trash'></i>
 								</button>
 							</div>
@@ -60,24 +72,26 @@ function Bins() {
 
 				{/* ========================================= DEFAULT 'Add Bin' CARD */}
 				{!loading && (
-					<Link to={`/add-bin`}>
-						<Card className='add-bin-card'>
-							<p className='card-text'>Add Bin</p>
-							<div className='icon-container'>
-								<button
-									type='button'
-									className='add-icon button-css'
-									onClick={() => navigate('/add-bin')}>
-									+
-								</button>
-							</div>
-						</Card>
-					</Link>
+					<Card className='add-bin-card'>
+						<p className='card-text'>Add Bin</p>
+						<div className='icon-container'>
+							<button
+								type='button'
+								className='add-icon button-css'
+								onClick={(e) => showModal(e, '', 'modalToAdd')}>
+								+
+							</button>
+						</div>
+					</Card>
 				)}
 			</div>
 
-			{/* ============================================================ MODAL */}
-			<Modal show={show} onHide={closeModal}>
+			{/* ============================================== MODAL TO DELETE BIN */}
+			<Modal
+				show={show.modalToDelete}
+				onHide={() => {
+					closeModal('modalToDelete');
+				}}>
 				<Modal.Header>
 					<Modal.Title>Are you sure?</Modal.Title>
 				</Modal.Header>
@@ -90,16 +104,54 @@ function Bins() {
 					<button
 						type='button'
 						className='modal-cancel-button button-css'
-						onClick={closeModal}>
+						onClick={() => {
+							closeModal('modalToDelete');
+						}}>
 						CANCEL
 					</button>
 					<button
 						type='button'
 						className='modal-delete-button button-css'
-						onClick={deleteBin}>
+						onClick={() => deleteBin('modalToDelete')}>
 						DELETE BIN
 					</button>
 				</Modal.Footer>
+			</Modal>
+
+			{/* ================================================= MODAL TO ADD BIN */}
+			<Modal show={show.modalToAdd} onHide={() => closeModal('modalToAdd')}>
+				<Modal.Body>
+					<h2>New Bin </h2>
+					<Form>
+						<Form.Group>
+							<Form.Label htmlFor='title'>Title</Form.Label>
+							<Form.Control
+								id='title'
+								value={binToAdd.title}
+								onChange={(e) => setBinToAdd({ title: e.target.value })}
+								required
+							/>
+						</Form.Group>
+						<div className='modal-button-container'>
+							<button
+								type='button'
+								className='modal-cancel-button button-css'
+								onClick={() => {
+									closeModal('modalToAdd');
+								}}>
+								CANCEL
+							</button>
+							<button
+								type='button'
+								className='modal-submit-button button-css'
+								onClick={() => {
+									addBin('modalToAdd');
+								}}>
+								ADD BIN
+							</button>
+						</div>
+					</Form>
+				</Modal.Body>
 			</Modal>
 
 			{loading && <Spinner />}

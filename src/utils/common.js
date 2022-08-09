@@ -60,13 +60,34 @@ export function useAuthFetch(path) {
 			});
 	};
 
+	// ====================================================================== POST
+	const addItem = (item) => {
+		setError('');
+		setLoading(true);
+		axios
+			.post(`${url}/`, item, {
+				headers: {
+					Authorization: `Token ${token}`,
+				},
+			})
+			.then(() => {
+				setLoading(false);
+				fetchItems();
+			})
+			.catch((err) => {
+				setLoading(false);
+				console.log('Something went wrong...', err);
+				setError(errorMessage);
+			});
+	};
+
 	// ==================================================================== DELETE
 	const deleteItem = (item) => {
 		const noQueryUrl = getPathFromUrl(url);
 		setError('');
 		setLoading(true);
 		axios
-			.delete(`${noQueryUrl}${item.id}`, {
+			.delete(`${noQueryUrl}/${item.id}`, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
@@ -88,7 +109,7 @@ export function useAuthFetch(path) {
 		setError('');
 		setLoading(true);
 		axios
-			.put(`${noQueryUrl}/${item.id}/`, item, {
+			.put(`${noQueryUrl}${item.id}`, item, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
@@ -108,5 +129,14 @@ export function useAuthFetch(path) {
 		fetchItems();
 	}, [url, token, refetchIndex]);
 
-	return { data, loading, error, deleteItem, setUrl, updateItem, refetch };
+	return {
+		data,
+		loading,
+		error,
+		deleteItem,
+		setUrl,
+		updateItem,
+		addItem,
+		refetch,
+	};
 }
