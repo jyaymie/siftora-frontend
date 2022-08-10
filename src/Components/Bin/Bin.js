@@ -2,7 +2,7 @@ import './Bin.css';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthFetch } from '../../utils/common';
-import { BASE_API_URL } from '../../utils/enums';
+import { BASE_API_URL, MODAL_TYPE } from '../../utils/enums';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Accordion from 'react-bootstrap/Accordion';
@@ -51,9 +51,11 @@ function Bin() {
 	const [show, setShow] = useState({
 		modalForAdding: false,
 		modalForRemoving: false,
+		modalForUpdating: false,
 	});
-	const [productToRemove, setProductToRemove] = useState({});
 	const [productToAdd, setProductToAdd] = useState({});
+	const [productToRemove, setProductToRemove] = useState({});
+	const [productToUpdate, setProductToUpdate] = useState({});
 
 	// ========================================================== GET BIN PRODUCTS
 	const {
@@ -63,6 +65,7 @@ function Bin() {
 		loading,
 		error,
 		setUrl,
+		addItem,
 		updateItem,
 	} = useAuthFetch(
 		// Use window.location.search to save the last used query parameters. This
@@ -79,7 +82,7 @@ function Bin() {
 		error: productsError,
 	} = useAuthFetch(`/products`);
 
-	// ========================================= GET PRODUCTS IN THE DROPDOWN MENU
+	// ===================================================== GET DROPDOWN PRODUCTS
 	const getDropdownProducts = () => {
 		if (!data.products) {
 			return [];
@@ -115,21 +118,89 @@ function Bin() {
 	};
 
 	// ========================================================== SHOW/CLOSE MODAL
-	const showModal = (e, name, product) => {
-		// e.preventDefault();
-		product && setProductToRemove(product);
-		const data = { ...show, [name]: true };
-		setShow(data);
+	const showModal = (product, type) => {
+		switch (type) {
+			case MODAL_TYPE.ADD:
+				setShow({
+					...show,
+					modalForAdding: true,
+				});
+				break;
+			case MODAL_TYPE.REMOVE:
+				setProductToRemove(product);
+				setShow({
+					...show,
+					modalForRemoving: true,
+				});
+				break;
+			case MODAL_TYPE.UPDATE:
+				setProductToUpdate(product);
+				setShow({
+					...show,
+					modalForUpdating: true,
+				});
+				break;
+			default:
+				break;
+		}
 	};
 
-	const closeModal = (name) => {
-		const data = { ...show, [name]: false };
-		setShow(data);
+	const closeModal = () =>
+		setShow({
+			modalForAdding: false,
+			modalForRemoving: false,
+			modalForUpdating: false,
+		});
+
+	// ==================================================== ADD NEW PRODUCT TO BIN
+	const addNewProduct = async (e) => {
+		e.preventDefault();
+
+		if (!e.target.purchase_date.value) {
+			e.target.purchase_date.value = '0001-01-01';
+		}
+		if (!e.target.open_date.value) {
+			e.target.open_date.value = '0001-01-01';
+		}
+		if (!e.target.expiry_date.value) {
+			e.target.expiry_date.value = '0001-01-01';
+		}
+		if (!e.target.finish_date.value) {
+			e.target.finish_date.value = '0001-01-01';
+		}
+
+		const productToAdd = {
+			brand: e.target.brand.value,
+			name: e.target.name.value,
+			shade: e.target.shade.value,
+			purchase_date: e.target.purchase_date.value,
+			price: e.target.price.value,
+			open_date: e.target.open_date.value,
+			expiry_date: e.target.expiry_date.value,
+			use_count: e.target.use_count.value,
+			finish_date: e.target.finish_date.value,
+			will_repurchase: e.target.will_repurchase.checked,
+			image: e.target.image.value,
+			notes: e.target.notes.value,
+		};
+
+		const res = await addItem(productToAdd, `${BASE_API_URL}/products`);
+		data.products.push(res.data);
+		updateItem(data, `${BASE_API_URL}/bins`);
+		closeModal();
+	};
+
+	// =============================================== ADD EXISTING PRODUCT TO BIN
+	const addExistingProduct = async (e, product) => {
+		e.preventDefault();
+		closeModal();
+		data.products.push(product);
+		updateItem(data, `${BASE_API_URL}/bins`);
 	};
 
 	// =================================================== REMOVE PRODUCT FROM BIN
-	const removeProduct = async (name) => {
-		closeModal(name);
+	const removeProduct = async () => {
+		closeModal();
 		const filteredBinProducts = data.products.filter(
 			(product) => product !== productToRemove
 		);
@@ -139,30 +210,6 @@ function Bin() {
 			products: filteredBinProducts,
 		};
 		updateItem(updatedBin, `${BASE_API_URL}/bins`);
-	};
-
-	// ======================================================== ADD PRODUCT TO BIN
-	const addProduct = async (e, name, product) => {
-		if (name) {
-			setProductToAdd({
-				brand: e.target.brand.value,
-				name: e.target.name.value,
-				shade: e.target.shade.value,
-				purchase_date: e.target.purchase_date.value,
-				price: e.target.price.value,
-				open_date: e.target.open_date.value,
-				expiry_date: e.target.expiry_date.value,
-				use_count: e.target.use_count.value,
-				finish_date: e.target.finish_date.value,
-				will_repurchase: e.target.will_repurchase.checked,
-				image: e.target.image.value,
-				notes: e.target.notes.value,
-			});
-			closeModal(name);
-		}
-
-		data.products.push(product ? product : productToAdd);
-		updateItem(data, `${BASE_API_URL}/bins/`);
 	};
 
 	// ======================================================================= JSX
@@ -176,14 +223,14 @@ function Bin() {
 					<DropdownButton
 						title={`Add Product${' '}`}
 						className='dropdown-button'>
-						<Dropdown.Item onClick={(e) => showModal(e, 'modalForAdding')}>
+						<Dropdown.Item onClick={(e) => showModal(e, MODAL_TYPE.ADD)}>
 							✨ ADD NEW PRODUCT ✨
 						</Dropdown.Item>
 						{getDropdownProducts().map((product) => (
 							<Dropdown.Item
 								key={product.id}
 								onClick={(e) =>
-									addProduct(e, '', product)
+									addExistingProduct(e, product)
 								}>{`${product.name} by ${product.brand}`}</Dropdown.Item>
 						))}
 					</DropdownButton>
@@ -267,12 +314,64 @@ function Bin() {
 						</Accordion>
 					))}
 
+				{/* ========================================MODAL FOR ADDING A PRODUCT */}
+				<Modal show={show.modalForAdding} onHide={closeModal}>
+					<Modal.Body>
+						<h2>New Product</h2>
+						<Form onSubmit={(e) => addNewProduct(e)}>
+							<Form.Group>
+								<Form.Label htmlFor='brand'>Brand*</Form.Label>
+								<Form.Control id='brand' required />
+								<Form.Label htmlFor='name'>Name*</Form.Label>
+								<Form.Control id='name' required />
+								<Form.Label htmlFor='shade'>Shade</Form.Label>
+								<Form.Control id='shade' />
+								<Form.Label htmlFor='purchase_date'>Purchase Date</Form.Label>
+								<Form.Control type='date' id='purchase_date' />
+								<Form.Label htmlFor='price'>Price</Form.Label>
+								<Form.Control id='price' />
+								<Form.Label htmlFor='open_date'>Open Date</Form.Label>
+								<Form.Control type='date' id='open_date' />
+								<Form.Label htmlFor='expiry_date'>Expiry Date</Form.Label>
+								<Form.Control type='date' id='expiry_date' />
+								<Form.Label htmlFor='use_count'># of Uses</Form.Label>
+								<Form.Control
+									type='number'
+									id='use_count'
+									min='0'
+									defaultValue='0'
+								/>
+								<Form.Label htmlFor='finish_date'>Finish Date</Form.Label>
+								<Form.Control type='date' id='finish_date' />
+								<Form.Check
+									type='checkbox'
+									id='will_repurchase'
+									label='Will Repurchase'
+								/>
+								<Form.Label htmlFor='image'>Image URL</Form.Label>
+								<Form.Control id='image' />
+								<Form.Label htmlFor='notes'>Notes</Form.Label>
+								<Form.Control as='textarea' rows={3} id='notes' />
+							</Form.Group>
+							<div className='modal-button-container'>
+								<button
+									type='button'
+									className='modal-cancel-button button-css'
+									onClick={closeModal}>
+									CANCEL
+								</button>
+								<button
+									type='submit'
+									className='modal-submit-button button-css'>
+									ADD PRODUCT
+								</button>
+							</div>
+						</Form>
+					</Modal.Body>
+				</Modal>
+
 				{/* =================================== MODAL FOR REMOVING A PRODUCT */}
-				<Modal
-					show={show.modalForRemoving}
-					onHide={() => {
-						closeModal('modalForRemoving');
-					}}>
+				<Modal show={show.modalForRemoving} onHide={closeModal}>
 					<Modal.Header>
 						<Modal.Title>Just so you know...</Modal.Title>
 					</Modal.Header>
@@ -290,7 +389,7 @@ function Bin() {
 						<button
 							type='button'
 							className='modal-cancel-button button-css'
-							onClick={() => closeModal('modalForRemoving')}>
+							onClick={closeModal}>
 							CANCEL
 						</button>
 						<button
@@ -302,69 +401,6 @@ function Bin() {
 					</Modal.Footer>
 				</Modal>
 			</div>
-
-			{/* ========================================MODAL FOR ADDING A PRODUCT */}
-			<Modal
-				show={show.modalForAdding}
-				onHide={() => closeModal('modalForAdding')}>
-				<Modal.Body>
-					<h2>New Product</h2>
-					<Form>
-						<Form.Group>
-							<Form.Label htmlFor='brand'>Brand*</Form.Label>
-							<Form.Control id='brand' required />
-							<Form.Label htmlFor='name'>Name*</Form.Label>
-							<Form.Control id='name' required />
-							<Form.Label htmlFor='shade'>Shade</Form.Label>
-							<Form.Control id='shade' />
-							<Form.Label htmlFor='purchase_date'>Purchase Date</Form.Label>
-							<Form.Control type='date' id='purchase_date' />
-							<Form.Label htmlFor='price'>Price</Form.Label>
-							<Form.Control id='price' />
-							<Form.Label htmlFor='open_date'>Open Date</Form.Label>
-							<Form.Control type='date' id='open_date' />
-							<Form.Label htmlFor='expiry_date'>Expiry Date</Form.Label>
-							<Form.Control type='date' id='expiry_date' />
-							<Form.Label htmlFor='use_count'># of Uses</Form.Label>
-							<Form.Control
-								type='number'
-								id='use_count'
-								min='0'
-								defaultValue='0'
-							/>
-							<Form.Label htmlFor='finish_date'>Finish Date</Form.Label>
-							<Form.Control type='date' id='finish_date' />
-							<Form.Check
-								type='checkbox'
-								id='will_repurchase'
-								label='Will Repurchase'
-							/>
-							<Form.Label htmlFor='image'>Image URL</Form.Label>
-							<Form.Control id='image' />
-							<Form.Label htmlFor='notes'>Notes</Form.Label>
-							<Form.Control as='textarea' rows={3} id='notes' />
-						</Form.Group>
-						<div className='modal-button-container'>
-							<button
-								type='button'
-								className='modal-cancel-button button-css'
-								onClick={() => {
-									closeModal('modalForAdding');
-								}}>
-								CANCEL
-							</button>
-							<button
-								type='button'
-								className='modal-submit-button button-css'
-								onClick={(e) => {
-									addProduct(e, 'modalForAdding');
-								}}>
-								ADD PRODUCT
-							</button>
-						</div>
-					</Form>
-				</Modal.Body>
-			</Modal>
 
 			{data.products && !data.products.length && (
 				<p className='bin-empty-message'>

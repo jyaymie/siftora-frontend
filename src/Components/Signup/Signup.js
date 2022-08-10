@@ -96,6 +96,17 @@ function Signup() {
 				</Link>
 				.
 			</p>
+			<p>
+				To get a feel for the app before signing up,{' '}
+				<Link to='/login' className='here-link modal-link'>
+					log in
+				</Link>{' '}
+				as our test buddy:
+				<ul>
+					<li>Username: test</li>
+					<li>Password: testtest</li>
+				</ul>
+			</p>
 
 			{loading && <Spinner />}
 			{error && error}

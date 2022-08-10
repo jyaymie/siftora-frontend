@@ -1,11 +1,11 @@
 import './Products.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuthFetch } from '../../utils/common';
-import { BASE_API_URL } from '../../utils/enums';
+import { BASE_API_URL, MODAL_TYPE } from '../../utils/enums';
 import Accordion from 'react-bootstrap/Accordion';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from '../Spinner/Spinner';
 
@@ -36,7 +36,6 @@ const DROPDOWN_OPTIONS = [
 // Example: { sort: "use_count", order: "asc" }
 function updateQueryParams(params) {
 	const url = new URL(window.location.href);
-
 	// Iterate through each property,
 	for (const key in params) {
 		if (params[key] !== undefined) {
@@ -45,22 +44,27 @@ function updateQueryParams(params) {
 			url.searchParams.set(key, params[key]);
 		}
 	}
-
 	// Update the URL without reloading the page.
 	window.history.pushState({}, '', url.toString());
 }
 
 function Products() {
-	const [show, setShow] = useState(false);
+	const [show, setShow] = useState({
+		modalForAdding: false,
+		modalForDeleting: false,
+		modalForUpdating: false,
+	});
 	const [productToDelete, setProductToDelete] = useState({});
+	const [productToUpdate, setProductToUpdate] = useState({});
 
 	// ============================================================== GET PRODUCTS
-	const { data, loading, error, setUrl, deleteItem, updateItem } = useAuthFetch(
-		// Use window.location.search to save the last used query parameters. This
-		// way, when a product's use count is updated, the products will remain
-		// sorted by whatever option the user last chose.
-		`/products${window.location.search ? window.location.search : ''}`
-	);
+	const { data, loading, error, setUrl, addItem, deleteItem, updateItem } =
+		useAuthFetch(
+			// Use window.location.search to save the last used query parameters. This
+			// way, when a product's use count is updated, the products will remain
+			// sorted by whatever option the user last chose.
+			`/products${window.location.search ? window.location.search : ''}`
+		);
 
 	// ============================================================= SORT PRODUCTS
 	const sortProducts = async (option) => {
@@ -86,17 +90,122 @@ function Products() {
 	};
 
 	// ========================================================== SHOW/CLOSE MODAL
-	const showModal = (product) => {
-		setProductToDelete(product);
-		setShow(true);
+	const showModal = (product, type) => {
+		switch (type) {
+			case MODAL_TYPE.ADD:
+				setShow({
+					...show,
+					modalForAdding: true,
+				});
+				break;
+			case MODAL_TYPE.UPDATE:
+				setProductToUpdate(product);
+				setShow({
+					...show,
+					modalForUpdating: true,
+				});
+				break;
+			case MODAL_TYPE.DELETE:
+				setProductToDelete(product);
+				setShow({
+					...show,
+					modalForDeleting: true,
+				});
+				break;
+			default:
+				break;
+		}
 	};
 
-	const closeModal = () => setShow(false);
+	const closeModal = () =>
+		setShow({
+			modalForAdding: false,
+			modalForDeleting: false,
+			modalForUpdating: false,
+		});
+
+	// =============================================================== ADD PRODUCT
+	const addProduct = async (e) => {
+		e.preventDefault();
+
+		if (!e.target.purchase_date.value) {
+			e.target.purchase_date.value = '0001-01-01';
+		}
+		if (!e.target.open_date.value) {
+			e.target.open_date.value = '0001-01-01';
+		}
+		if (!e.target.expiry_date.value) {
+			e.target.expiry_date.value = '0001-01-01';
+		}
+		if (!e.target.finish_date.value) {
+			e.target.finish_date.value = '0001-01-01';
+		}
+
+		const productToAdd = {
+			brand: e.target.brand.value,
+			name: e.target.name.value,
+			shade: e.target.shade.value,
+			purchase_date: e.target.purchase_date.value,
+			price: e.target.price.value,
+			open_date: e.target.open_date.value,
+			expiry_date: e.target.expiry_date.value,
+			use_count: e.target.use_count.value,
+			finish_date: e.target.finish_date.value,
+			will_repurchase: e.target.will_repurchase.checked,
+			image: e.target.image.value,
+			notes: e.target.notes.value,
+		};
+
+		closeModal();
+		addItem(productToAdd);
+	};
 
 	// ============================================================ DELETE PRODUCT
 	const deleteProduct = async () => {
 		closeModal();
 		deleteItem(productToDelete);
+	};
+
+	// ============================================================ UPDATE PRODUCT
+	const updateProduct = async (e) => {
+		e.preventDefault();
+
+		if (!e.target.purchase_date.value) {
+			e.target.purchase_date.value = '0001-01-01';
+		}
+		if (!e.target.open_date.value) {
+			e.target.open_date.value = '0001-01-01';
+		}
+		if (!e.target.expiry_date.value) {
+			e.target.expiry_date.value = '0001-01-01';
+		}
+		if (!e.target.finish_date.value) {
+			e.target.finish_date.value = '0001-01-01';
+		}
+
+		const data = {
+			id: productToUpdate.id,
+			brand: e.target.brand.value,
+			name: e.target.name.value,
+			shade: e.target.shade.value,
+			purchase_date: e.target.purchase_date.value,
+			price: e.target.price.value,
+			open_date: e.target.open_date.value,
+			expiry_date: e.target.expiry_date.value,
+			use_count: e.target.use_count.value,
+			finish_date: e.target.finish_date.value,
+			will_repurchase: e.target.will_repurchase.checked,
+			image: e.target.image.value,
+			notes: e.target.notes.value,
+		};
+
+		closeModal();
+		updateItem(data, `${BASE_API_URL}/products`);
+	};
+
+	// =========================================== onChange FOR FORM INPUT CHANGES
+	const onInputChange = (e, name) => {
+		setProductToUpdate({ ...productToUpdate, [name]: e.target.checked });
 	};
 
 	// ======================================================================= JSX
@@ -106,14 +215,13 @@ function Products() {
 				<h2>Products</h2>
 
 				<div className='products-actions'>
-					<Link to='/add-product' className='add-product-link button-css'>
+					<button
+						className='add-product-button button-css'
+						onClick={() => showModal({}, MODAL_TYPE.ADD)}>
 						Add New Product ▸
-					</Link>
+					</button>
 					{/* ================================ DROPDOWN FOR SORTING PRODUCTS */}
-					<DropdownButton
-						title={`Sort Products By${' '}`}
-						className='dropdown-button'
-						id='dropdown-menu-align-end'>
+					<DropdownButton title='Sort Products By' className='dropdown-button'>
 						{DROPDOWN_OPTIONS.map((option) => (
 							<Dropdown.Item
 								onClick={() => sortProducts(option)}
@@ -168,15 +276,16 @@ function Products() {
 								<p>Notes: {product.notes}</p>
 								{/* ==================================== EDIT & DELETE ICONS */}
 								<div className='products-icon-container'>
-									<Link
+									<button
 										to={`/products/${product.id}/edit`}
-										className='edit-icon button-css'>
+										className='edit-icon button-css'
+										onClick={() => showModal(product, MODAL_TYPE.UPDATE)}>
 										<i className='icon-pencil'></i>
-									</Link>
+									</button>
 									<button
 										type='button'
 										className='delete-icon button-css'
-										onClick={() => showModal(product)}>
+										onClick={() => showModal(product, MODAL_TYPE.DELETE)}>
 										<i className='icon-trash'></i>
 									</button>
 								</div>
@@ -185,8 +294,61 @@ function Products() {
 					</Accordion>
 				))}
 
-				{/* ========================================================== MODAL */}
-				<Modal show={show} onHide={closeModal}>
+				{/* ======================================= MODAL FOR ADDING PRODUCT */}
+				<Modal show={show.modalForAdding} onHide={closeModal}>
+					<Modal.Body>
+						<h2>New Product</h2>
+						<Form onSubmit={addProduct}>
+							<Form.Group>
+								<Form.Label htmlFor='brand'>Brand*</Form.Label>
+								<Form.Control id='brand' required />
+								<Form.Label htmlFor='name'>Name*</Form.Label>
+								<Form.Control id='name' required />
+								<Form.Label htmlFor='shade'>Shade</Form.Label>
+								<Form.Control id='shade' />
+								<Form.Label htmlFor='purchase_date'>Purchase Date</Form.Label>
+								<Form.Control type='date' id='purchase_date' />
+								<Form.Label htmlFor='price'>Price</Form.Label>
+								<Form.Control id='price' />
+								<Form.Label htmlFor='open_date'>Open Date</Form.Label>
+								<Form.Control type='date' id='open_date' />
+								<Form.Label htmlFor='expiry_date'>Expiry Date</Form.Label>
+								<Form.Control type='date' id='expiry_date' />
+								<Form.Label htmlFor='use_count'># of Uses</Form.Label>
+								<Form.Control
+									type='number'
+									id='use_count'
+									min='0'
+									defaultValue='0'
+								/>
+								<Form.Label htmlFor='finish_date'>Finish Date</Form.Label>
+								<Form.Control type='date' id='finish_date' />
+								<Form.Check
+									type='checkbox'
+									id='will_repurchase'
+									label='Will Repurchase'
+								/>
+								<Form.Label htmlFor='image'>Image URL</Form.Label>
+								<Form.Control id='image' />
+								<Form.Label htmlFor='notes'>Notes</Form.Label>
+								<Form.Control as='textarea' rows={3} id='notes' />
+							</Form.Group>
+							<div className='form-option-container'>
+								<button
+									className='form-cancel-option button-css'
+									onClick={closeModal}>
+									CANCEL
+								</button>
+								<button type='submit' className='form-add-option button-css'>
+									ADD PRODUCT
+								</button>
+							</div>
+						</Form>
+					</Modal.Body>
+				</Modal>
+
+				{/* ===================================== MODAL FOR DELETING PRODUCT */}
+				<Modal show={show.modalForDeleting} onHide={closeModal}>
 					<Modal.Header>
 						<Modal.Title>Are you sure?</Modal.Title>
 					</Modal.Header>
@@ -211,6 +373,86 @@ function Products() {
 					</Modal.Footer>
 				</Modal>
 			</div>
+
+			{/* ======================================== MODAL TO UPDATING PRODUCT */}
+			<Modal show={show.modalForUpdating} onHide={closeModal}>
+				<Modal.Body>
+					<h2>Edit Product</h2>
+					<Form onSubmit={updateProduct}>
+						<Form.Group>
+							<Form.Label htmlFor='brand'>Brand</Form.Label>
+							<Form.Control
+								id='brand'
+								defaultValue={productToUpdate.brand}
+								required
+							/>
+							<Form.Label htmlFor='name'>Name</Form.Label>
+							<Form.Control
+								id='name'
+								defaultValue={productToUpdate.name}
+								required
+							/>
+							<Form.Label htmlFor='shade'>Shade</Form.Label>
+							<Form.Control id='shade' defaultValue={productToUpdate.shade} />
+							<Form.Label htmlFor='purchase_date'>Purchase Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='purchase_date'
+								defaultValue={productToUpdate.purchase_date}
+							/>
+							<Form.Label htmlFor='price'>Price</Form.Label>
+							<Form.Control id='price' defaultValue={productToUpdate.price} />
+							<Form.Label htmlFor='open_date'>Open Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='open_date'
+								defaultValue={productToUpdate.open_date}
+							/>
+							<Form.Label htmlFor='expiry_date'>Expiry Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='expiry_date'
+								defaultValue={productToUpdate.expiry_date}
+							/>
+							<Form.Label htmlFor='use_count'># of Uses</Form.Label>
+							<Form.Control
+								type='number'
+								id='use_count'
+								min='0'
+								defaultValue={productToUpdate.use_count}
+							/>
+							<Form.Label htmlFor='finish_date'>Finish Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='finish_date'
+								defaultValue={productToUpdate.finish_date}
+							/>
+							<Form.Check
+								type='checkbox'
+								id='will_repurchase'
+								label='Will Repurchase'
+								checked={Boolean(productToUpdate.will_repurchase)}
+								onChange={(e) => onInputChange(e, 'will_repurchase')}
+							/>
+							<Form.Label htmlFor='image'>Image URL</Form.Label>
+							<Form.Control id='image' defaultValue={productToUpdate.image} />
+							<Form.Label htmlFor='notes'>Notes</Form.Label>
+							<Form.Control id='notes' defaultValue={productToUpdate.notes} />
+						</Form.Group>
+						<div className='modal-button-container'>
+							<button
+								type='button'
+								className='modal-cancel-button button-css'
+								onClick={closeModal}>
+								CANCEL
+							</button>
+							<button type='submit' className='modal-submit-button button-css'>
+								UPDATE PRODUCT
+							</button>
+						</div>
+					</Form>
+				</Modal.Body>
+			</Modal>
 
 			{loading && <Spinner />}
 			{error && error}

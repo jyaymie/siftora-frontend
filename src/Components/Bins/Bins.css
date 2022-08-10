@@ -23,6 +23,7 @@
 }
 
 .add-bin-card {
+	cursor: pointer;
 	background-color: rgb(180, 140, 140, 0.15);
 }
 
@@ -78,6 +79,31 @@
 	justify-content: flex-end;
 	margin-top: 20px;
 }
+
+/* From FormToEditBin.css */
+/* .form-control {
+	border-radius: 0;
+	width: 500px;
+	overflow: hidden;
+}
+
+.form-options {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.bin-form-cancel-option,
+.bin-form-submit-option {
+	width: 80px;
+	height: 40px;
+}
+
+.bin-form-cancel-option {
+	border: none;
+} */
+
+
+
 
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {

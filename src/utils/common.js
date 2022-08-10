@@ -61,18 +61,20 @@ export function useAuthFetch(path) {
 	};
 
 	// ====================================================================== POST
-	const addItem = (item) => {
+	const addItem = (item, path) => {
 		setError('');
 		setLoading(true);
-		axios
-			.post(`${url}/`, item, {
+
+		return axios
+			.post(`${path ? path : url}/`, item, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},
 			})
-			.then(() => {
+			.then((res) => {
 				setLoading(false);
 				fetchItems();
+				return res;
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -105,11 +107,12 @@ export function useAuthFetch(path) {
 
 	// ======================================================================= PUT
 	const updateItem = (item, path) => {
+		// Remove all queries from the current path.
 		const noQueryUrl = getPathFromUrl(path ? path : url);
 		setError('');
 		setLoading(true);
 		axios
-			.put(`${noQueryUrl}${item.id}/`, item, {
+			.put(`${noQueryUrl}/${item.id}/`, item, {
 				headers: {
 					Authorization: `Token ${token}`,
 				},

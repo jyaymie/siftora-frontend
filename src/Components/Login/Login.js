@@ -81,6 +81,13 @@ function Login() {
 				</Link>
 				.
 			</p>
+			<p>
+				To get a feel for the app before signing up, log in as our test buddy:
+				<ul>
+					<li>Username: test</li>
+					<li>Password: testtest</li>
+				</ul>
+			</p>
 
 			{loading && <Spinner />}
 			{error && error}
