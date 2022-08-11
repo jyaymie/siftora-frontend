@@ -1,6 +1,6 @@
 .home {
 	height: 100vh;
-	margin: 0 auto;
+	margin: 0;
 }
 
 .home::before {
@@ -36,17 +36,11 @@ h1 {
 }
 
 .login-link {
-	margin-right: 5px;
-}
-
-.login-link:hover {
-	background-color: rgb(255, 255, 255);
-	color: rgb(30, 30, 30);
+	margin-right: 10px;
+	background-color: transparent;
 }
 
 .signup-link {
-	margin-left: 5px;
-	background-color: rgb(30, 30, 30);
-	color: rgb(255, 255, 255) !important;
-	transition-duration: 0.3s;
+	margin-left: 10px;
+	background-color: rgb(255, 255, 255);
 }

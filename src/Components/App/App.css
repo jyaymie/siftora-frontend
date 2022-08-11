@@ -22,7 +22,7 @@ h2 {
 	margin-bottom: 20px;
 	text-align: center;
 	font-family: 'Bodoni Moda', serif;
-	font-size: 50px;
+	font-size: 40px;
 }
 
 p {
@@ -43,15 +43,18 @@ a:visited {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 40px;
+	height: 35px;
 	padding: 0 15px;
-	margin: 0 5px;
-	border: 0.5px solid rgb(255, 255, 255);
 	border-radius: 0;
 	background-color: rgb(255, 255, 255);
 	color: rgb(30, 30, 30);
 	font-size: 15px;
 	transition-duration: 0.3s;
+}
+
+.btn,
+.btn-primary {
+	border: 0.5px solid rgb(255, 255, 255);
 }
 
 .button-css {
@@ -64,6 +67,18 @@ a:visited {
 	border: 0.5px solid rgb(30, 30, 30);
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
+}
+
+.form-label {
+	margin: 0;
+}
+
+.form-control {
+	width: 300px;
+	margin-bottom: 20px;
+	border-radius: 0;
+	overflow: hidden;
+	font-size: 15px;
 }
 
 .product-image-large {
@@ -126,6 +141,10 @@ footer {
 	height: 50px;
 	background-color: rgb(30, 30, 30);
 	color: rgb(255, 255, 255);
+}
+
+svg {
+	margin-top: 20px;
 }
 
 /* =========================================================== DESKTOP STYLES */

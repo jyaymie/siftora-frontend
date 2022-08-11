@@ -1,3 +1,32 @@
-.signup-bottom-text {
+.signup-submit-button {
+	width: 300px;
+}
+
+.signup-bottom-text-container {
+	width: 300px;
 	margin-top: 20px;
+}
+
+.test-buddy-text {
+	margin-top: 20px;
+}
+
+.test-buddy-credentials {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	background-color: rgb(180, 140, 140, 0.3);
+}
+
+/* =========================================================== DESKTOP STYLES */
+@media screen and (min-width: 768px) {
+	.signup-submit-button {
+		width: 500px;
+	}
+
+	.signup-bottom-text-container {
+		width: 500px;
+	}
 }

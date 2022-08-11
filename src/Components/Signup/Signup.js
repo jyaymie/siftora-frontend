@@ -18,7 +18,7 @@ function Signup() {
 	const handleSignup = (e) => {
 		e.preventDefault();
 
-		const post = async () => {
+		const signUp = async () => {
 			setError('');
 			setLoading(true);
 			try {
@@ -41,7 +41,7 @@ function Signup() {
 			}
 		};
 
-		post();
+		signUp();
 	};
 
 	return (
@@ -76,37 +76,38 @@ function Signup() {
 					<Form.Control
 						type='password'
 						id='confirmed-password'
-						minLength='5'
 						value={confirmedPassword}
 						onChange={(e) => setConfirmedPassword(e.target.value)}
 						required
 					/>
 				</Form.Group>
 				<div className='form-option-container'>
-					<button type='submit' className='button-css'>
-						Submit
+					<button type='submit' className='signup-submit-button button-css'>
+						SIGN UP
 					</button>
 				</div>
 			</Form>
 
-			<p className='signup-bottom-text'>
-				Already a member? Log in{' '}
-				<Link to='/login' className='here-link modal-link'>
-					here
-				</Link>
-				.
-			</p>
-			<p>
-				To get a feel for the app before signing up,{' '}
-				<Link to='/login' className='here-link modal-link'>
-					log in
-				</Link>{' '}
-				as our test buddy:
-				<ul>
-					<li>Username: test</li>
-					<li>Password: testtest</li>
-				</ul>
-			</p>
+			<div className='signup-bottom-text-container'>
+				<p>
+					Already a member? Log in{' '}
+					<Link to='/login' className='underlined-link'>
+						here
+					</Link>
+					.
+				</p>
+				<p className='test-buddy-text'>
+					Unsure? Get a feel for the app before signing up by{' '}
+					<Link to='/login' className='underlined-link'>
+						logging in
+					</Link>{' '}
+					as our test buddy:
+					<div className='test-buddy-credentials'>
+						<p>Username: test</p>
+						<p>Password: testtest</p>
+					</div>
+				</p>
+			</div>
 
 			{loading && <Spinner />}
 			{error && error}

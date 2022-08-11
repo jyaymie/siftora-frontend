@@ -380,7 +380,7 @@ function Bin() {
 						<span className='modal-product-name'>{productToRemove.name}</span>{' '}
 						from this bin will not delete it from your products inventory. To
 						completely part ways with this product, please go to{' '}
-						<Link to='/products' className='modal-link'>
+						<Link to='/products' className='underlined-link'>
 							Products
 						</Link>
 						.

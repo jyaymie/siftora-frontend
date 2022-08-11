@@ -31,7 +31,7 @@
 	background-color: rgb(180, 140, 140, 0.15);
 }
 
-.bins-icon-container {
+.bin-icon-container {
 	display: flex;
 	position: absolute;
 	bottom: 0;
@@ -102,9 +102,6 @@
 	border: none;
 } */
 
-
-
-
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {
 	.bins-container {
@@ -113,5 +110,11 @@
 
 	#title {
 		min-width: 100%;
+	}
+}
+
+@media screen and (min-width: 1080px) {
+	.bins-container {
+		grid-template-columns: repeat(3, 250px);
 	}
 }

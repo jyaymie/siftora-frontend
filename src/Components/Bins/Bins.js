@@ -2,7 +2,7 @@ import './Bins.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthFetch } from '../../utils/common';
-import { BASE_API_URL, MODAL_TYPE } from '../../utils/enums';
+import { MODAL_TYPE } from '../../utils/enums';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -14,13 +14,32 @@ function Bins() {
 		modalForDeleting: false,
 		modalForUpdating: false,
 	});
-	const [binToDelete, setBinToDelete] = useState({});
 	const [binToAdd, setBinToAdd] = useState({ title: '' });
-	const [binToUpdate, setBinToUpdate] = useState({ title: '' });
+	const [binToDelete, setBinToDelete] = useState({ id: '', title: '' });
+	const [binToUpdate, setBinToUpdate] = useState({ id: '', title: '' });
 
 	// ================================================================== GET BINS
 	const { data, loading, error, addItem, deleteItem, updateItem } =
 		useAuthFetch('/bins');
+
+	// =================================================================== ADD BIN
+	const addBin = async () => {
+			closeModal();
+			addItem(binToAdd);
+	};
+
+	// ================================================================ DELETE BIN
+	const deleteBin = async () => {
+		closeModal();
+		deleteItem(binToDelete);
+	};
+
+	// ================================================================ UPDATE BIN
+	const updateBin = async (e) => {
+		e.preventDefault();
+		closeModal();
+		updateItem(binToUpdate);
+	};
 
 	// ========================================================== SHOW/CLOSE MODAL
 	const showModal = (e, bin, type) => {
@@ -31,6 +50,7 @@ function Bins() {
 					...show,
 					modalForAdding: true,
 				});
+				setBinToAdd({ title: '' });
 				break;
 			case MODAL_TYPE.DELETE:
 				setBinToDelete(bin);
@@ -45,12 +65,12 @@ function Bins() {
 					...show,
 					modalForUpdating: true,
 				});
-				console.log(bin);
 				break;
 			default:
 				break;
 		}
 	};
+
 	const closeModal = () => {
 		setShow({
 			modalForAdding: false,
@@ -59,40 +79,20 @@ function Bins() {
 		});
 	};
 
-	// ================================================================ DELETE BIN
-	const deleteBin = async () => {
-		closeModal();
-		deleteItem(binToDelete);
-	};
-
-	// =================================================================== ADD BIN
-	const addBin = async () => {
-		closeModal();
-		addItem(binToAdd);
-	};
-
-	// ================================================================ UPDATE BIN
-	const updateBin = async (e) => {
-		e.preventDefault();
-		console.log(binToUpdate);
-
-		closeModal();
-		updateItem(binToUpdate, `${BASE_API_URL}/bins`);
-	};
-
 	// ======================================================================= JSX
 	return (
 		<section className='bins'>
 			<h2>Bins</h2>
+
+			{/* ======================================================== BIN CARDS */}
 			<div className='bins-container'>
-				{/* ======================================================= BIN CARD */}
 				{data.map((bin) => (
-					<Link to={`/bins/${bin.id}`} key={bin.id} className='bin-link'>
+					<Link to={`/bins/${bin.id}`} key={bin.id}>
 						<Card>
-							<p className='card-text'>
+							<p>
 								{bin.title} ({bin.product_count})
 							</p>
-							<div className='bins-icon-container'>
+							<div className='bin-icon-container'>
 								<button
 									className='edit-icon button-css'
 									onClick={(e) => showModal(e, bin, MODAL_TYPE.UPDATE)}>
@@ -101,7 +101,7 @@ function Bins() {
 								<button
 									type='button'
 									className='delete-icon button-css'
-									onClick={() => showModal(bin, MODAL_TYPE.DELETE)}>
+									onClick={(e) => showModal(e, bin, MODAL_TYPE.DELETE)}>
 									<i className='icon-trash'></i>
 								</button>
 							</div>
@@ -114,8 +114,8 @@ function Bins() {
 					<Card
 						className='add-bin-card'
 						onClick={(e) => showModal(e, {}, MODAL_TYPE.ADD)}>
-						<p className='card-text'>Add Bin</p>
-						<div className='bins-icon-container'>
+						<p>Add Bin</p>
+						<div className='bin-icon-container'>
 							<button
 								type='button'
 								className='add-icon button-css'
@@ -127,37 +127,11 @@ function Bins() {
 				)}
 			</div>
 
-			{/* ============================================== MODAL TO DELETE BIN */}
-			<Modal show={show.modalForDeleting} onHide={closeModal}>
-				<Modal.Header>
-					<Modal.Title>Are you sure?</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					Deleting your{' '}
-					<span className='modal-bin-name'>{binToDelete.title}</span> bin cannot
-					be undone.
-				</Modal.Body>
-				<Modal.Footer>
-					<button
-						type='button'
-						className='modal-cancel-button button-css'
-						onClick={closeModal}>
-						CANCEL
-					</button>
-					<button
-						type='button'
-						className='modal-delete-button button-css'
-						onClick={() => deleteBin()}>
-						DELETE BIN
-					</button>
-				</Modal.Footer>
-			</Modal>
-
 			{/* ================================================= MODAL TO ADD BIN */}
 			<Modal show={show.modalForAdding} onHide={closeModal}>
 				<Modal.Body>
 					<h2>New Bin</h2>
-					<Form>
+					<Form onSubmit={addBin}>
 						<Form.Group>
 							<Form.Label htmlFor='title'>Title</Form.Label>
 							<Form.Control
@@ -174,12 +148,7 @@ function Bins() {
 								onClick={closeModal}>
 								CANCEL
 							</button>
-							<button
-								type='button'
-								className='modal-submit-button button-css'
-								onClick={() => {
-									addBin(MODAL_TYPE.ADD);
-								}}>
+							<button type='submit' className='modal-submit-button button-css'>
 								ADD BIN
 							</button>
 						</div>
@@ -187,7 +156,33 @@ function Bins() {
 				</Modal.Body>
 			</Modal>
 
-			{/* ================================================ MODAL TO EDIT BIN */}
+			{/* ============================================== MODAL TO DELETE BIN */}
+			<Modal show={show.modalForDeleting} onHide={closeModal}>
+				<Modal.Header>
+					<Modal.Title className='bold'>Are you sure?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					Deleting your{' '}
+					<span className='modal-bin-name'>{binToDelete.title}</span> bin cannot
+					be undone.
+				</Modal.Body>
+				<Modal.Footer>
+					<button
+						type='button'
+						className='modal-cancel-button button-css'
+						onClick={closeModal}>
+						CANCEL
+					</button>
+					<button
+						type='button'
+						className='modal-delete-button button-css'
+						onClick={deleteBin}>
+						DELETE BIN
+					</button>
+				</Modal.Footer>
+			</Modal>
+
+			{/* ============================================== MODAL TO UPDATE BIN */}
 			<Modal show={show.modalForUpdating} onHide={closeModal}>
 				<Modal.Body>
 					<h2>Update Bin</h2>

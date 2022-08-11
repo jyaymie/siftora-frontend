@@ -17,7 +17,7 @@ function Login() {
 	const handleLogin = (e) => {
 		e.preventDefault();
 
-		const post = async () => {
+		const logIn = async () => {
 			setError('');
 			setLoading(true);
 			try {
@@ -30,16 +30,16 @@ function Login() {
 					setAuthLocalStorage(res.data.token);
 					navigate('/bins');
 				}
-			} catch (error) {
+			} catch (err) {
 				setLoading(false);
-				console.log('Something went wrong...', error);
+				console.log('Something went wrong...', err);
 				setError(
 					'Hm, something went wrong. Please try again or contact jamieparkemail@gmail.com.'
 				);
 			}
 		};
 
-		post();
+		logIn();
 	};
 
 	return (
@@ -68,26 +68,25 @@ function Login() {
 					/>
 				</Form.Group>
 				<div className='form-option-container'>
-					<button type='submit' className='button-css'>
-						Submit
+					<button type='submit' className='login-submit-button button-css'>
+						LOG IN
 					</button>
 				</div>
 			</Form>
 
-			<p className='login-bottom-text'>
-				New to Siftora? Sign up{' '}
-				<Link to='/signup' className='modal-link'>
-					here
-				</Link>
-				.
-			</p>
-			<p>
-				To get a feel for the app before signing up, log in as our test buddy:
-				<ul>
-					<li>Username: test</li>
-					<li>Password: testtest</li>
-				</ul>
-			</p>
+			<div className='login-bottom-text-container'>
+				<p>
+					New to Siftora? Sign up{' '}
+					<Link to='/signup' className='underlined-link'>
+						here
+					</Link>{' '}
+					or get a feel for the app using our test buddy's credentials:
+				</p>
+				<div className='test-buddy-credentials'>
+					<p>Username: test</p>
+					<p>Password: testtest</p>
+				</div>
+			</div>
 
 			{loading && <Spinner />}
 			{error && error}
