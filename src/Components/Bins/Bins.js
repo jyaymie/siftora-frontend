@@ -24,21 +24,21 @@ function Bins() {
 
 	// =================================================================== ADD BIN
 	const addBin = async () => {
-			closeModal();
-			addItem(binToAdd);
+		addItem(binToAdd);
+		closeModal();
 	};
 
 	// ================================================================ DELETE BIN
 	const deleteBin = async () => {
-		closeModal();
 		deleteItem(binToDelete);
+		closeModal();
 	};
 
 	// ================================================================ UPDATE BIN
 	const updateBin = async (e) => {
 		e.preventDefault();
-		closeModal();
 		updateItem(binToUpdate);
+		closeModal();
 	};
 
 	// ========================================================== SHOW/CLOSE MODAL
@@ -94,7 +94,7 @@ function Bins() {
 							</p>
 							<div className='bin-icon-container'>
 								<button
-									className='edit-icon button-css'
+									className='update-icon button-css'
 									onClick={(e) => showModal(e, bin, MODAL_TYPE.UPDATE)}>
 									<i className='icon-pencil'></i>
 								</button>
@@ -128,7 +128,7 @@ function Bins() {
 			</div>
 
 			{/* ================================================= MODAL TO ADD BIN */}
-			<Modal show={show.modalForAdding} onHide={closeModal}>
+			<Modal show={show.modalForAdding} onHide={closeModal} centered>
 				<Modal.Body>
 					<h2>New Bin</h2>
 					<Form onSubmit={addBin}>
@@ -157,7 +157,7 @@ function Bins() {
 			</Modal>
 
 			{/* ============================================== MODAL TO DELETE BIN */}
-			<Modal show={show.modalForDeleting} onHide={closeModal}>
+			<Modal show={show.modalForDeleting} onHide={closeModal} centered>
 				<Modal.Header>
 					<Modal.Title className='bold'>Are you sure?</Modal.Title>
 				</Modal.Header>
@@ -183,7 +183,7 @@ function Bins() {
 			</Modal>
 
 			{/* ============================================== MODAL TO UPDATE BIN */}
-			<Modal show={show.modalForUpdating} onHide={closeModal}>
+			<Modal show={show.modalForUpdating} onHide={closeModal} centered>
 				<Modal.Body>
 					<h2>Update Bin</h2>
 					<Form onSubmit={updateBin}>

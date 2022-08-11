@@ -37,64 +37,24 @@ a:visited {
 	transition-duration: 0.3s;
 }
 
-.btn,
-.btn-primary,
-.button-css {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 35px;
-	padding: 0 15px;
-	border-radius: 0;
-	background-color: rgb(255, 255, 255);
-	color: rgb(30, 30, 30);
-	font-size: 15px;
-	transition-duration: 0.3s;
-}
-
-.btn,
-.btn-primary {
-	border: 0.5px solid rgb(255, 255, 255);
-}
-
-.button-css {
-	border: 0.5px solid rgb(30, 30, 30);
-}
-
-.btn:focus,
-.btn:hover,
-.button-css:hover {
-	border: 0.5px solid rgb(30, 30, 30);
-	background-color: rgb(30, 30, 30);
-	color: rgb(255, 255, 255);
-}
-
-.form-label {
-	margin: 0;
-}
-
-.form-control {
-	width: 300px;
-	margin-bottom: 20px;
-	border-radius: 0;
-	overflow: hidden;
-	font-size: 15px;
-}
-
-.product-image-large {
-	width: 258px;
-	margin: 7px 0;
-}
-
-.product-image-small {
-	margin: 0 20px;
-	height: 50px;
-}
-
 .bold {
 	font-weight: bold;
 }
 
+.underlined-link {
+	border-bottom: 1px dashed rgb(30, 30, 30);
+}
+
+.test-buddy-credentials {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	background-color: rgb(180, 140, 140, 0.3);
+}
+
+/* =================================================================== HEADER */
 header {
 	top: 0;
 	left: 0;
@@ -119,6 +79,10 @@ header {
 	transition: 0.5s;
 }
 
+.nav-icon-link:hover {
+	transform: rotateY(180deg);
+}
+
 .nav-text-link {
 	margin: 0 20px;
 	padding-top: 3px;
@@ -129,6 +93,205 @@ header {
 	border-bottom: 1px dashed rgb(255, 255, 255);
 }
 
+/* =========================================================== BUTTON & ICONS */
+.btn,
+.button-css {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 35px;
+	padding: 0 15px;
+	border-radius: 0;
+	background-color: rgb(255, 255, 255);
+	color: rgb(30, 30, 30);
+	font-size: 15px;
+	transition-duration: 0.3s;
+}
+
+.btn {
+	border: 0.5px solid rgb(255, 255, 255);
+}
+
+.button-css {
+	border: 0.5px solid rgb(30, 30, 30);
+}
+
+.btn-primary {
+	--bs-btn-focus-shadow-rgb: none;
+}
+
+.btn:focus,
+.btn:hover,
+.button-css:hover {
+	border: 0.5px solid rgb(30, 30, 30);
+	background-color: rgb(30, 30, 30);
+	color: rgb(255, 255, 255);
+}
+
+.add-icon,
+.delete-icon,
+.remove-icon,
+.update-icon {
+	border: 0.5px solid transparent;
+	background-color: transparent;
+}
+
+/* ============================================================ DROPDOWN MENU */
+.dropdown-button .dropdown-toggle {
+	margin: 0 0;
+}
+
+.dropdown-button .dropdown-toggle::after {
+	margin-left: 10px;
+}
+
+.dropdown-menu {
+	width: 300px;
+	height: 300px;
+	border-radius: 0;
+	background-color: rgb(30, 30, 30);
+	overflow: auto;
+}
+
+.dropdown-item {
+	color: rgb(255, 255, 255);
+	font-size: 15px;
+}
+
+.dropdown-item:hover {
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+}
+
+/* ================================================================ ACCORDION */
+.accordion {
+	--bs-accordion-color: rgb(30, 30, 30);
+	--bs-accordion-bg: rgb(255, 255, 255);
+	--bs-accordion-border-radius: none;
+	--bs-accordion-inner-border-radius: none;
+	--bs-accordion-btn-active-icon: url(data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27var%28--bs-body-color%29%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e);
+	--bs-accordion-btn-focus-border-color: rgb(180, 140, 140, 0.3);
+	--bs-accordion-btn-focus-box-shadow: 0 0 0 0;
+	--bs-accordion-active-color: rgb(30, 30, 30);
+	--bs-accordion-active-bg: rgb(180, 140, 140, 0.3);
+}
+
+.accordion-header {
+	border: 0.5px solid rgb(30, 30, 30);
+	border-radius: 0;
+}
+
+.accordion-header-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.accordion-button {
+	background-color: rgb(255, 255, 255);
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 15px;
+}
+
+.product-detail p {
+	margin-top: 2px;
+	border-bottom: 1px dashed rgb(0, 0, 0);
+}
+
+.product-icon-container {
+	display: flex;
+	justify-content: flex-end;
+	bottom: 0;
+}
+
+/* ============================================================ PRODUCT IMAGE */
+.product-image-large {
+	width: 258px;
+	margin: 7px 0;
+}
+
+.product-image-small {
+	margin: 0 20px;
+	height: 50px;
+}
+
+/* ======================================================== PRODUCT USE COUNT */
+.use-count-button-container {
+	display: flex;
+}
+
+.decrement-button,
+.increment-button {
+	width: 20px;
+	height: 20px;
+	margin: 0 10px;
+}
+
+/* ==================================================================== MODAL */
+.modal-content {
+	border-radius: 0;
+}
+
+.modal-title {
+	font-size: 15px;
+}
+
+.modal-button-container {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.modal-bin-name,
+.modal-product-name {
+	padding: 2px 5px;
+	background-color: rgb(180, 140, 140, 0.3);
+}
+
+.modal-cancel-button,
+.form-cancel-option {
+	margin-right: 10px;
+	border: 0.5px solid rgb(255, 255, 255);
+}
+
+.modal-delete-button,
+.modal-remove-button,
+.form-add-option {
+	border: 0.5px solid rgb(30, 30, 30);
+}
+
+/* ===================================================================== FORM */
+.form-label {
+	margin: 0;
+}
+
+.form-control {
+	width: 100%;
+	margin-bottom: 20px;
+	border-radius: 0;
+	overflow: hidden;
+	font-size: 15px;
+}
+
+.form-control:focus {
+	background-color: rgb(255, 255, 255);
+	color: rgb(30, 30, 30);
+	border-color: rgb(180, 140, 140, 0.3);
+	outline: 0;
+	box-shadow: 0 0 0 0.25rem rgb(180, 140, 140, 0.3);
+}
+
+.form-check-label {
+	margin-bottom: 20px;
+}
+
+.form-option-container {
+	display: flex;
+	justify-content: flex-end;
+	bottom: 0;
+}
+
+/* ========================================================= FOOTER & SPINNER */
 footer {
 	display: flex;
 	justify-content: center;
@@ -149,11 +312,4 @@ svg {
 
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {
-	.nav-icon-link:hover {
-		transform: rotateY(180deg);
-	}
-
-	.form-control {
-		min-width: 500px;
-	}
 }

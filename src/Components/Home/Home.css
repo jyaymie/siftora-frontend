@@ -24,7 +24,7 @@
 }
 
 h1 {
-	margin-bottom: 20px;
+	margin-bottom: 5px;
 	font-family: 'Bodoni Moda', serif;
 	font-size: 70px;
 }
@@ -36,11 +36,11 @@ h1 {
 }
 
 .login-link {
-	margin-right: 10px;
+	margin-right: 5px;
 	background-color: transparent;
 }
 
 .signup-link {
-	margin-left: 10px;
+	margin-left: 5px;
 	background-color: rgb(255, 255, 255);
 }

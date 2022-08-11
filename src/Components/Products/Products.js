@@ -251,7 +251,7 @@ function Products() {
 								<p>Price: ${product.price}</p>
 								<p>Open Date: {product.open_date}</p>
 								<p>Expiry Date: {product.expiry_date}</p>
-								<p className='use-count-container'>
+								<p className='use-count-button-container'>
 									# of Uses:{' '}
 									<button
 										type='button'
@@ -274,11 +274,10 @@ function Products() {
 									<img src={product.image} className='product-image-large' />
 								</p>
 								<p>Notes: {product.notes}</p>
-								{/* ==================================== EDIT & DELETE ICONS */}
-								<div className='products-icon-container'>
+								{/* ================================== UPDATE & DELETE ICONS */}
+								<div className='product-icon-container'>
 									<button
-										to={`/products/${product.id}/edit`}
-										className='edit-icon button-css'
+										className='update-icon button-css'
 										onClick={() => showModal(product, MODAL_TYPE.UPDATE)}>
 										<i className='icon-pencil'></i>
 									</button>
@@ -295,7 +294,7 @@ function Products() {
 				))}
 
 				{/* ======================================= MODAL FOR ADDING PRODUCT */}
-				<Modal show={show.modalForAdding} onHide={closeModal}>
+				<Modal show={show.modalForAdding} onHide={closeModal} centered>
 					<Modal.Body>
 						<h2>New Product</h2>
 						<Form onSubmit={addProduct}>
@@ -348,9 +347,9 @@ function Products() {
 				</Modal>
 
 				{/* ===================================== MODAL FOR DELETING PRODUCT */}
-				<Modal show={show.modalForDeleting} onHide={closeModal}>
+				<Modal show={show.modalForDeleting} onHide={closeModal} centered>
 					<Modal.Header>
-						<Modal.Title>Are you sure?</Modal.Title>
+						<Modal.Title className='bold'>Are you sure?</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						Deleting{' '}
@@ -374,10 +373,10 @@ function Products() {
 				</Modal>
 			</div>
 
-			{/* ======================================== MODAL TO UPDATING PRODUCT */}
-			<Modal show={show.modalForUpdating} onHide={closeModal}>
+			{/* ======================================= MODAL FOR UPDATING PRODUCT */}
+			<Modal show={show.modalForUpdating} onHide={closeModal} centered>
 				<Modal.Body>
-					<h2>Edit Product</h2>
+					<h2>Update Product</h2>
 					<Form onSubmit={updateProduct}>
 						<Form.Group>
 							<Form.Label htmlFor='brand'>Brand</Form.Label>

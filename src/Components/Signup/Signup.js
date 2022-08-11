@@ -21,23 +21,25 @@ function Signup() {
 		const signUp = async () => {
 			setError('');
 			setLoading(true);
-			try {
-				const res = await axios.post(`${BASE_API_URL}/signup/`, {
-					username: username,
-					password: password,
-					password2: confirmedPassword,
-				});
-				if (res.status === 200) {
+			if (username && password && confirmedPassword) {
+				try {
+					const res = await axios.post(`${BASE_API_URL}/signup/`, {
+						username: username,
+						password: password,
+						password2: confirmedPassword,
+					});
+					if (res.status === 200) {
+						setLoading(false);
+						setAuthLocalStorage(res.data.token);
+						navigate('/login');
+					}
+				} catch (err) {
 					setLoading(false);
-					setAuthLocalStorage(res.data.token);
-					navigate('/bins');
+					console.log('Something went wrong...', err);
+					setError(
+						'Hm, something went wrong. Please try again or contact jamieparkemail@gmail.com.'
+					);
 				}
-			} catch (err) {
-				setLoading(false);
-				console.log('Something went wrong...', err);
-				setError(
-					'Hm, something went wrong. Please try again or contact jamieparkemail@gmail.com.'
-				);
 			}
 		};
 

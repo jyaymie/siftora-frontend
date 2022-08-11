@@ -1,6 +1,6 @@
 import './Bin.css';
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAuthFetch } from '../../utils/common';
 import { BASE_API_URL, MODAL_TYPE } from '../../utils/enums';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -31,7 +31,6 @@ const DROPDOWN_OPTIONS = [
 // Example: { sort: "use_count", order: "asc" }
 function updateQueryParams(params) {
 	const url = new URL(window.location.href);
-
 	// Iterate through each property,
 	for (const key in params) {
 		if (params[key] !== undefined) {
@@ -40,27 +39,24 @@ function updateQueryParams(params) {
 			url.searchParams.set(key, params[key]);
 		}
 	}
-
 	// Update the URL without reloading the page.
 	window.history.pushState({}, '', url.toString());
 }
 
 function Bin() {
 	const { id } = useParams();
-	const navigate = useNavigate();
 	const [show, setShow] = useState({
 		modalForAdding: false,
 		modalForRemoving: false,
 		modalForUpdating: false,
 	});
-	const [productToAdd, setProductToAdd] = useState({});
 	const [productToRemove, setProductToRemove] = useState({});
 	const [productToUpdate, setProductToUpdate] = useState({});
 
 	// ========================================================== GET BIN PRODUCTS
 	const {
-		// In the useAuthFetch hook, data's default value is an array. Change it to
-		// an object.
+		// In the useAuthFetch hook, data's default value is an array, so it is
+		// changed to an object here.
 		data = {},
 		loading,
 		error,
@@ -75,11 +71,11 @@ function Bin() {
 	);
 
 	// ===================================================== GET ALL USER PRODUCTS
-	// For this component, rename the variables to products-specific variables.
+	// Rename these variables to products-specific variables.
 	const {
 		data: products,
-		loading: productsLoading,
 		error: productsError,
+		loading: productsLoading,
 	} = useAuthFetch(`/products`);
 
 	// ===================================================== GET DROPDOWN PRODUCTS
@@ -93,64 +89,6 @@ function Bin() {
 			return !data.products.find((binProduct) => binProduct.id === product.id);
 		});
 	};
-
-	// ========================================================= SORT BIN PRODUCTS
-	const sortBinProducts = async (option) => {
-		// When the url changes, useEffect is triggered in the useAuthFetch custom
-		// hook.
-		setUrl(`${BASE_API_URL}/bins/${id}/?sort=${option.params}`);
-		updateQueryParams({
-			sort: `${option.params}`,
-		});
-	};
-
-	// ========================================================== UPDATE USE COUNT
-	const incrementUse = (product) => {
-		product.use_count++;
-		updateItem(product, `${BASE_API_URL}/products`);
-	};
-
-	const decrementUse = (product) => {
-		if (product.use_count > 0) {
-			product.use_count--;
-			updateItem(product, `${BASE_API_URL}/products`);
-		}
-	};
-
-	// ========================================================== SHOW/CLOSE MODAL
-	const showModal = (product, type) => {
-		switch (type) {
-			case MODAL_TYPE.ADD:
-				setShow({
-					...show,
-					modalForAdding: true,
-				});
-				break;
-			case MODAL_TYPE.REMOVE:
-				setProductToRemove(product);
-				setShow({
-					...show,
-					modalForRemoving: true,
-				});
-				break;
-			case MODAL_TYPE.UPDATE:
-				setProductToUpdate(product);
-				setShow({
-					...show,
-					modalForUpdating: true,
-				});
-				break;
-			default:
-				break;
-		}
-	};
-
-	const closeModal = () =>
-		setShow({
-			modalForAdding: false,
-			modalForRemoving: false,
-			modalForUpdating: false,
-		});
 
 	// ==================================================== ADD NEW PRODUCT TO BIN
 	const addNewProduct = async (e) => {
@@ -193,14 +131,72 @@ function Bin() {
 	// =============================================== ADD EXISTING PRODUCT TO BIN
 	const addExistingProduct = async (e, product) => {
 		e.preventDefault();
-		closeModal();
 		data.products.push(product);
 		updateItem(data, `${BASE_API_URL}/bins`);
+		closeModal();
 	};
+
+	// ========================================================= SORT BIN PRODUCTS
+	const sortBinProducts = async (option) => {
+		// When the url changes, useEffect is triggered in the useAuthFetch custom
+		// hook.
+		setUrl(`${BASE_API_URL}/bins/${id}/?sort=${option.params}`);
+		updateQueryParams({
+			sort: `${option.params}`,
+		});
+	};
+
+	// ========================================================== UPDATE USE COUNT
+	const incrementUse = (product) => {
+		product.use_count++;
+		updateItem(product, `${BASE_API_URL}/products`);
+	};
+
+	const decrementUse = (product) => {
+		if (product.use_count > 0) {
+			product.use_count--;
+			updateItem(product, `${BASE_API_URL}/products`);
+		}
+	};
+
+	// ========================================================== SHOW/CLOSE MODAL
+	const showModal = (e, product, type) => {
+		e.preventDefault();
+		switch (type) {
+			case MODAL_TYPE.ADD:
+				setShow({
+					...show,
+					modalForAdding: true,
+				});
+				break;
+			case MODAL_TYPE.REMOVE:
+				setProductToRemove(product);
+				setShow({
+					...show,
+					modalForRemoving: true,
+				});
+				break;
+			case MODAL_TYPE.UPDATE:
+				setProductToUpdate(product);
+				setShow({
+					...show,
+					modalForUpdating: true,
+				});
+				break;
+			default:
+				break;
+		}
+	};
+
+	const closeModal = () =>
+		setShow({
+			modalForAdding: false,
+			modalForRemoving: false,
+			modalForUpdating: false,
+		});
 
 	// =================================================== REMOVE PRODUCT FROM BIN
 	const removeProduct = async () => {
-		closeModal();
 		const filteredBinProducts = data.products.filter(
 			(product) => product !== productToRemove
 		);
@@ -210,6 +206,49 @@ function Bin() {
 			products: filteredBinProducts,
 		};
 		updateItem(updatedBin, `${BASE_API_URL}/bins`);
+		closeModal();
+	};
+
+	// ============================================================ UPDATE PRODUCT
+	const updateProduct = async (e) => {
+		e.preventDefault();
+
+		if (!e.target.purchase_date.value) {
+			e.target.purchase_date.value = '0001-01-01';
+		}
+		if (!e.target.open_date.value) {
+			e.target.open_date.value = '0001-01-01';
+		}
+		if (!e.target.expiry_date.value) {
+			e.target.expiry_date.value = '0001-01-01';
+		}
+		if (!e.target.finish_date.value) {
+			e.target.finish_date.value = '0001-01-01';
+		}
+
+		const data = {
+			id: productToUpdate.id,
+			brand: e.target.brand.value,
+			name: e.target.name.value,
+			shade: e.target.shade.value,
+			purchase_date: e.target.purchase_date.value,
+			price: e.target.price.value,
+			open_date: e.target.open_date.value,
+			expiry_date: e.target.expiry_date.value,
+			use_count: e.target.use_count.value,
+			finish_date: e.target.finish_date.value,
+			will_repurchase: e.target.will_repurchase.checked,
+			image: e.target.image.value,
+			notes: e.target.notes.value,
+		};
+
+		const res = await updateItem(data, `${BASE_API_URL}/products`);
+		closeModal();
+	};
+
+	// =========================================== onChange FOR FORM INPUT CHANGES
+	const onInputChange = (e, name) => {
+		setProductToUpdate({ ...productToUpdate, [name]: e.target.checked });
 	};
 
 	// ======================================================================= JSX
@@ -223,7 +262,7 @@ function Bin() {
 					<DropdownButton
 						title={`Add Product${' '}`}
 						className='dropdown-button'>
-						<Dropdown.Item onClick={(e) => showModal(e, MODAL_TYPE.ADD)}>
+						<Dropdown.Item onClick={(e) => showModal(e, {}, MODAL_TYPE.ADD)}>
 							✨ ADD NEW PRODUCT ✨
 						</Dropdown.Item>
 						{getDropdownProducts().map((product) => (
@@ -238,12 +277,11 @@ function Bin() {
 					{/* ================================ DROPDOWN FOR SORTING PRODUCTS */}
 					<DropdownButton
 						title={`Sort Products By${' '}`}
-						className='dropdown-button'
-						id='dropdown-menu-align-end'>
+						className='dropdown-button'>
 						{DROPDOWN_OPTIONS.map((option) => (
 							<Dropdown.Item
-								onClick={() => sortBinProducts(option)}
-								key={option.id}>
+								key={option.id}
+								onClick={() => sortBinProducts(option)}>
 								{option.name}
 							</Dropdown.Item>
 						))}
@@ -270,7 +308,7 @@ function Bin() {
 									<p>Price: ${product.price}</p>
 									<p>Open Date: {product.open_date}</p>
 									<p>Expiry Date: {product.expiry_date}</p>
-									<p className='use-count-container'>
+									<p className='use-count-button-container'>
 										# of Uses:{' '}
 										<button
 											type='button'
@@ -295,17 +333,17 @@ function Bin() {
 										<img src={product.image} className='product-image-large' />
 									</p>
 									<p>Notes: {product.notes}</p>
-									{/* ================================== EDIT & DELETE ICONS */}
-									<div className='bin-icon-container'>
-										<Link
-											to={`/products/${product.id}/edit`}
-											className='edit-icon button-css'>
+									{/* ================================ UPDATE & REMOVE ICONS */}
+									<div className='product-icon-container'>
+										<button
+											className='update-icon button-css'
+											onClick={(e) => showModal(e, product, MODAL_TYPE.UPDATE)}>
 											<i className='icon-pencil'></i>
-										</Link>
+										</button>
 										<button
 											type='button'
-											className='delete-icon button-css'
-											onClick={() => showModal(product)}>
+											className='remove-icon button-css'
+											onClick={(e) => showModal(e, product, MODAL_TYPE.REMOVE)}>
 											<i className='icon-trash'></i>
 										</button>
 									</div>
@@ -314,8 +352,8 @@ function Bin() {
 						</Accordion>
 					))}
 
-				{/* ========================================MODAL FOR ADDING A PRODUCT */}
-				<Modal show={show.modalForAdding} onHide={closeModal}>
+				{/* ======================================= MODAL FOR ADDING PRODUCT */}
+				<Modal show={show.modalForAdding} onHide={closeModal} centered>
 					<Modal.Body>
 						<h2>New Product</h2>
 						<Form onSubmit={(e) => addNewProduct(e)}>
@@ -370,10 +408,10 @@ function Bin() {
 					</Modal.Body>
 				</Modal>
 
-				{/* =================================== MODAL FOR REMOVING A PRODUCT */}
-				<Modal show={show.modalForRemoving} onHide={closeModal}>
+				{/* ===================================== MODAL FOR REMOVING PRODUCT */}
+				<Modal show={show.modalForRemoving} onHide={closeModal} centered>
 					<Modal.Header>
-						<Modal.Title>Just so you know...</Modal.Title>
+						<Modal.Title className='bold'>Just so you know...</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						Removing{' '}
@@ -395,12 +433,92 @@ function Bin() {
 						<button
 							type='button'
 							className='modal-remove-button button-css'
-							onClick={() => removeProduct('modalForRemoving')}>
+							onClick={removeProduct}>
 							REMOVE FROM BIN
 						</button>
 					</Modal.Footer>
 				</Modal>
 			</div>
+
+			{/* ======================================= MODAL FOR UPDATING PRODUCT */}
+			<Modal show={show.modalForUpdating} onHide={closeModal} centered>
+				<Modal.Body>
+					<h2>Update Product</h2>
+					<Form onSubmit={updateProduct}>
+						<Form.Group>
+							<Form.Label htmlFor='brand'>Brand</Form.Label>
+							<Form.Control
+								id='brand'
+								defaultValue={productToUpdate.brand}
+								required
+							/>
+							<Form.Label htmlFor='name'>Name</Form.Label>
+							<Form.Control
+								id='name'
+								defaultValue={productToUpdate.name}
+								required
+							/>
+							<Form.Label htmlFor='shade'>Shade</Form.Label>
+							<Form.Control id='shade' defaultValue={productToUpdate.shade} />
+							<Form.Label htmlFor='purchase_date'>Purchase Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='purchase_date'
+								defaultValue={productToUpdate.purchase_date}
+							/>
+							<Form.Label htmlFor='price'>Price</Form.Label>
+							<Form.Control id='price' defaultValue={productToUpdate.price} />
+							<Form.Label htmlFor='open_date'>Open Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='open_date'
+								defaultValue={productToUpdate.open_date}
+							/>
+							<Form.Label htmlFor='expiry_date'>Expiry Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='expiry_date'
+								defaultValue={productToUpdate.expiry_date}
+							/>
+							<Form.Label htmlFor='use_count'># of Uses</Form.Label>
+							<Form.Control
+								type='number'
+								id='use_count'
+								min='0'
+								defaultValue={productToUpdate.use_count}
+							/>
+							<Form.Label htmlFor='finish_date'>Finish Date</Form.Label>
+							<Form.Control
+								type='date'
+								id='finish_date'
+								defaultValue={productToUpdate.finish_date}
+							/>
+							<Form.Check
+								type='checkbox'
+								id='will_repurchase'
+								label='Will Repurchase'
+								checked={Boolean(productToUpdate.will_repurchase)}
+								onChange={(e) => onInputChange(e, 'will_repurchase')}
+							/>
+							<Form.Label htmlFor='image'>Image URL</Form.Label>
+							<Form.Control id='image' defaultValue={productToUpdate.image} />
+							<Form.Label htmlFor='notes'>Notes</Form.Label>
+							<Form.Control id='notes' defaultValue={productToUpdate.notes} />
+						</Form.Group>
+						<div className='modal-button-container'>
+							<button
+								type='button'
+								className='modal-cancel-button button-css'
+								onClick={closeModal}>
+								CANCEL
+							</button>
+							<button type='submit' className='modal-submit-button button-css'>
+								UPDATE PRODUCT
+							</button>
+						</div>
+					</Form>
+				</Modal.Body>
+			</Modal>
 
 			{data.products && !data.products.length && (
 				<p className='bin-empty-message'>

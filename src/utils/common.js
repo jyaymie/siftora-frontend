@@ -29,7 +29,6 @@ export function useAuthFetch(path) {
 	const errorMessage =
 		'Hm, something went wrong. Please try again or contact jamieparkemail@gmail.com.';
 	const token = getAuthLocalStorage();
-
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -107,7 +106,6 @@ export function useAuthFetch(path) {
 
 	// ======================================================================= PUT
 	const updateItem = (item, path) => {
-		// Remove all queries from the current path.
 		const noQueryUrl = getPathFromUrl(path ? path : url);
 		setError('');
 		setLoading(true);
@@ -136,10 +134,10 @@ export function useAuthFetch(path) {
 		data,
 		loading,
 		error,
-		deleteItem,
 		setUrl,
-		updateItem,
 		addItem,
+		deleteItem,
+		updateItem,
 		refetch,
 	};
 }

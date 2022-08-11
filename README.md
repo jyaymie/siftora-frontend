@@ -2,7 +2,7 @@
 
 ## 💄 Project Description
 
-SIFTORA provides a convenient way for users to keep a digital inventory of all their makeup and skincare products. Products are organized into user-named "bins" and can be sorted by a variety of fields, including price, expiry date, and product use.
+SIFTORA provides a convenient way for users to keep a digital inventory of all their makeup products. Products are organized into user-named "bins" and can be sorted by a variety of fields, including price, expiry date, and product use.
 
 Take a look: https://siftora.netlify.app
 
@@ -24,11 +24,12 @@ Credits:
 - As a user, I want to add photos so that I can easily reference them when I am deciding on a shade in store.
 
 ### Original Wireframes
+
 ![siftora-original-wireframes](https://user-images.githubusercontent.com/104411072/182657461-70927e5b-36ed-424c-933c-325a0e96a5a2.png)
 
 ## 👩‍💻 Technologies
 
-This frontend React application utilizes JSX, React-Bootstrap, React Router, as well as Axios (for fetching data).
+This frontend React application utilizes JSX, React-Bootstrap, React Router, a custom React hook, localStorage, and Axios.
 
 ## 🛠 Installation
 
@@ -39,6 +40,7 @@ This frontend React application utilizes JSX, React-Bootstrap, React Router, as 
 ## 🤝 Contribution
 
 There is always room for improvement! If you have any suggestions, please submit an issue or create a pull request.
+
 ##
 
 ✨ Thank you so much for your interest in SIFTORA! ✨
