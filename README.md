@@ -29,7 +29,7 @@ Credits:
 
 ## 👩‍💻 Technologies
 
-This frontend React application utilizes JSX, React-Bootstrap, React Router, a custom React hook, localStorage, and Axios.
+This frontend React application utilizes JSX, React-Bootstrap, React Router, a custom React hook, localStorage, as well as Axios (for fetching data from the [Siftora API](https://github.com/jyaymie/siftora-backend)).
 
 ## 🛠 Installation
 
