@@ -2,7 +2,7 @@
 
 ## 💄 Project Description
 
-SIFTORA provides a convenient way for users to keep a digital inventory of all their makeup products. Products are organized into user-named "bins" and can be sorted by a variety of fields, including price, expiry date, and product use.
+Siftora provides a convenient way for users to keep a digital inventory of all their makeup products. Products are organized into user-named "bins" and can be sorted by a variety of fields, including price, expiry date, and product use.
 
 Take a look: https://siftora.netlify.app
 
@@ -43,4 +43,4 @@ There is always room for improvement! If you have any suggestions, please submit
 
 ##
 
-✨ Thank you so much for your interest in SIFTORA! ✨
+✨ Thank you so much for your interest in Siftora! ✨
