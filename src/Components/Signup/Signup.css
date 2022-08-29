@@ -5,10 +5,7 @@
 .signup-bottom-text-container {
 	width: 300px;
 	margin-top: 20px;
-}
-
-.test-buddy-text {
-	margin-top: 20px;
+	text-align: center;
 }
 
 /* =========================================================== DESKTOP STYLES */
