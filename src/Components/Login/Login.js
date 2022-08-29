@@ -79,13 +79,9 @@ function Login() {
 					New to Siftora? Sign up{' '}
 					<Link to='/signup' className='underlined-link'>
 						here
-					</Link>{' '}
-					or get a feel for the app using our test buddy's credentials:
+					</Link>
+					.
 				</p>
-				<div className='test-buddy-credentials'>
-					<p>Username: test</p>
-					<p>Password: testtest</p>
-				</div>
 			</div>
 
 			{loading && <Spinner />}

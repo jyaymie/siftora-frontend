@@ -98,17 +98,6 @@ function Signup() {
 					</Link>
 					.
 				</p>
-				<p className='test-buddy-text'>
-					Unsure? Get a feel for the app before signing up by{' '}
-					<Link to='/login' className='underlined-link'>
-						logging in
-					</Link>{' '}
-					as our test buddy:
-					<div className='test-buddy-credentials'>
-						<p>Username: test</p>
-						<p>Password: testtest</p>
-					</div>
-				</p>
 			</div>
 
 			{loading && <Spinner />}
