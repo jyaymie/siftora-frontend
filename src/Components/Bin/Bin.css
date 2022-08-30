@@ -10,10 +10,6 @@
 	width: 300px;
 }
 
-.bin-empty-message {
-	margin-top: 20px;
-}
-
 /* =========================================================== DESKTOP STYLES */
 @media screen and (min-width: 768px) {
 	.bin-container {

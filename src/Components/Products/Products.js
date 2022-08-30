@@ -234,64 +234,66 @@ function Products() {
 
 				{/* ====================================================== ACCORDION */}
 				{data.map((product) => (
-					<Accordion key={product.id}>
-						<Accordion.Item eventKey={`${product.id}`}>
-							<Accordion.Header>
-								<div className='accordion-header-content'>
-									<p>
-										<span className='bold'>{product.name}</span>
-										{` by ${product.brand}`}
+						<Accordion key={product.id}>
+							<Accordion.Item eventKey={`${product.id}`}>
+								<Accordion.Header>
+									<div className='accordion-header-content'>
+										<p>
+											<span className='bold'>{product.name}</span>
+											{` by ${product.brand}`}
+										</p>
+										<img src={product.image} className='product-image-small' />
+									</div>
+								</Accordion.Header>
+								<Accordion.Body className='product-detail'>
+									<p>Shade: {product.shade}</p>
+									<p>Purchase Date: {product.purchase_date}</p>
+									<p>Price: ${product.price}</p>
+									<p>Open Date: {product.open_date}</p>
+									<p>Expiry Date: {product.expiry_date}</p>
+									<p className='use-count-button-container'>
+										# of Uses:{' '}
+										<button
+											type='button'
+											className='decrement-button button-css'
+											onClick={() => decrementUse(product)}>
+											-
+										</button>
+										{product.use_count}
+										<button
+											type='button'
+											className='increment-button button-css'
+											onClick={() => incrementUse(product)}>
+											+
+										</button>
 									</p>
-									<img src={product.image} className='product-image-small' />
-								</div>
-							</Accordion.Header>
-							<Accordion.Body className='product-detail'>
-								<p>Shade: {product.shade}</p>
-								<p>Purchase Date: {product.purchase_date}</p>
-								<p>Price: ${product.price}</p>
-								<p>Open Date: {product.open_date}</p>
-								<p>Expiry Date: {product.expiry_date}</p>
-								<p className='use-count-button-container'>
-									# of Uses:{' '}
-									<button
-										type='button'
-										className='decrement-button button-css'
-										onClick={() => decrementUse(product)}>
-										-
-									</button>
-									{product.use_count}
-									<button
-										type='button'
-										className='increment-button button-css'
-										onClick={() => incrementUse(product)}>
-										+
-									</button>
-								</p>
-								<p>Finish Date: {product.finish_date}</p>
-								<p>Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}</p>
-								<p>
-									Image:{' '}
-									<img src={product.image} className='product-image-large' />
-								</p>
-								<p>Notes: {product.notes}</p>
-								{/* ================================== UPDATE & DELETE ICONS */}
-								<div className='product-icon-container'>
-									<button
-										className='update-icon button-css'
-										onClick={() => showModal(product, MODAL_TYPE.UPDATE)}>
-										<i className='icon-pencil'></i>
-									</button>
-									<button
-										type='button'
-										className='delete-icon button-css'
-										onClick={() => showModal(product, MODAL_TYPE.DELETE)}>
-										<i className='icon-trash'></i>
-									</button>
-								</div>
-							</Accordion.Body>
-						</Accordion.Item>
-					</Accordion>
-				))}
+									<p>Finish Date: {product.finish_date}</p>
+									<p>
+										Will Repurchase: {product.will_repurchase ? 'Yes' : 'No'}
+									</p>
+									<p>
+										Image:{' '}
+										<img src={product.image} className='product-image-large' />
+									</p>
+									<p>Notes: {product.notes}</p>
+									{/* ================================== UPDATE & DELETE ICONS */}
+									<div className='product-icon-container'>
+										<button
+											className='update-icon button-css'
+											onClick={() => showModal(product, MODAL_TYPE.UPDATE)}>
+											<i className='icon-pencil'></i>
+										</button>
+										<button
+											type='button'
+											className='delete-icon button-css'
+											onClick={() => showModal(product, MODAL_TYPE.DELETE)}>
+											<i className='icon-trash'></i>
+										</button>
+									</div>
+								</Accordion.Body>
+							</Accordion.Item>
+						</Accordion>
+					))}
 
 				{/* ======================================= MODAL FOR ADDING PRODUCT */}
 				<Modal show={show.modalForAdding} onHide={closeModal} centered>
@@ -452,6 +454,12 @@ function Products() {
 					</Form>
 				</Modal.Body>
 			</Modal>
+
+			{!loading && !data.length && (
+				<p className='empty-message'>
+					There's nothing here...yet. Please add a product.
+				</p>
+			)}
 
 			{loading && <Spinner />}
 			{error && error}

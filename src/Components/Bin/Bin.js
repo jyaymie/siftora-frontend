@@ -521,7 +521,7 @@ function Bin() {
 			</Modal>
 
 			{data.products && !data.products.length && (
-				<p className='bin-empty-message'>
+				<p className='empty-message'>
 					This bin is empty. Please add a product.
 				</p>
 			)}

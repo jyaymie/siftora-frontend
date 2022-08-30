@@ -45,13 +45,9 @@ a:visited {
 	border-bottom: 1px dashed rgb(30, 30, 30);
 }
 
-.test-buddy-credentials {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+/* When Products or a Bin is empty */
+.empty-message {
 	margin-top: 20px;
-	background-color: rgb(180, 140, 140, 0.3);
 }
 
 /* =================================================================== HEADER */
